@@ -1,1 +1,87 @@
-Product backlog
+
+# Product backlog 
+
+<div align > 
+
+## Sistem za upravljanje laboratorijskom opremom
+
+</div>
+
+## Opis projekta 
+
+Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacijama, praćenje statusa opreme, odobravanje korištenja, pregled zauzeća i potrošnju repromaterijala. 
+
+## Tipovi korisnika
+
+- Studenti
+- Profesori (nastavni ansambl)
+- Administratori i osoblje nadležno za laboratorij
+
+## Product Backlog 
+
+<table>
+
+<tr>
+<th>ID</th>
+<th align ="left" >User Story</th>
+<th>Priority</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td align ="left">Kao korisnik želim pregledati svu dostupnu opremu</td>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>2</th>
+<th  align ="left">Kao korisnik želim vidjeti informacije o opremi (status, opis)</th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>3</th>
+<th  align ="left">Kao korisnik želim moći rezervisati opremu za odgovarajući termin</th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>4</th>
+<th  align ="left">Kao korisnik želim vidjeti podatke o svojim rezervacijama</th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>5</th>
+<th  align ="left">Kao administrator želim dodavati i brisati opremu iz inventara </th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>6</th>
+<th  align ="left">Kao administrator želim odobravati/odbijati zahtjeve za korištenje opreme </th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>8</th>
+<th  align ="left">Kao administrator želim mijenjati statuse i detalje vezane za opremu </th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>9</th>
+<th  align ="left">Kao korisnik želim vidjeti kalendar zauzeća opreme </th>
+<th>High</th>
+<th>To Do</th>
+</tr>
+
+</table>
