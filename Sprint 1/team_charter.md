@@ -29,8 +29,11 @@ Pravila u slučaju neispunjenja obaveza
 Radna pravila tima:
 
 Kada i kako tim radi zajedno: Tim radi jednom sedmično, u prvom slobodnom terminu koji odgovara svim članovima, a sastanci se održavaju putem aplikacije Google Meet.
+
 Kako se zadaci dogovaraju i prate: Zadaci se dogovaraju zajednički, uz dogovor o rokovima i obavezama. Dok, napredak zadataka se prati kroz kontinuiranu komunikaciju izmedju članova grupe i redovno izvještavanju o realizaciji zadatka.
+
 Kako se dokumentuju odluke: Odluke se zapisuju tokom sastanaka i čuvaju na zajedničkom mjestu kako bi ih svi članovi tima mogli kasnije pregledati.
+
 Kako se rejšavaju neslaganja:
 
 4. Kako se evidentiraju problemi u timu?
