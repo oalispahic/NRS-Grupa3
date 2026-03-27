@@ -11,13 +11,13 @@ Naziv tima: Grupa 3
 | Suljo Ruvić                               | 185- ST      | sruvic1@etf.unsa.ba     |
 | Iman Salanović                            | 249-ST       | isalanovic1@etf.unsa.ba |
 | Harun Zukanovic                           | 239-ST       | hzukanovic1@etf.unsa.ba |
-| [Kemal Mešić](mailto:kmesic2@etf.unsa.ba) | 236- ST      | kmesic2@etf.unsa.ba     |
+| [Kemal Mešić](https://github.com/mesicc)  | 236- ST      | kmesic2@etf.unsa.ba     |
 
 Način komunikacije:
 
-Primarni kanal komunikacije: Aplikacija whatsapp
-Očekivano vrijeme odgovora: Kroz 1 h
-Način zakazivanja sastanka: po dogovoru
+Primarni kanal komunikacije: Aplikacija whatsapp <br> 
+Očekivano vrijeme odgovora: Kroz 1 h <br>
+Način zakazivanja sastanka: po dogovoru <br>
 
 Pravila u slučaju neispunjenja obaveza
 1. Kako se član upozorava?
