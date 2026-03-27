@@ -32,7 +32,29 @@ U softverskom inžinjerstvu, "stakeholder" nije samo krajnji korisnik nego sve o
 
 ### 2. Kategorije Stakeholdera
 
-#### harun 
+#### 2.1 Klasifikacija zainteresovanih strana 
+Da bih nnapravio uvid u Stakeholdere, podijelio sam ih u 3 grupe:
+
+1. Direktni korisnici: <br>
+**Laborant** - Najviše koristiti sistem i radi stalni upis u bazu podataka. Koristi sistem za rezervaciju i unos rezultata. <br>
+**Šef Laboratorije** - Naagleda radi Laaboranta, ima stalni uvid u termine i kontroliše resurse laboratorije. <br>
+
+2. Podrška: <br>
+**IT Administrator** - Osigurava rad baze podataka i aplikacije da rade beez prestanka. <br>
+**Služba za servis** - Reaguje na kvarove i u slučaju kvara blokiraju opremu. <br>
+
+3. Logistika: <br>
+**Služba nabavke** - Prati izvještaj o potršnji materijala i vrše nabavku novog materijala. <br>
+
+<br>
+
+#### 2.2 Prikaz Entity Relationship Diagrama
+
+*Ovaj dijagram prikazuje logičku povezanost između korisnika i ključnih kategorija sistema / aplikacije [3].*
+![Entity Relationship Diagram](../ERD.png)
+
+
+
 
 ### 3. Detaljna tabela Stakeholder Mape
 *Ova tabela prikaazuje korisnike sistema, njihove uloge i očekivanja.*
@@ -50,7 +72,7 @@ U softverskom inžinjerstvu, "stakeholder" nije samo krajnji korisnik nego sve o
 *Kratak opis tabele i MVP* <br>
         Ako laborant nema mogućnost unosa podataka/rezultata u sistem, sistem je beskoristan jer on puni aplikaciju podacima i zato je MVP Visok. Šef laboratorije mora imati detaljan uvid u termine (da ne bi dolazilo do preklapanja) i da sve u laboratoriji bude kako treba. Služba za servis mora biti dostupna 24/7 ako npr. dođe do pucanja veze između apilkacije/sistema i baze podataka sistem prestaje raditi. IT Administrator u MVP-u je jako visok jer je potrebna zaštita podataka i bez toga ne smijemo čuvati stvarne rezultate pretrage.
 
-
+<br>
 
 
 
@@ -75,6 +97,7 @@ U softverskom inžinjerstvu, "stakeholder" nije samo krajnji korisnik nego sve o
 1. Ian Sommerville - *Software Engineering, 9th Edition*
         Dostupno na: - [Internet](https://engineering.futureuniversity.com/BOOKS%20FOR%20IT/Software-Engineering-9th-Edition-by-Ian-Sommerville.pdf)
 2. Darren Alderman - *What is an MVP?*  - Dostupno na: [YouTube](https://www.youtube.com/watch?v=H6bHuZ7gjv0)
+3. Korišten online alat Canva za izradu ERD - [Canva](https://www.canva.com/)
 
 
 
