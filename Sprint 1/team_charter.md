@@ -12,3 +12,11 @@ Naziv tima: Grupa 3
 | Iman Salanović                            | 249-ST       | isalanovic1@etf.unsa.ba |
 | Harun Zukanovic                           | 239-ST       | hzukanovic1@etf.unsa.ba |
 | [Kemal Mešić](mailto:kmesic2@etf.unsa.ba) | 236- ST      | kmesic2@etf.unsa.ba     |
+
+Pravila u slučaju neispunjenja obaveza
+1. Kako se član upozorava?
+	U slučaju neispunjenja obaveza, član se upozorava porukom u zajedničkoj grupi na aplikaciji Whatsapp. Od njega se traži da u što kraćem roku izvrši svoje obaveze.
+2. Kada se problem prijavljuje nastavno osoblje?
+  Problem se prijavljuje nastavnom osoblju onda kada član odbija da pravovremeno iskomunicira nemogućnost izvršavanja svojih obaveza sa ostatkom tima ili ih direktno odbija izvršiti.
+3. Kako se evidentiraju problemi u timu?
+  Problemi u timu se evidentiraju putem zajedničke grupe na aplikaciji Whatsapp.
