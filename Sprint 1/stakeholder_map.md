@@ -51,7 +51,7 @@ Da bih nnapravio uvid u Stakeholdere, podijelio sam ih u 3 grupe:
 #### 2.2 Prikaz Entity Relationship Diagrama
 
 *Ovaj dijagram prikazuje logičku povezanost između korisnika i ključnih kategorija sistema / aplikacije [3].*
-![Entity Relationship Diagram](../ERD.png)
+![Entity Relationship Diagram](img/ERD.png)
 
 
 
