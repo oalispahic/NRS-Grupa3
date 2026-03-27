@@ -13,6 +13,12 @@ Naziv tima: Grupa 3
 | Harun Zukanovic                           | 239-ST       | hzukanovic1@etf.unsa.ba |
 | [Kemal Mešić](mailto:kmesic2@etf.unsa.ba) | 236- ST      | kmesic2@etf.unsa.ba     |
 
+Način komunikacije:
+
+Primarni kanal komunikacije: Aplikacija whatsapp
+Očekivano vrijeme odgovora: Kroz 1 h
+Način zakazivanja sastanka: po dogovoru
+
 Pravila u slučaju neispunjenja obaveza
 1. Kako se član upozorava?
 	U slučaju neispunjenja obaveza, član se upozorava porukom u zajedničkoj grupi na aplikaciji Whatsapp. Od njega se traži da u što kraćem roku izvrši svoje obaveze.
