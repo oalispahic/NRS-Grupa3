@@ -133,4 +133,39 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <th>To Do</th>
 </tr>
 
+<tr>
+<th>17</th>
+<th align="left">Kao administrator želim generisati izvještaje o korištenju opreme</th>
+<th>Low</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>18</th>
+<th align="left">Kao administrator želim voditi evidenciju o održavanju opreme</th>
+<th>Low</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>19</th>
+<th align="left">Kao administrator želim dodavati slike i specifikacije opreme</th>
+<th>Low</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>20</th>
+<th align="left">Kao korisnik želim ocjenjivati opremu nakon korištenja</th>
+<th>Low</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>21</th>
+<th align="left">Kao administrator želim izvoz podataka (PDF/Excel)</th>
+<th>Low</th>
+<th>To Do</th>
+</tr>
+
 </table>
