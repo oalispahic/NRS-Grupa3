@@ -29,7 +29,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 </tr>
 
 <tr>
-<td>1</td>
+<th>1</th>
 <td align ="left">Kao korisnik želim pregledati svu dostupnu opremu</td>
 <th>High</th>
 <th>To Do</th>
