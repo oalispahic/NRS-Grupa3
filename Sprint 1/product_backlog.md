@@ -84,4 +84,53 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <th>To Do</th>
 </tr>
 
+<tr>
+<th>10</th>
+<th align="left">Kao korisnik želim pretraživati opremu po nazivu</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>11</th>
+<th align="left">Kao korisnik želim filtrirati opremu po kategoriji ili tipu</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>12</th>
+<th align="left">Kao administrator želim slati obavijesti o rezervacijama</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>13</th>
+<th align="left">Kao administrator želim vidjeti sve rezervacije u sistemu</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>14</th>
+<th align="left">Kao korisnik želim otkazati rezervaciju</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>15</th>
+<th align="left">Kao korisnik želim izmijeniti postojeću rezervaciju</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
+<tr>
+<th>16</th>
+<th align="left">Kao administrator želim vidjeti ko trenutno koristi opremu</th>
+<th>Medium</th>
+<th>To Do</th>
+</tr>
+
 </table>
