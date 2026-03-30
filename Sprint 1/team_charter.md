@@ -28,10 +28,13 @@ Radna pravila tima:
 3. Kako se dokumentuju odluke: Odluke se zapisuju tokom sastanaka i čuvaju na zajedničkom mjestu kako bi ih svi članovi tima mogli kasnije pregledati.
 
 4. Kako se rješavaju neslaganja: Neslaganja se riješavaju glasanjem odnosno preglasavanjem.
-5. Backlog i zahtjevi
-6. Arhitektura i tehničke odluke
-7. Testiranje i kvalitet
-8. Dokumentacija i evidencije
+
+Početne odgovornosti:
+1. Backlog i zahtjevi: Omar Alispahić i Elma Dedić <br>
+2. Arhitektura i tehničke odluke: Amina Rovčanin i Suljo Ruvić <br>
+3. Testiranje i kvalitet: Kemal Mešić i Harun Zukanović<br>
+4. Dokumentacija i evidencije: Bilal Ozdić, Ilda Avdić, Iman Salanović <br>
+5. Koordinacija sprinta: Zajednički, nemamo vođu tima<br>
 
 Pravila u slučaju neispunjenja obaveza
 1. Kako se član upozorava? <br>
