@@ -3,7 +3,7 @@
 
 <div align > 
 
-## Sistem za upravljanje laboratorijskom opremom
+## Sistem za upravljanje medicinskom laboratorijskom opremom
 
 </div>
 
