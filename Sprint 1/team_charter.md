@@ -27,7 +27,7 @@ Radna pravila tima:
 
 3. Kako se dokumentuju odluke: Odluke se zapisuju tokom sastanaka i čuvaju na zajedničkom mjestu kako bi ih svi članovi tima mogli kasnije pregledati.
 
-4. Kako se rješavaju neslaganja:
+4. Kako se rješavaju neslaganja: Neslaganja se riješavaju glasanjem odnosno preglasavanjem.
 
 Pravila u slučaju neispunjenja obaveza
 1. Kako se član upozorava? <br>
