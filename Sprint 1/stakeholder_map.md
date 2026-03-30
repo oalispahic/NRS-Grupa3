@@ -14,7 +14,7 @@ U softverskom inžinjerstvu, "stakeholder" nije samo krajnji korisnik nego sve o
 *Mapiranje nam pomaže da otkrijemo potrebe koje nisu očigledne na prvi pogled.*
 
 1. Identifikacije skrivenih funkcionalnih zahtjeva <br>
-        Pomaže pri shvatanju administratorskih potreba, npr. adminu treba izvještaj o potršnji a ne samo dumge za rezervaciju.
+        Pomaže pri shvatanju administratorskih potreba, npr. adminu treba izvještaj o potrošnji a ne samo dugme za rezervaciju.
 
         Primjer: Krajnji korisnik (istraživač) vidi samo potrebu za akcijom "Rezervacije" dok administrator to gleda iz drugog ugla i vidi potrebu za npr. automatskim izveštajem o potrošnji materijala.
 
