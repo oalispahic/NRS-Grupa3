@@ -1,0 +1,1 @@
+neka podjela u sprintovima i sprint goal
