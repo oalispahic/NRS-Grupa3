@@ -1,100 +1,104 @@
 # User Stories
 
-Ovdje se nalaze objašnjenja funkcionalnosti softvera napisana iz perspektive krajnjeg korisnika. User Stories pomažu tako što ne opisujemo samo kako radi aplikacija, nego govore o tome ko koristi funkciju i koju će vrijednost postići u svakodnevnom radu. Fokus nije samo na kodu, nego se daje značaj stvarnim potrebama korisnika.
+Ovdje se nalaze objašnjenja funkcionalnosti softvera napisana iz perspektive krajnjeg korisnika. User Stories pomažu da se funkcionalnosti ne posmatraju samo kroz to kako aplikacija radi, nego i kroz to ko koristi određenu funkciju i koju vrijednost ona donosi u svakodnevnom radu.
 
-## Story ID: Lab - 01
+## ID storyja
+Lab-01
 
-### Naziv Storyja:
+## Naziv storyja
+Rezervacija laboratorijske opreme
 
-Prijava kvara na analizatoru krvi
+## Opis
+Kao laboratorijsko osoblje, želim rezervisati opremu za određeni termin, kako bih mogla na vrijeme organizovati rad i izbjeći preklapanje korištenja opreme.
 
-### Opis
+## Poslovna vrijednost
+Ovaj story je važan zato što omogućava bolju organizaciju rada u laboratoriji. Kada korisnici mogu unaprijed rezervisati opremu, smanjuje se mogućnost nesporazuma, čekanja i preklapanja termina.
 
-Recimo imamo kvar unutar aplikacije gdje pri analizi nečije krvi dođe do neke greške. Laborant je dužan da pošalje digitalni izvještaj kvara koji se desio. Da ga popuni detaljno da ne dođe do zabuna niti dvoumica. Pri tome da spriječi korištenje neispravnog uređaja da ne bi došlo do daljnjeg širenja problema.
+## Prioritet
+Visok
 
-### Poslovna Vrijednost
-Vrijednost jeste upravo što pri ovakvoj komunikaciji dostižemo jedan korak više što se tiče sporazuma između laboranta i tehničara. Da koristimo ručno, usmeno ili da šaljemo izvještaj mailom, bio bi dosta sporiji proces i čak bi došlo do gubitka informacija, velikih zastoja u analizama i tako bi lanac problema nastao ukoliko ne bismo uveli ovaj vid izvještavanja.
+## Pretpostavke i otvorena pitanja
+Pretpostavka: Svaka stavka opreme ima evidentiran status i dostupne termine.
+Pretpostavka: Korisnik mora biti prijavljen u sistem da bi mogao izvršiti rezervaciju.
+Otvoreno pitanje: Da li rezervacija mora biti automatski odobrena ili je potrebno dodatno odobrenje?
+Otvoreno pitanje: Može li jedan korisnik imati više aktivnih rezervacija u isto vrijeme?
 
-### Prioritet
+## Veze sa drugim storyjima ili zavisnostima
+Zavisi od: pregleda opreme i prikaza njenog statusa
+Povezano sa: pregledom zauzeća opreme i odobravanjem rezervacija
 
-Visok (Must-Have). Smatramo da je ovo osnovna funkcija za ovu aplikaciju. Održavanje opreme je na top prioritetu!
+## ID storyja
+Lab-02
 
-### Pretpostavke i otvorena pitanja
-Pretpostavljamo da korisnici (laborant i tehničar) imaju aktivno korisničko ime i lozinku za pristup.
+## Naziv storyja
+Pregled statusa laboratorijske opreme
 
-Otvoreno pitanje: Mora li laborant pri slanju izvještaja da popuni polje za opis kvara ili može da ga ostavi prazno?
+## Opis
+Kao laboratorijsko osoblje, želim vidjeti status laboratorijske opreme, kako bih znala koja je oprema dostupna za korištenje a koja nije.
 
-Otvoreno pitanje: Da li postoji opcija da korisnik može da ima opciju pri kreiranju izvještaja da odredi ozbiljnost kvara (hitan / nije hitan)?
+## Poslovna vrijednost
+Ovaj story je važan jer korisnicima daje brz i jasan pregled nad opremom. Na taj način se lakše planira rad, izbjegavaju se zabune i smanjuje mogućnost da neko pokuša koristiti opremu koja je već zauzeta ili van funkcije.
 
-### Veze sa drugim storyjima i zavisnostima
-Zavisi od: Registracije korisnika (Login sistem) i Baze podataka opreme (Inventar).
+## Prioritet
+Visok
 
-Povezano sa: Storyjem za pregled i obradu kvara od strane tehničara
+## Pretpostavke i otvorena pitanja
+Pretpostavka: Svaka stavka opreme ima evidentiran trenutni status.
+Pretpostavka: Status opreme se redovno ažurira u sistemu.
+Otvoreno pitanje: Ko sve ima pravo mijenjati status opreme?
+Otvoreno pitanje: Koji statusi će biti dostupni u sistemu, npr. dostupna, zauzeta, u kvaru, van upotrebe?
 
-
-
-## Story ID Lab: Lab - 02
-
-### Naziv Storyja:
-
-Pregledanje i prihvatanje kvara od strane Tehničara
-
-### Opis
-
-Tehničar dobije prijavu kvara na svom računaru. On treba da odreaguje tako što će se pojaviti u toj laboratoriji i brzo odgovoriti na izvještaj tako što će označiti da je popravka u toku. Pri tome treba da ukloni kvar ako je moguće. Ako nije moguće, treba da ostavi nalog u statusu "u toku popravke". Pri okončanju popravke, kada je uređaj stabilan, na izvještaju treba da označi da je problem riješen.Tehničar u aplikaciji mijenja status kvara iz Prijavljeno u U toku, a po završetku u Zatvoreno/Riješeno. 
-
-### Poslovna Vrijednost
-
-Ovim procesom stvara se bolja i vještija komunikacija između laboranta i tehničara (kao što je navedeno u Lab - 01). Tehničari dobijaju bolji alat i efikasniji način rada na terenu, što ubrzava vraćanje opreme u funkciju.
-
-### Prioritet
-
-Visok (Must-Have): Također osnovna funkcija unutar ove aplikacije kako bismo što efikasnije riješili problem!
-
-### Pretpostavke i otvorena pitanja
-
-Pretpostavka: Tehničar ima pristup listi svih otvorenih prijava kvara.
-
-Otvoreno pitanje: Da li tehničar treba da unese opis šta je tačno popravio prije nego što zatvori nalog?
-
-Otvoreno pitanje: Da li sistem treba automatski da obavijesti šefa laboratorije kada je uređaj ponovo spreman za rad?
-
-Otvoreno pitanje: Da li sistem treba tražiti od tehničara da unese serijski broj zamjenskog dijela ako je nešto promijenjeno?
-
-### Veze sa drugim storyjima i zavisnostima
-
-Direktno zavisi od: Lab - 01 (Prijava kvara na analizatoru krvi)
-
-Povezano sa: Lab - 03 (Preventivni servis i održavanje)  jer popravka kvara može uticati na planiranje budućih redovnih servisa
+## Veze sa drugim storyjima ili zavisnostima
+Zavisi od: evidencije laboratorijske opreme
+Povezano sa: rezervacijom opreme i pregledom zauzeća
 
 
+## ID storyja
+Lab-03
 
-## Story ID Lab: Lab - 03
+## Naziv storyja
+Pregled zauzeća opreme
 
-### Naziv Storyja:
+## Opis
+Kao laboratorijsko osoblje, želim pregledati zauzeće opreme po terminima, kako bih mogla bolje planirati korištenje laboratorijskih resursa.
 
-Preventivni servis i održavanje
+## Poslovna vrijednost
+Ovaj story je važan jer omogućava korisnicima da unaprijed vide kada je određena oprema slobodna, a kada zauzeta. Tako se lakše organizuje rad, izbjegavaju se preklapanja i smanjuju nepotrebni zastoji.
 
-### Opis
+## Prioritet
+Visok
 
-Aplikacija mora da laborantima i tehničarima (korisnicima aplikacije) prati i najavljuje redovne servise za svaki analizator. Pretpostavimo da je došlo do kvara; tehničari i laboranti dobiju automatsko obavještenje (recimo, imaju pristup statusnoj listi svih analizatora) i pri tome stvaraju plan da urade servis unaprijed kako ne bi došlo do zastoja u laboratoriji.
+## Pretpostavke i otvorena pitanja
+Pretpostavka: Sistem sadrži tačne i ažurne podatke o svim aktivnim rezervacijama opreme.
+Otvoreno pitanje: Da li se zauzeće opreme prikazuje samo kao lista termina ili se prikazuje i kroz kalendarski pregled?
+Otvoreno pitanje: Da li korisnici mogu vidjeti ko je rezervisao opremu ili samo da je termin zauzet?
 
-### Poslovna Vrijednost
-
-Ovim osiguravamo neprekidan rad unutar laboratorije. Smatramo da je bolji preventivni servis nego da dođe do velikog kvara i zastoja, što je ključno u medicini. Time laboratorija ispunjava zakonske obaveze. Najbolji primjer važnosti ove prevencije zastoja jeste COVID-19, virus koji je pogodio cijeli svijet i gdje svaki zastoj može mnogo koštati.I u pitanju je život ili smrt.
-
-### Prioritet
-
-Visok (Must-Have): U ozbiljnim laboratorijama održavanje nije opcija nego obaveza da bi nalazi bili validni!
-
-### Pretpostavke i otvorena pitanja
-
-Pretpostavka: Svaki uređaj u bazi ima definisan datum sljedećeg servisa.
-
-Otvoreno pitanje: Da li sistem treba da blokira rad na aparatu ako je prošlo više od 7 dana od planiranog servisa, a on nije obavljen?
+## Veze sa drugim storyjima ili zavisnostima
+Zavisi od: rezervacije opreme
+Povezano sa: pregledom statusa opreme
 
 
-### Veze sa drugim storyjima i zavisnostima
+## ID storyja
+Lab-04
 
-Direktno zavisi od: Registra opreme (Inventar).
-Povezano sa: Lab - 01 (Prijava kvara) – jer ako se preventivni servis uradi na vrijeme, smanjuje se broj prijava kvarova.
+## Naziv storyja
+Evidentiranje potrošnje repromaterijala
+
+## Opis
+Kao laboratorijsko osoblje, želim evidentirati potrošnju repromaterijala nakon korištenja opreme, kako bih imala tačan pregled nad stanjem zaliha.
+
+## Poslovna vrijednost
+Ovaj story je važan jer omogućava bolju kontrolu nad repromaterijalom koji se koristi u radu sa laboratorijskom opremom. Na taj način se lakše prati stanje zaliha, izbjegava se nestašica materijala i olakšava planiranje nabavke.
+
+## Prioritet
+Srednji
+
+## Pretpostavke i otvorena pitanja
+Pretpostavka: Repromaterijal je unaprijed evidentiran u sistemu.
+Pretpostavka: Korisnik može unijeti količinu potrošenog materijala.
+Otvoreno pitanje: Da li se potrošnja unosi ručno ili se automatski povezuje sa korištenjem određene opreme?
+Otvoreno pitanje: Da li sistem treba upozoriti kada količina nekog materijala padne ispod minimalne granice?
+
+## Veze sa drugim storyjima ili zavisnostima
+Zavisi od: evidencije repromaterijala u sistemu
+Povezano sa: pregledom laboratorijske opreme i pretragom podataka
