@@ -102,3 +102,29 @@ Srednji
 ## Veze sa drugim storyjima ili zavisnostima
 - Zavisi od: evidencije repromaterijala u sistemu
 - Povezano sa: pregledom laboratorijske opreme i pretragom podataka
+
+
+## ID storyja
+Lab-05
+
+## Naziv storyja
+Pretraga laboratorijske opreme
+
+## Opis
+Kao laboratorijsko osoblje, želim pretražiti laboratorijsku opremu po nazivu ili kategoriji, kako bih brže pronašli potrebnu opremu.
+
+## Poslovna vrijednost
+Ovaj story je važan jer omogućava korisnicima da brzo pronađu opremu bez ručnog pregleda cijele liste. Na taj način se štedi vrijeme i olakšava organizacija rada u laboratoriji.
+
+## Prioritet
+Srednji
+
+## Pretpostavke i otvorena pitanja
+- Pretpostavka: Oprema je evidentirana u sistemu sa osnovnim podacima
+- Pretpostavka: Sistem omogućava unos ključnih riječi za pretragu
+- Po kojim kriterijima je moguće pretraživati (naziv, kategorija, status)?
+- Da li pretraga treba biti filtrirana ili samo osnovna?
+
+## Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: evidencije laboratorijske opreme
+- Povezano sa: pregledom statusa opreme i rezervacijom opreme
