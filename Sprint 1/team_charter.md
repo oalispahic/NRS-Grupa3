@@ -21,13 +21,15 @@ Sastanci se zakazuju po prethodnom dogovoru, u terminu koji odgovara svima ili v
 
 Radna pravila tima:
 
-1. Kada i kako tim radi zajedno: Tim radi jednom sedmično, u prvom slobodnom terminu koji odgovara svim članovima, a sastanci se održavaju putem aplikacije Google Meet.
-
-2. Kako se zadaci dogovaraju i prate: Zadaci se dogovaraju zajednički, uz dogovor o rokovima i obavezama. Dok, napredak zadataka se prati kroz kontinuiranu komunikaciju izmedju članova grupe i redovno izvještavanju o realizaciji zadatka.
-
-3. Kako se dokumentuju odluke: Odluke se zapisuju tokom sastanaka i čuvaju na zajedničkom mjestu kako bi ih svi članovi tima mogli kasnije pregledati.
-
-4. Kako se rješavaju neslaganja: Neslaganja se riješavaju glasanjem odnosno preglasavanjem.
+1. Kada i kako tim radi zajedno
+Tim zajednički radi jednom sedmično, i to u prvom slobodnom terminu koji odgovara svim članovima. Redovni sastanci se održavaju putem platforme Google Meet, što omogućava jednostavno okupljanje svih članova bez obzira na fizičku lokaciju. Tokom sastanaka članovi analiziraju do tada urađene aktivnosti, usklađuju naredne korake i raspoređuju nove zadatke. Po potrebi, dodatni sastanci se mogu organizovati i van redovnog termina ukoliko projekat to zahtijeva.
+2. Kako se zadaci dogovaraju i prate
+Zadaci se definišu i raspoređuju zajedničkim dogovorom svih članova tima. Prilikom raspodjele zadataka vodi se računa o sposobnostima, interesima i prethodnom iskustvu svakog člana, kako bi rad bio što efikasniji i kvalitetniji. Također, uz svaki zadatak se dogovaraju okvirni rokovi i očekivanja u vezi s njegovom realizacijom.
+Napredak na zadacima prati se kroz kontinuiranu komunikaciju u grupi, međusobno informisanje o stanju aktivnosti, kao i redovno izvještavanje na timskim sastancima. Na taj način svi članovi imaju uvid u tok rada i mogu pravovremeno reagovati ukoliko dođe do zastoja ili potrebe za dodatnom pomoći.
+3. Kako se dokumentuju odluke
+Sve važnije odluke koje tim donese tokom sastanaka ili u procesu rada se zapisuju i čuvaju na zajedničkom mjestu, dostupnom svim članovima tima. Time se osigurava transparentnost rada i mogućnost da se svaki član naknadno podsjeti na ranije dogovorene zaključke, obaveze i rokove. Dokumentovanje odluka doprinosi boljoj organizaciji, lakšem praćenju napretka i smanjenju mogućnosti nesporazuma.
+4. Kako se rješavaju neslaganja
+U slučaju neslaganja među članovima tima, problem se nastoji riješiti prvenstveno razgovorom i razmjenom argumenata, kako bi se došlo do rješenja koje je prihvatljivo za sve. Ukoliko se zajednički stav ne može postići na taj način, konačna odluka se donosi glasanjem, odnosno preglasavanjem većinom glasova. Ovakav pristup omogućava da se nesuglasice riješe na demokratski i pravičan način, uz očuvanje dobrih odnosa unutar tima.
 
 Početne odgovornosti:
 1. Backlog i zahtjevi: Omar Alispahić i Elma Dedić <br>
