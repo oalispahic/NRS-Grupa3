@@ -13,11 +13,10 @@ Naziv tima: Grupa 3
 | Harun Zukanovic                           | 239-ST       | hzukanovic1@etf.unsa.ba |
 | [Kemal Mešić](https://github.com/mesicc)  | 236- ST      | kmesic2@etf.unsa.ba     |
 
-Način komunikacije:
-
-Primarni kanal komunikacije: Aplikacija whatsapp <br> 
-Očekivano vrijeme odgovora: Kroz 1 h <br>
-Način zakazivanja sastanka: po dogovoru <br>
+Način komunikacije
+Primarni kanal komunikacije unutar tima je aplikacija WhatsApp, putem koje članovi svakodnevno razmjenjuju informacije, dogovaraju aktivnosti i prate napredak na zadacima. Ovaj kanal je odabran zbog svoje pristupačnosti i mogućnosti brze i jednostavne komunikacije među svim članovima tima.
+Očekivano vrijeme odgovora na poruke i upite je u roku od jednog sata, osim u situacijama kada član zbog objektivnih razloga nije u mogućnosti odgovoriti u tom periodu. Na ovaj način tim nastoji održati efikasnu i kontinuiranu komunikaciju, što je posebno važno u situacijama kada je potrebno brzo reagovati ili donijeti zajedničku odluku.
+Sastanci se zakazuju po prethodnom dogovoru, u terminu koji odgovara svima ili većini članova tima. Pri tome se vodi računa o studentskim obavezama, rasporedu nastave i drugim odgovornostima članova grupe.
 
 Radna pravila tima:
 
