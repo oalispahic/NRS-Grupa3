@@ -32,11 +32,18 @@ Sve važnije odluke koje tim donese tokom sastanaka ili u procesu rada se zapisu
 U slučaju neslaganja među članovima tima, problem se nastoji riješiti prvenstveno razgovorom i razmjenom argumenata, kako bi se došlo do rješenja koje je prihvatljivo za sve. Ukoliko se zajednički stav ne može postići na taj način, konačna odluka se donosi glasanjem, odnosno preglasavanjem većinom glasova. Ovakav pristup omogućava da se nesuglasice riješe na demokratski i pravičan način, uz očuvanje dobrih odnosa unutar tima.
 
 Početne odgovornosti:
-1. Backlog i zahtjevi: Omar Alispahić i Elma Dedić <br>
-2. Arhitektura i tehničke odluke: Amina Rovčanin i Suljo Ruvić <br>
-3. Testiranje i kvalitet: Kemal Mešić i Harun Zukanović<br>
-4. Dokumentacija i evidencije: Bilal Ozdić, Ilda Avdić, Iman Salanović <br>
-5. Koordinacija sprinta: Zajednički, nemamo vođu tima<br>
+Radi bolje organizacije rada, članovi tima su na početku projekta rasporedili odgovornosti po oblastima:
+Backlog i zahtjevi: Omar Alispahić i Elma Dedić
+ Ovi članovi su zaduženi za evidentiranje zahtjeva, organizaciju backlog stavki i praćenje prioriteta unutar projekta.
+Arhitektura i tehničke odluke: Amina Rovčanin i Suljo Ruvić
+ Njihova odgovornost je da analiziraju tehničke aspekte projekta, predlažu odgovarajuća rješenja i učestvuju u donošenju odluka vezanih za arhitekturu sistema.
+Testiranje i kvalitet: Kemal Mešić i Harun Zukanović
+ Ovi članovi prate kvalitet implementacije, učestvuju u testiranju funkcionalnosti i nastoje osigurati da konačno rješenje bude stabilno i pouzdano.
+Dokumentacija i evidencije: Bilal Ozdić, Ilda Avdić i Iman Salanović
+ Njihov zadatak je vođenje i ažuriranje projektne dokumentacije, kao i evidentiranje važnih informacija i odluka koje nastaju tokom rada.
+Koordinacija sprinta: zajednički
+ Tim nema formalno imenovanog vođu, već se koordinacija sprinta obavlja zajednički, uz ravnopravno učešće svih članova. Na ovaj način se podstiče timski rad, odgovornost svih članova i ravnomjerna uključenost u proces organizacije.
+
 
 Pravila u slučaju neispunjenja obaveza
 1. Kako se član upozorava? <br>
