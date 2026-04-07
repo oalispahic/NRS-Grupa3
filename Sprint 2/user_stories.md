@@ -4,7 +4,9 @@ Ovdje se nalaze objašnjenja funkcionalnosti softvera napisana iz perspektive kr
 
 ## Sprint 6 goal
 Omogućiti osnovni pristup sistemu, pregled laboratorijske opreme i rezervaciju opreme, uz početno upravljanje opremom od strane administratora.
+
 ---
+
 ### ID storyja
 US-1 
 
