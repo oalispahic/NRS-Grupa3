@@ -13,9 +13,9 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 
 ## Tipovi korisnika
 
-- Korisnik (studenti)
+- Korisnik (laborant)
   
-- Administrator (nadležno osoblje za laboratorij, profesor, laborant)
+- Administrator (šef laboratorije, IT administrator)
 
 ## Product Backlog 
 
