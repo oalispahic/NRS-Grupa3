@@ -53,10 +53,15 @@ Koordinacija sprinta: zajednički <br>
 
 **Pravila u slučaju neispunjenja obaveza**
 1. Kako se član upozorava?
+   
 U slučaju da neki član ne ispuni svoje obaveze u predviđenom roku, prvo se upozorava putem poruke u zajedničkoj WhatsApp grupi. U poruci se jasno navodi koja obaveza nije izvršena i od člana se traži da u što kraćem roku dostavi pojašnjenje ili završi preuzeti zadatak. Cilj upozorenja nije stvaranje pritiska, nego pravovremeno reagovanje kako bi tim mogao nastaviti rad bez većih zastoja.
+
 2. Kada se problem prijavljuje nastavnom osoblju?
+   
 Problem se prijavljuje nastavnom osoblju u situacijama kada član ne komunicira pravovremeno sa ostatkom tima o razlozima neizvršavanja svojih obaveza, kada duže vrijeme ignoriše dogovore i poruke, ili kada direktno odbija izvršiti preuzete zadatke. Prije obraćanja nastavnom osoblju, tim će pokušati riješiti problem internim dogovorom i upozorenjem, ali ukoliko to ne urodi rezultatom, problem će biti formalno prijavljen.
+
 3. Kako se evidentiraju problemi u timu?
+
 Svi problemi koji se pojave tokom rada tima evidentiraju se putem zajedničke komunikacije u WhatsApp grupi, gdje ostaje zapisan trag o nastalim poteškoćama, upozorenjima i pokušajima njihovog rješavanja. Po potrebi, dodatne bilješke o problemima mogu se sačuvati i u zajedničkoj dokumentaciji tima, kako bi se kasnije mogao napraviti pregled situacije i analizirati način na koji je problem riješen.
 
 
