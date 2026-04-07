@@ -37,12 +37,16 @@ Radi bolje organizacije rada, članovi tima su na početku projekta rasporedili 
 
 Backlog i zahtjevi: Omar Alispahić i Elma Dedić <br>
  Ovi članovi su zaduženi za evidentiranje zahtjeva, organizaciju backlog stavki i praćenje prioriteta unutar projekta. <br>
+
 Arhitektura i tehničke odluke: Amina Rovčanin i Suljo Ruvić <br>
  Njihova odgovornost je da analiziraju tehničke aspekte projekta, predlažu odgovarajuća rješenja i učestvuju u donošenju odluka vezanih za arhitekturu sistema.<br>
+
 Testiranje i kvalitet: Kemal Mešić i Harun Zukanović <br>
  Ovi članovi prate kvalitet implementacije, učestvuju u testiranju funkcionalnosti i nastoje osigurati da konačno rješenje bude stabilno i pouzdano.<br>
+
 Dokumentacija i evidencije: Bilal Ozdić, Ilda Avdić i Iman Salanović <br>
  Njihov zadatak je vođenje i ažuriranje projektne dokumentacije, kao i evidentiranje važnih informacija i odluka koje nastaju tokom rada.<br>
+
 Koordinacija sprinta: zajednički <br>
  Tim nema formalno imenovanog vođu, već se koordinacija sprinta obavlja zajednički, uz ravnopravno učešće svih članova. Na ovaj način se podstiče timski rad, odgovornost svih članova i ravnomjerna uključenost u proces organizacije.
 
