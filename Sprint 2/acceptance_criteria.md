@@ -43,13 +43,13 @@ Kada stanje zalihe padne ispod minimalno definisane granice, tada sistem treba p
 
 ## Lab-05 — Pretraga laboratorijske opreme
 
-Kada korisnik unese puni ili djelimični naziv opreme u polje za pretragu, tada sistem mora prikazati sve stavke koje odgovaraju unesenom pojmu.
-Kada korisnik odabere kategoriju opreme kao kriterij pretrage, tada sistem mora prikazati samo opremu iz odabrane kategorije.
-Kada korisnik koristi više kriterija pretrage istovremeno, tada sistem mora prikazati samo rezultate koji zadovoljavaju sve odabrane kriterije.
-Kada za uneseni pojam ili odabrane kriterije ne postoji nijedan rezultat, tada korisnik treba dobiti poruku da nema pronađene opreme.
-Kada korisnik ostavi polje za pretragu prazno, tada sistem treba prikazati kompletnu listu evidentirane opreme.
-Sistem ne smije prikazivati opremu koja ne odgovara zadanim kriterijima pretrage.
-Sistem mora omogućiti da rezultat pretrage sadrži najmanje naziv opreme, kategoriju i trenutni status opreme.
-Kada korisnik izvrši pretragu, rezultat treba biti prikazan jasno i pregledno kako bi korisnik mogao nastaviti sa pregledom ili rezervacijom opreme.
+-Kada korisnik unese puni ili djelimični naziv opreme u polje za pretragu, tada sistem mora prikazati sve stavke koje odgovaraju unesenom pojmu.
+-Kada korisnik odabere kategoriju opreme kao kriterij pretrage, tada sistem mora prikazati samo opremu iz odabrane kategorije.
+-Kada korisnik koristi više kriterija pretrage istovremeno, tada sistem mora prikazati samo rezultate koji zadovoljavaju sve odabrane kriterije.
+-Kada za uneseni pojam ili odabrane kriterije ne postoji nijedan rezultat, tada korisnik treba dobiti poruku da nema pronađene opreme.
+-Kada korisnik ostavi polje za pretragu prazno, tada sistem treba prikazati kompletnu listu evidentirane opreme.
+-Sistem ne smije prikazivati opremu koja ne odgovara zadanim kriterijima pretrage.
+-Sistem mora omogućiti da rezultat pretrage sadrži najmanje naziv opreme, kategoriju i trenutni status opreme.
+-Kada korisnik izvrši pretragu, rezultat treba biti prikazan jasno i pregledno kako bi korisnik mogao nastaviti sa pregledom ili rezervacijom opreme.
 
 
