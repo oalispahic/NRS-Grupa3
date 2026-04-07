@@ -20,3 +20,25 @@
 - Kada u sistemu ne postoji nijedna evidentirana stavka opreme, tada korisnik treba dobiti poruku da oprema trenutno nije dostupna u evidenciji.
 - Sistem ne smije prikazivati nevažeće ili nedefinisane statuse opreme.
 - Sistem mora omogućiti brz i jasan pregled statusa bez potrebe za otvaranjem detalja svake pojedinačne stavke.
+
+##  Lab-03 — Pregled zauzeća opreme
+Kada korisnik otvori pregled zauzeća za određenu opremu, tada sistem mora prikazati evidentirane rezervacije za tu opremu po terminima.
+Kada za opremu postoje budući termini rezervacije, tada sistem mora prikazati datum, vrijeme početka i vrijeme završetka svakog zauzetog termina.
+Kada za izabranu opremu nema aktivnih ili budućih rezervacija, tada korisnik treba dobiti poruku da nema evidentiranog zauzeća.
+Kada korisnik pregleda zauzeće opreme, tada sistem mora omogućiti jasan uvid u slobodne i zauzete termine.
+Kada korisnik odabere određeni datum ili vremenski period, ako postoje rezervacije u tom periodu, tada sistem mora prikazati samo zauzeća iz tog perioda.
+Sistem ne smije prikazivati zauzete termine kao slobodne.
+Sistem mora prikazivati zauzeće na osnovu ažurnih i aktivnih rezervacija evidentiranih u sistemu.
+Korisnik treba dobiti dovoljno informacija da može procijeniti da li je željeni termin dostupan za novu rezervaciju.
+
+## Lab-04 — Evidentiranje potrošnje repromaterijala
+Kada je korisnik prijavljen u sistem i repromaterijal postoji u evidenciji, ako unese količinu potrošenog materijala i potvrdi unos, tada sistem mora evidentirati potrošnju.
+Kada je potrošnja uspješno evidentirana, tada sistem mora automatski umanjiti trenutno stanje zalihe za unesenu količinu.
+Kada korisnik unese količinu potrošnje koja je jednaka nuli ili manja od nule, tada sistem ne smije dozvoliti evidentiranje i mora prikazati poruku o grešci.
+Kada korisnik unese količinu veću od trenutno raspoložive količine na zalihi, tada sistem ne smije dozvoliti evidentiranje potrošnje.
+Kada je evidentiranje potrošnje uspješno završeno, korisnik treba dobiti potvrdu sa informacijom o nazivu materijala, unešenoj količini i preostalom stanju zalihe.
+Kada repromaterijal nije evidentiran u sistemu, tada sistem ne smije dozvoliti unos potrošnje za taj materijal.
+Sistem mora omogućiti evidentiranje datuma unosa i korisnika koji je izvršio unos potrošnje.
+Kada stanje zalihe padne ispod minimalno definisane granice, tada sistem treba prikazati upozorenje o niskom stanju zalihe.
+
+
