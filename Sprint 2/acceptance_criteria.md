@@ -109,3 +109,23 @@
 - Kada korisnik očisti polje za pretragu, tada sistem mora prikazati kompletnu listu opreme.
 - Sistem ne smije prikazivati rezultate koji ne odgovaraju unesenom pojmu pretrage.
 
+### US-13 — Filtriranje opreme
+- Kada korisnik odabere kategoriju ili tip opreme kao filter, tada sistem mora prikazati samo opremu koja odgovara odabranom filteru.
+- Kada korisnik primijeni više filtera istovremeno, tada sistem mora prikazati samo opremu koja zadovoljava sve odabrane kriterije.
+- Kada nijedna stavka ne odgovara odabranim filterima, tada sistem treba prikazati poruku da nema rezultata.
+- Kada korisnik ukloni aktivne filtere, tada sistem mora vratiti puni prikaz opreme.
+- Sistem ne smije prikazivati stavke koje ne pripadaju odabranim kategorijama ili tipovima.
+### US-14 — Otkazivanje rezervacija
+- Kada korisnik otvori svoje aktivne rezervacije, tada sistem mora omogućiti otkazivanje rezervacije koja još nije započela.
+- Kada korisnik potvrdi otkazivanje rezervacije, tada sistem mora promijeniti status rezervacije u „otkazana“.
+- Kada rezervacija bude otkazana, tada oslobođeni termin mora ponovo postati dostupan za rezervaciju.
+- Kada korisnik pokuša otkazati rezervaciju koja je već započela ili završena, tada sistem ne smije dozvoliti otkazivanje i mora prikazati odgovarajuću poruku.
+- Sistem treba tražiti potvrdu prije konačnog otkazivanja rezervacije.
+### US-15 — Izmjena rezervacije
+- Kada korisnik otvori svoju postojeću rezervaciju prije početka termina, tada sistem mora omogućiti izmjenu dozvoljenih podataka rezervacije.
+- Kada korisnik izmijeni termin rezervacije, tada sistem mora prije spremanja provjeriti dostupnost novog termina.
+- Kada novi termin nije dostupan, tada sistem ne smije sačuvati izmjene i mora prikazati poruku o konfliktu termina.
+- Kada su izmjene uspješno sačuvane, tada sistem mora ažurirati podatke rezervacije i prikazati potvrdu o uspješnoj izmjeni.
+- Kada korisnik pokuša izmijeniti rezervaciju koja je već započela ili završena, tada sistem ne smije dozvoliti izmjenu.
+
+
