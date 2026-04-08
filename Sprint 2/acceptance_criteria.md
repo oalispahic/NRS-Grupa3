@@ -128,4 +128,84 @@
 - Kada su izmjene uspješno sačuvane, tada sistem mora ažurirati podatke rezervacije i prikazati potvrdu o uspješnoj izmjeni.
 - Kada korisnik pokuša izmijeniti rezervaciju koja je već započela ili završena, tada sistem ne smije dozvoliti izmjenu.
 
+## Sprint 9
+### US-16 — Notifikacije
+- Kada administrator pošalje obavijest vezanu za rezervaciju, tada sistem mora evidentirati i isporučiti obavijest ciljnom korisniku ili ciljnoj grupi korisnika.
+- Kada je obavijest uspješno poslana, tada sistem mora prikazati potvrdu o uspješnom slanju.
+- Kada administrator odabere rezervaciju ili korisnika kao kontekst obavijesti, tada sistem mora povezati obavijest sa odgovarajućim zapisom.
+- Sistem ne smije dozvoliti slanje prazne obavijesti bez sadržaja.
+- Sistem ne smije dozvoliti korisniku bez administratorskih ovlaštenja slanje administrativnih obavijesti.
+### US-17 — Pregled svih rezervacija
+- Kada administrator otvori pregled svih rezervacija, tada sistem mora prikazati sve evidentirane rezervacije u sistemu.
+- Kada se prikaže lista rezervacija, tada sistem mora za svaku rezervaciju prikazati najmanje korisnika, opremu, datum, termin i status.
+-  Kada administrator primijeni filter po korisniku, opremi, statusu ili datumu, tada sistem mora prikazati samo odgovarajuće rezervacije.
+- Kada ne postoji nijedna rezervacija koja odgovara izabranim kriterijima, tada sistem treba prikazati poruku da nema rezultata.
+- Sistem ne smije dozvoliti običnom korisniku pristup prikazu svih rezervacija.
+### US-18 — Trenutno korištenje
+- Kada administrator otvori pregled trenutnog korištenja, tada sistem mora prikazati opremu koja je trenutno u aktivnom terminu korištenja.
+- Kada postoji trenutno aktivno korištenje opreme, tada sistem mora prikazati najmanje naziv opreme, korisnika, vrijeme početka i planirano vrijeme završetka.
+- Kada nijedna oprema nije trenutno u upotrebi, tada sistem treba prikazati poruku da nema aktivnog korištenja.
+- Sistem mora određivati trenutno korištenje na osnovu odobrenih rezervacija i aktuelnog vremena.
+- Sistem ne smije prikazivati završene ili buduće rezervacije kao trenutno korištenje.
+### US-19 — Logovanje aktivnosti
+- Kada korisnik ili administrator izvrši važnu akciju u sistemu, tada sistem mora evidentirati tu aktivnost u historiji aktivnosti.
+- Kada se aktivnost evidentira, tada zapis mora sadržavati najmanje vrstu akcije, korisnika i vrijeme izvršenja.
+- Kada administrator otvori pregled historije aktivnosti, tada sistem mora prikazati evidentirane zapise hronološki ili prema odabranom filteru.
+- Sistem ne smije dozvoliti izmjenu ili brisanje log zapisa običnim korisnicima.
+- Kada ne postoji nijedna evidentirana aktivnost, tada sistem treba prikazati poruku da nema dostupnih zapisa.
+
+## Sprint 10
+### US-20 — Potrošnja repromaterijala
+- Kada administrator unese količinu potrošenog repromaterijala, tada sistem mora evidentirati promjenu i ažurirati trenutno stanje zalihe.
+- Kada je unos potrošnje uspješno sačuvan, tada sistem mora prikazati novo stanje zalihe za taj repromaterijal.
+- Kada administrator pokuša unijeti negativnu vrijednost ili nulu kao potrošnju, tada sistem ne smije dozvoliti spremanje i mora prikazati poruku o grešci.
+- Kada stanje zalihe padne ispod minimalno definisane granice, tada sistem mora prikazati upozorenje o niskom stanju zalihe.
+- Sistem mora evidentirati datum i korisnika koji je izvršio unos potrošnje.
+### US-21 — Pravila korištenja
+- Kada administrator unese pravilo korištenja za opremu, tada sistem mora sačuvati to pravilo i povezati ga sa odgovarajućom opremom ili opštim pravilima.
+- Kada korisnik otvori detalje opreme za koju postoje pravila korištenja, tada sistem mora prikazati ta pravila.
+- Kada administrator izmijeni postojeće pravilo, tada sistem mora prikazati ažuriranu verziju pravila korisnicima.
+- Sistem ne smije dozvoliti spremanje praznog pravila korištenja.
+- Kada su pravila povezana sa određenom opremom, tada sistem ne smije prikazivati pravila druge opreme u njenim detaljima.
+
+## Sprint 11
+### US-22 — Izvještaji
+- Kada administrator odabere generisanje izvještaja o korištenju opreme, tada sistem mora kreirati izvještaj na osnovu postojećih podataka o rezervacijama i korištenju.
+- Kada je izvještaj generisan, tada sistem mora prikazati najmanje period, opremu i relevantne podatke o korištenju.
+- Kada administrator odabere vremenski raspon ili dodatne filtere, tada sistem mora generisati izvještaj samo za zadane kriterije.
+- Kada za zadani period ne postoje podaci, tada sistem treba prikazati poruku da nema podataka za izvještaj.
+- Sistem ne smije dozvoliti običnom korisniku pristup administratorskim izvještajima.
+### US-23 — Održavanje opreme
+- Kada administrator evidentira servis ili kvar opreme, tada sistem mora sačuvati zapis o održavanju za odabranu opremu.
+- Kada se evidentira zapis održavanja, tada sistem mora sačuvati najmanje datum i opis događaja.
+- Kada je oprema označena kao na održavanju, tada sistem mora jasno prikazati da oprema nije dostupna za rezervaciju.
+- Kada administrator pregleda historiju održavanja opreme, tada sistem mora prikazati sve evidentirane zapise za tu opremu.
+- Sistem ne smije dozvoliti evidentiranje održavanja za nepostojeću stavku opreme.
+### US-24 — Dashboard pregled
+- Kada se korisnik uspješno prijavi u sistem, tada sistem mora prikazati početni dashboard.
+- Kada se dashboard učita, tada sistem mora prikazati osnovne informacije relevantne za prijavljenog korisnika.
+- Kada je prijavljeni korisnik administrator, tada dashboard treba prikazati administratorske informacije i prečice u skladu sa ulogom.
+- Kada je prijavljeni korisnik obični korisnik, tada dashboard treba prikazati korisničke informacije i funkcije u skladu sa ulogom.
+- Sistem ne smije prikazivati podatke ili funkcije koje nisu dozvoljene za ulogu prijavljenog korisnika.
+
+## Sprint 12
+### US-25 — Specifikacije opreme
+- Kada administrator otvori uređivanje opreme, tada sistem mora omogućiti unos tehničkih specifikacija i dodavanje slika za odabranu opremu.
+- Kada administrator uspješno sačuva specifikacije ili slike, tada sistem mora prikazati te podatke u detaljima opreme.
+- Kada oprema ima više dodatih specifikacija, tada sistem mora prikazati sve evidentirane tehničke podatke u preglednom formatu.
+- Kada administrator doda sliku opreme, tada sistem mora povezati sliku sa odgovarajućom stavkom opreme.
+- Sistem ne smije dozvoliti korisniku bez administratorskih ovlaštenja dodavanje ili izmjenu specifikacija opreme.
+### US-26 — Ocjenjivanje opreme
+- Kada korisnik završi korištenje opreme kroz prethodno evidentiranu rezervaciju, tada sistem mora omogućiti unos ocjene za tu opremu.
+- Kada korisnik uspješno pošalje ocjenu, tada sistem mora sačuvati ocjenu i povezati je sa odgovarajućom opremom i korisnikom.
+- Sistem ne smije dozvoliti ocjenjivanje opreme koju korisnik nije prethodno koristio.
+- Kada sistem podržava i komentar uz ocjenu, tada sistem mora sačuvati komentar zajedno sa ocjenom.
+- Kada oprema ima evidentirane ocjene, tada sistem treba omogućiti prikaz tih ocjena u skladu sa definisanim ovlaštenjima.
+### US-27 — Export podataka
+- Kada administrator odabere izvoz podataka, tada sistem mora omogućiti generisanje izvoza u podržanom formatu.
+- Kada administrator odabere PDF ili Excel format, tada sistem mora kreirati datoteku u tom formatu sa odabranim podacima.
+- Kada administrator primijeni filtere prije izvoza, tada sistem mora izvesti samo podatke koji odgovaraju zadanim kriterijima.
+- Kada za izvoz ne postoje dostupni podaci, tada sistem treba prikazati poruku da nema podataka za izvoz.
+- Sistem ne smije dozvoliti korisniku bez administratorskih ovlaštenja pristup funkciji izvoza podataka.
+
 
