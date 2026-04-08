@@ -91,4 +91,21 @@
 - Sistem ne smije prikazivati opcije za koje prijavljeni korisnik nema ovlaštenje.
 - Kada korisnička uloga bude promijenjena u sistemu, tada sistem mora primijeniti nova ovlaštenja pri sljedećoj prijavi ili osvježavanju sesije.
 
----
+## Sprint 8
+
+### US-11 — Kalendar zauzeća
+
+- Kada korisnik otvori kalendar zauzeća za određenu opremu, tada sistem mora prikazati zauzete termine za tu opremu.
+- Kada za odabranu opremu postoje rezervacije, tada sistem mora prikazati datum, vrijeme početka i vrijeme završetka svakog zauzetog termina.
+- Kada za odabranu opremu ne postoje rezervacije, tada sistem treba prikazati poruku da nema evidentiranog zauzeća.
+- Sistem ne smije prikazivati zauzete termine kao slobodne u kalendaru.
+- Kada korisnik pregleda kalendar zauzeća, tada mora moći jasno razlikovati slobodne i zauzete termine.
+  
+### US-12 — Pretraga opreme
+
+- Kada korisnik unese puni naziv opreme u polje za pretragu, tada sistem mora prikazati odgovarajuću opremu.
+- Kada korisnik unese djelimičan naziv opreme, tada sistem mora prikazati sve stavke koje odgovaraju unesenom pojmu.
+- Kada za uneseni pojam ne postoji nijedan rezultat, tada sistem treba prikazati poruku da nema pronađene opreme.
+- Kada korisnik očisti polje za pretragu, tada sistem mora prikazati kompletnu listu opreme.
+- Sistem ne smije prikazivati rezultate koji ne odgovaraju unesenom pojmu pretrage.
+
