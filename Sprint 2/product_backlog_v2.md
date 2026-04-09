@@ -271,7 +271,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Low</td>
 <td>3</td>
 <th>To Do</th>
-<td></td>
+<td>Izvještaji</td>
 </tr>
 
 <tr>
@@ -385,7 +385,7 @@ Sprint 11 (analitika i održavanje):
 Sprint 12 (finalizacija i dodatne funkcionalnosti):
 - PB18, PB19, PB20
 
-# Tehnologije za realizaciju projekta
+# Preliminarne tehnologije za realizaciju projekta
 
 Backend
 - Node.js (Express) 
@@ -398,13 +398,8 @@ Frontend
 - Dinamički prikaz podataka (oprema, rezervacije, dashboard)
 
 Baza podataka:
-- PostgreSQL
+- PostgreSQL (relaciona baza pogodna za: opremu, korisnike, rezervacije...)
   
-Relacijska baza pogodna za:
-- opremu
-- korisnike
-- rezervacije
-- repromaterijal
 
 Autentifikacija i sigurnost:
 - JWT (JSON Web Token)
