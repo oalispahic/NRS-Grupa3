@@ -2,7 +2,7 @@
 Ovdje se nalaze objašnjenja funkcionalnosti softvera napisana iz perspektive krajnjeg korisnika. User Stories pomažu da se funkcionalnosti ne posmatraju samo kroz to kako aplikacija radi, nego i kroz to ko koristi određenu funkciju i koju vrijednost ona donosi u svakodnevnom radu.
 
 
-## Sprint 6 goal
+## Sprint 5 goal
 Omogućiti osnovni pristup sistemu, pregled laboratorijske opreme i rezervaciju opreme, uz početno upravljanje opremom od strane administratora.
 
 ---
@@ -170,7 +170,7 @@ Visok
 
 ---
 
-## Sprint 7 goal
+## Sprint 6 goal
 Cilj sprinta 7 je unaprijediti kontrolu nad korištenjem laboratorijske opreme kroz odobravanje rezervacija, upravljanje statusom opreme, razlikovanje korisničkih uloga i sprječavanje konflikta pri rezervisanju termina.
 
 ### ID storyja
@@ -283,7 +283,7 @@ Visok
 ---
 
 
-## Sprint 8 goal
+## Sprint 7 goal
 Omogućiti korisnicima lakše upravljanje rezervacijama i jednostavnije snalaženje u sistemu kroz pregled zauzeća, pretragu, filtriranje, otkazivanje i izmjenu rezervacija.
 
 ### ID storyja
@@ -422,7 +422,7 @@ Srednji
 ---
 
 
-## Sprint 9 goal
+## Sprint 8 goal
 Omogućiti bolji administrativni pregled sistema kroz notifikacije, pregled svih rezervacija, praćenje trenutnog korištenja opreme i logovanje aktivnosti.
 
 ### ID storyja
@@ -536,7 +536,7 @@ Srednji
 ---
 
 
-## Sprint 10 goal
+## Sprint 9 goal
 Omogućiti bolju kontrolu nad laboratorijskom opremom kroz praćenje potrošnje repromaterijala i definisanje pravila korištenja.
 
 ### ID storyja
@@ -595,7 +595,7 @@ Srednji
 ---
 
 
-## Sprint 11 goal
+## Sprint 10 goal
 Omogućiti bolji pregled sistema kroz dashboard, izvještaje i evidenciju održavanja opreme.
 
 ### ID storyja
@@ -683,7 +683,7 @@ Srednji
 ---
 
 
-## Sprint 12 goal
+## Sprint 11 goal
 Omogućiti dodatne funkcionalnosti sistema kroz prikaz specifikacija opreme, ocjenjivanje nakon korištenja i izvoz podataka.
 
 
