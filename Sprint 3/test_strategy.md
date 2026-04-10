@@ -87,31 +87,6 @@ Glavna stvar nam je da sistem bude pouzdan i da u laboratoriji nema haosa. Ne sm
 </table>
 
 
-### Vizuelni prikaz strukture testiranja
-Donja piramida ilustruje našu strategiju raspodjele resursa. Temelj sistema čine **Unit testovi** jer su najbrži za izvršavanje i omogućavaju nam da rano otkrijemo logičke greške u kodu. Kako se krećemo ka vrhu, broj testova se smanjuje, ali njihova kompleksnost raste, završavajući sa **Prihvatnim testovima** koji verifikuju sistem iz perspektive krajnjeg korisnika.
-
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 30px auto; text-align: center;">
-  
-  <div style="background-color: #a5d6a7; border: 2px solid #2e7d32; padding: 15px; margin: 0 auto 5px auto; width: 40%; clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);">
-    <b style="color: #1b5e20; font-size: 0.85rem;">Prihvatno UAT</b><br>
-    <span style="font-size: 0.75rem; color: #1b5e20;">US-16, US-18</span>
-  </div>
-
-  <div style="background-color: #fff59d; border: 2px solid #fbc02d; padding: 15px; margin: 0 auto 5px auto; width: 70%; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);">
-    <b style="color: #f57f17; font-size: 0.9rem;">Integraciono</b><br>
-    <span style="font-size: 0.8rem; color: #f57f17;">US-5, US-24, FR-10</span>
-  </div>
-
-  <div style="background-color: #90caf9; border: 2px solid #1565c0; padding: 20px; margin: 0 auto; width: 100%; border-radius: 0 0 8px 8px;">
-    <b style="color: #0d47a1; font-size: 1rem;">Unit Baza Kvaliteta</b><br>
-    <span style="font-size: 0.85rem; color: #0d47a1;">US-23, US-21, NFR-13</span>
-  </div>
-
-  <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 15px;">
-    Slika: Hijerarhija testiranja od najbržih Unit do najkompleksnijih UAT
-  </p>
-</div>
-
 ## 4. Kako znamo da je test prošao? 
 Svaki test mora odgovarati onome što smo napisali u Backlog-u. Ako smo rekli da laborant ne smije vidjeti admin panel, test to mora potvrditi. Također, ako neka funkcija radi, ali joj treba 10 sekundi da učita, to smatramo padom testa jer smo u NFR-ovima zacrtali da sve mora biti brzo ispod 1.5s.
 
