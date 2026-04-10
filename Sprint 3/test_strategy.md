@@ -20,33 +20,48 @@ Glavna stvar nam je da sistem bude pouzdan i da u laboratoriji nema haosa. Ne sm
 
 ## 3. Šta se testira u kojem nivou
 
-<table style="width:100%; border-collapse: collapse; font-family: sans-serif; margin-bottom: 20px;">
+<table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
   <thead>
-    <tr style="background-color: #34495e; color: white; text-align: left;">
-      <th style="padding: 12px; border: 1px solid #ddd;">Nivo</th>
-      <th style="padding: 12px; border: 1px solid #ddd;">Konkretne funkcije Stories / Zahtjevi</th>
+    <tr style="background-color: #2c3e50; color: #ffffff; text-align: left;">
+      <th style="padding: 15px; width: 25%; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">Nivo Testiranja</th>
+      <th style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">Konkretne funkcije (Stories / Zahtjevi)</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ddd; background-color: #f2f2f2; font-weight: bold;">Unit</td>
-      <td style="padding: 10px; border: 1px solid #ddd;">Provjera lozinki US-23, logika trošenja zaliha US-21, ID kodovi NFR-13.</td>
+    <tr style="background-color: #ffffff;">
+      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
+        <span style="display: inline-block; width: 8px; height: 8px; background-color: #3498db; border-radius: 50%; margin-right: 10px;"></span>Unit
+      </td>
+      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
+        Provjera lozinki <strong>(US-23)</strong>, logika trošenja zaliha <strong>(US-21)</strong>, ID kodovi <strong>(NFR-13)</strong>.
+      </td>
     </tr>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Integraciono</td>
-      <td style="padding: 10px; border: 1px solid #ddd;">Rad sa opremom u bazi US-5, ko ima koje dozvole US-24, backup sistema FR-10.</td>
+    <tr style="background-color: #fdfdfd;">
+      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
+        <span style="display: inline-block; width: 8px; height: 8px; background-color: #e67e22; border-radius: 50%; margin-right: 10px;"></span>Integraciono
+      </td>
+      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
+        Rad sa opremom u bazi <strong>(US-5)</strong>, ko ima koje dozvole <strong>(US-24)</strong>, backup sistema <strong>(FR-10)</strong>.
+      </td>
     </tr>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ddd; background-color: #f2f2f2; font-weight: bold;">Sistemsko</td>
-      <td style="padding: 10px; border: 1px solid #ddd;">Rezervacija od početka do kraja US-3, mijenjanje statusa kvarova US-8, kalendar US-11.</td>
+    <tr style="background-color: #ffffff;">
+      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
+        <span style="display: inline-block; width: 8px; height: 8px; background-color: #2ecc71; border-radius: 50%; margin-right: 10px;"></span>Sistemsko
+      </td>
+      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
+        Rezervacija od početka do kraja <strong>(US-3)</strong>, mijenjanje statusa kvarova <strong>(US-8)</strong>, kalendar <strong>(US-11)</strong>.
+      </td>
     </tr>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Prihvatno</td>
-      <td style="padding: 10px; border: 1px solid #ddd;">Generisanje izvještaja za US-16, gledanje ko trenutno koristi aparate US-18.</td>
+    <tr style="background-color: #fdfdfd;">
+      <td style="padding: 15px; font-weight: bold; color: #2c3e50;">
+        <span style="display: inline-block; width: 8px; height: 8px; background-color: #9b59b6; border-radius: 50%; margin-right: 10px;"></span>Prihvatno (UAT)
+      </td>
+      <td style="padding: 15px; color: #444; line-height: 1.6;">
+        Generisanje izvještaja <strong>(US-16)</strong>, pregled trenutnog korištenja aparata <strong>(US-18)</strong>.
+      </td>
     </tr>
   </tbody>
 </table>
-
 ---
 
 ## 4. Kako znamo da je test prošao? 
