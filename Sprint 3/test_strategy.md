@@ -1,4 +1,4 @@
-# Strategija testiranja: Sistem za laboratorijsku opremu
+# Test Strategy
 
 ## 1. Šta želimo postići testiranjem? 
 Glavna stvar nam je da sistem bude pouzdan i da u laboratoriji nema haosa. Ne smije se desiti da dvoje ljudi rezerviše isti aparat u isto vrijeme ili da neko ko nije admin mijenja važne podatke. Također, pošto radimo s medicinskom opremom, svaki "trag" u sistemu mora ostati zabilježen u Audit Log-u da bismo znali ko je šta radio.
