@@ -20,49 +20,72 @@ Glavna stvar nam je da sistem bude pouzdan i da u laboratoriji nema haosa. Ne sm
 
 ## 3. Šta se testira u kojem nivou
 
-<table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+<table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
   <thead>
     <tr style="background-color: #2c3e50; color: #ffffff; text-align: left;">
-      <th style="padding: 15px; width: 25%; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">Nivo Testiranja</th>
-      <th style="padding: 15px; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">Konkretne funkcije (Stories / Zahtjevi)</th>
+      <th style="padding: 18px; width: 20%; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; border-right: 1px solid rgba(255,255,255,0.1);">Nivo</th>
+      <th style="padding: 18px; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em;">Konkretne funkcije (Stories / Zahtjevi)</th>
     </tr>
   </thead>
   <tbody>
     <tr style="background-color: #ffffff;">
-      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
-        <span style="display: inline-block; width: 8px; height: 8px; background-color: #3498db; border-radius: 50%; margin-right: 10px;"></span>Unit
+      <td style="padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50; vertical-align: middle;">
+        <div style="display: flex; align-items: center;">
+          <span style="width: 10px; height: 10px; background-color: #3498db; border-radius: 50%; margin-right: 10px;"></span>Unit
+        </div>
       </td>
-      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
-        Provjera lozinki <strong>(US-23)</strong>, logika trošenja zaliha <strong>(US-21)</strong>, ID kodovi <strong>(NFR-13)</strong>.
+      <td style="padding: 20px; border-bottom: 1px solid #eee;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span style="background: #ebf5fb; color: #2980b9; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d6eaf8;">Provjera lozinki <b>(US-23)</b></span>
+          <span style="background: #ebf5fb; color: #2980b9; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d6eaf8;">Logika trošenja zaliha <b>(US-21)</b></span>
+          <span style="background: #ebf5fb; color: #2980b9; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d6eaf8;">ID kodovi <b>(NFR-13)</b></span>
+        </div>
       </td>
     </tr>
-    <tr style="background-color: #fdfdfd;">
-      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
-        <span style="display: inline-block; width: 8px; height: 8px; background-color: #e67e22; border-radius: 50%; margin-right: 10px;"></span>Integraciono
+    <tr style="background-color: #fcfcfc;">
+      <td style="padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50; vertical-align: middle;">
+        <div style="display: flex; align-items: center;">
+          <span style="width: 10px; height: 10px; background-color: #e67e22; border-radius: 50%; margin-right: 10px;"></span>Integraciono
+        </div>
       </td>
-      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
-        Rad sa opremom u bazi <strong>(US-5)</strong>, ko ima koje dozvole <strong>(US-24)</strong>, backup sistema <strong>(FR-10)</strong>.
+      <td style="padding: 20px; border-bottom: 1px solid #eee;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span style="background: #fef5e7; color: #d35400; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #fae5d3;">Rad sa opremom <b>(US-5)</b></span>
+          <span style="background: #fef5e7; color: #d35400; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #fae5d3;">Dozvole pristupa <b>(US-24)</b></span>
+          <span style="background: #fef5e7; color: #d35400; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #fae5d3;">Backup sistema <b>(FR-10)</b></span>
+        </div>
       </td>
     </tr>
     <tr style="background-color: #ffffff;">
-      <td style="padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">
-        <span style="display: inline-block; width: 8px; height: 8px; background-color: #2ecc71; border-radius: 50%; margin-right: 10px;"></span>Sistemsko
+      <td style="padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50; vertical-align: middle;">
+        <div style="display: flex; align-items: center;">
+          <span style="width: 10px; height: 10px; background-color: #2ecc71; border-radius: 50%; margin-right: 10px;"></span>Sistemsko
+        </div>
       </td>
-      <td style="padding: 15px; border-bottom: 1px solid #eee; color: #444; line-height: 1.6;">
-        Rezervacija od početka do kraja <strong>(US-3)</strong>, mijenjanje statusa kvarova <strong>(US-8)</strong>, kalendar <strong>(US-11)</strong>.
+      <td style="padding: 20px; border-bottom: 1px solid #eee;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span style="background: #eafaf1; color: #27ae60; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d4efdf;">Rezervacija end-to-end <b>(US-3)</b></span>
+          <span style="background: #eafaf1; color: #27ae60; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d4efdf;">Statusi kvarova <b>(US-8)</b></span>
+          <span style="background: #eafaf1; color: #27ae60; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #d4efdf;">Interaktivni kalendar <b>(US-11)</b></span>
+        </div>
       </td>
     </tr>
-    <tr style="background-color: #fdfdfd;">
-      <td style="padding: 15px; font-weight: bold; color: #2c3e50;">
-        <span style="display: inline-block; width: 8px; height: 8px; background-color: #9b59b6; border-radius: 50%; margin-right: 10px;"></span>Prihvatno (UAT)
+    <tr style="background-color: #fcfcfc;">
+      <td style="padding: 20px; font-weight: bold; color: #2c3e50; vertical-align: middle;">
+        <div style="display: flex; align-items: center;">
+          <span style="width: 10px; height: 10px; background-color: #9b59b6; border-radius: 50%; margin-right: 10px;"></span>Prihvatno
+        </div>
       </td>
-      <td style="padding: 15px; color: #444; line-height: 1.6;">
-        Generisanje izvještaja <strong>(US-16)</strong>, pregled trenutnog korištenja aparata <strong>(US-18)</strong>.
+      <td style="padding: 20px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <span style="background: #f5eef8; color: #8e44ad; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #ebdef0;">Izvještaji <b>(US-16)</b></span>
+          <span style="background: #f5eef8; color: #8e44ad; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #ebdef0;">Praćenje korištenja <b>(US-18)</b></span>
+        </div>
       </td>
     </tr>
   </tbody>
 </table>
----
+
 
 ## 4. Kako znamo da je test prošao? 
 Svaki test mora odgovarati onome što smo napisali u Backlog-u. Ako smo rekli da laborant ne smije vidjeti admin panel, test to mora potvrditi. Također, ako neka funkcija radi, ali joj treba 10 sekundi da učita, to smatramo padom testa jer smo u NFR-ovima zacrtali da sve mora biti brzo ispod 1.5s.
@@ -75,7 +98,7 @@ Sve bugove koje nađemo idu direktno na **GitHub Issues** uz kratak opis šta ne
 ---
 
 ## 6. Na šta moramo najviše paziti? 
-* **Duple rezervacije:** To nam je najveći rizik, da se ne preklopi termin. Rešavamo to kroz lock mehanizme u bazi.
+* **Duple rezervacije:** To nam je najveći rizik, da se ne preklopi termin. Rješavamo to kroz lock mehanizme u bazi.
 * **Dozvole:** Da se ne desi da obični korisnik može brisati opremu. Zato RBAC testiramo do detalja.
 * **Pad sistema:** Laboratorija radi stalno, pa moramo biti sigurni da backup radi NFR-14 i da možemo brzo vratiti podatke.
 * **Pogrešne zalihe:** Ako sistem kaže da imamo epruveta, a fizički ih nema, to je problem. Zato matematiku oko zaliha US-21 testiramo posebno pažljivo.
