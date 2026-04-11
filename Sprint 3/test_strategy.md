@@ -104,8 +104,16 @@ Sve bugove koje nađemo idu direktno na **GitHub Issues** uz kratak opis šta ne
 * **Pogrešne zalihe:** Ako sistem kaže da imamo epruveta, a fizički ih nema, to je problem. Zato matematiku oko zaliha US-21 testiramo posebno pažljivo.
 
 
-## Verifikacija AI-generisanog koda 
+## 7. Verifikacija AI-generisanog koda 
 S obzirom na to da koristimo AI alate, smatramo ih moćnim pomagačima koji zahtijevaju našu strogu kontrolu. Naša politika je: **"AI generiše, tim verifikuje"**.
 * **Provjera ispravnosti:** Svaki blok koda kreiran AI-em mora proći kroz Unit test prije spajanja sa ostatkom sistema.
 * **Code Review:** Ne postoji "autorski prolaz" za AI kod; svaki red koda mora pregledati bar jedan član tima.
 * **Linteri:** Koristimo statičku analizu kako bismo osigurali da AI nije napravio greške u sintaksi.
+
+
+## 8. Poznati izazovi i ograničenja testiranja
+Ograničenja AI verifikacije: Iako koristimo stroge testove, svjesni smo da Unit test ne može otkriti "logičke propuste" u dizajnu koji AI može napraviti ako prompt nije bio savršeno precizan. Zato se oslanjamo na dodatni Manual Exploratory Testing.
+
+Vrijeme vs Kvalitet: U ovom sprintu smo dali prednost pokrivenosti kritičnih putanja (rezervacija, lozinke) nauštrb estetskih i manje bitnih UI elemenata koji se mogu lakše ispraviti naknadno.
+
+Eksterni faktori: Testiranje PostgreSQL baze u našem okruženju ne simulira identično ponašanje mreže kao u produkciji, što je rizik koji smo mapirali, ali trenutno ne možemo u potpunosti eliminisati.
