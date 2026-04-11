@@ -103,3 +103,9 @@ Sve bugove koje nađemo idu direktno na **GitHub Issues** uz kratak opis šta ne
 * **Pad sistema:** Laboratorija radi stalno, pa moramo biti sigurni da backup radi NFR-14 i da možemo brzo vratiti podatke.
 * **Pogrešne zalihe:** Ako sistem kaže da imamo epruveta, a fizički ih nema, to je problem. Zato matematiku oko zaliha US-21 testiramo posebno pažljivo.
 
+
+## Verifikacija AI-generisanog koda 
+S obzirom na to da koristimo AI alate, smatramo ih moćnim pomagačima koji zahtijevaju našu strogu kontrolu. Naša politika je: **"AI generiše, tim verifikuje"**.
+* **Provjera ispravnosti:** Svaki blok koda kreiran AI-em mora proći kroz Unit test prije spajanja sa ostatkom sistema.
+* **Code Review:** Ne postoji "autorski prolaz" za AI kod; svaki red koda mora pregledati bar jedan član tima.
+* **Linteri:** Koristimo statičku analizu kako bismo osigurali da AI nije napravio greške u sintaksi.
