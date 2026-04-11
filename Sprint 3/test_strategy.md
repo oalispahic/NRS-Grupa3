@@ -112,7 +112,7 @@ S obzirom na to da koristimo AI alate, smatramo ih moćnim pomagačima koji zaht
 
 
 ## 8. Poznati izazovi i ograničenja testiranja
-Ograničenja AI verifikacije: Iako koristimo stroge testove, svjesni smo da Unit test ne može otkriti "logičke propuste" u dizajnu koji AI može napraviti ako prompt nije bio savršeno precizan. Zato se oslanjamo na dodatni Manual Exploratory Testing.
+Ograničenja AI verifikacije: Iako koristimo stroge testove, svjesni smo da Unit test ne može otkriti "logičke propuste" u dizajnu koji AI može napraviti ako prompt nije bio savršeno precizan. Zato se oslanjamo na dodatno Ručno istraživačko testiranje.
 
 Vrijeme vs Kvalitet: U ovom sprintu smo dali prednost pokrivenosti kritičnih putanja (rezervacija, lozinke) nauštrb estetskih i manje bitnih UI elemenata koji se mogu lakše ispraviti naknadno.
 
