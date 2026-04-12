@@ -16,6 +16,7 @@ Ovaj rizik može nastati ako sistem ne provjerava dovoljno precizno dostupnost t
 Potrebno je implementirati automatsku provjeru konflikta termina prije spremanja svake rezervacije, kao i mehanizme transakcija i zaključavanja u bazi podataka. Pored toga, potrebno je provesti integraciona i sistemska testiranja za scenarije istovremenih rezervacija, te korisnicima jasno prikazivati zauzete i slobodne termine kako bi se smanjila mogućnost greške.
 
 **Odgovorna osoba ili uloga:** Backend Lead, QA Lead
+
 **Status:** Otvoren
 
 ---
@@ -38,6 +39,7 @@ Rizik može nastati zbog neadekvatno implementirane autentifikacije i autorizaci
 Potrebno je jasno definisati korisničke uloge i dozvole za svaku funkcionalnost sistema. Također, potrebno je implementirati provjeru ovlaštenja na svim osjetljivim dijelovima sistema, izvršiti sigurnosno testiranje i redovno provjeravati da li korisnici imaju pristup isključivo funkcijama koje odgovaraju njihovoj ulozi.
 
 **Odgovorna osoba ili uloga:** Security Lead, Backend Lead
+
 **Status:** Otvoren
 
 ---
@@ -60,6 +62,7 @@ Ovaj rizik može biti posljedica nedovoljno pouzdanog hosting okruženja, nepost
 Neophodno je uspostaviti redovne automatske backup-e baze podataka i aplikacionih podataka, te periodično testirati postupak vraćanja podataka iz backup-a. Pored toga, potrebno je uvesti monitoring dostupnosti sistema, definisati plan oporavka nakon incidenta i jasno odrediti odgovorne osobe za reagovanje u slučaju prekida rada.
 
 **Odgovorna osoba ili uloga:** DevOps / IT Administrator
+
 **Status:** Otvoren
 
 ---
