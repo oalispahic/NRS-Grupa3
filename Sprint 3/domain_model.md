@@ -1,9 +1,9 @@
-# 1. Domain Model - Sistem za upravljanje medicinskom laboratorijskom opremom
+# Domain Model - Sistem za upravljanje medicinskom laboratorijskom opremom
 
 Domain model definiše glavnu poentu sistema kroz analizu ključnih objekata i njihovih međusobnih odnosa. Model je direktno izveden iz zahtjeva definisanih u **[Product Backlogu](../Sprint%202/product_backlog_v2.md)**, sa posebnim fokusom na integritet podataka u medicinskom laboratorijskom okruženju. Ukratko to je “mapa” svih važnih stvari u našoj aplikaciji i prikaz kako su povezane.
 
 
-## 1.1. Glavni entiteti (Domain Entities)
+## Glavni entiteti (Domain Entities)
 
 Na osnovu funkcionalnih potreba laboratorije, identifikovani su sljedeći osnovni entiteti:
 
@@ -15,7 +15,7 @@ Na osnovu funkcionalnih potreba laboratorije, identifikovani su sljedeći osnovn
 6. **Servisni Karton (Maintenance Record):** Bilježi historiju kvarova i održavanja instrumenata.
 
 
-## 1.2 Ključni atributi
+## Ključni atributi
 
 U tabeli ispod su navedeni najbitniji podaci koje svaki entitet mora čuvati:
 
@@ -27,3 +27,14 @@ U tabeli ispod su navedeni najbitniji podaci koje svaki entitet mora čuvati:
 | **Repromaterijal** | naziv_materijala, kolicina_na_stanju, mjerna_jedinica, minimalni_prag_zaliha |
 | **Dnevnik Aktivnosti** | vrijeme_akcije, opis_promjene, id_korisnika, ip_adresa |
 | **Servisni Karton** | datum_servisa, opis_kvara, cijena_popravke, tehnicar_info |
+
+
+## Veze između entiteta
+
+Logička povezanost sistema definisana je sljedećim relacijama:
+
+* **Korisnik – Rezervacija (1:N):** Jedan laborant može kreirati neograničen broj rezervacija tokom vremena, ali svaka pojedinačna rezervacija u sistemu pripada isključivo jednom korisniku.
+* **Oprema – Rezervacija (1:N):** Jedan instrument može biti predmet mnogih rezervacija u različitim terminima, ali se jedna konkretna rezervacija odnosi samo na jedan komad opreme.
+* **Oprema – Servisni Karton (1:1/N):** Svaki komad opreme ima svoju historiju servisa. Veza omogućava uvid u pouzdanost uređaja kroz vrijeme.
+* **Korisnik – Dnevnik Aktivnosti (1:N):** Svaka kritična akcija (brisanje opreme, odobravanje termina) vezana je za ID korisnika koji je akciju izvršio.
+
