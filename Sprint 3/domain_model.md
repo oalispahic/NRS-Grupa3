@@ -38,6 +38,7 @@ Logička povezanost sistema definisana je sljedećim relacijama:
 * **Oprema – Servisni Karton (1:1/N):** Svaki komad opreme ima svoju historiju servisa. Veza omogućava uvid u pouzdanost uređaja kroz vrijeme.
 * **Korisnik – Dnevnik Aktivnosti (1:N):** Svaka kritična akcija (brisanje opreme, odobravanje termina) vezana je za ID korisnika koji je akciju izvršio.
 
+
 ## Poslovna pravila važna za domain model
 
 Ova pravila osiguravaju da sistem radi ispravno i sprječava ljudske greške (direktno vezano za **PB26** i **PB22**):
@@ -48,3 +49,35 @@ Ova pravila osiguravaju da sistem radi ispravno i sprječava ljudske greške (di
 * **Pravilo autorizacije:** Samo korisnik sa ulogom **Administrator** ima pravo pristupa entitetu **Dnevnik Aktivnosti** i pravo promjene statusa u entitetu **Servisni Karton**.
 * **Pravilo integriteta brisanja:** Nije dozvoljeno brisanje entiteta **Oprema** iz sistema ukoliko za nju postoje aktivne ili buduće **Rezervacije**.
 
+
+
+## Vizuelni prikaz domene - UML dijagram klasa
+
+*U nastavku je prikazan grafički model koji vizuelno spaja entitete, njihove atribute i međusobne relacije (1:N, M:N), čime se definiše struktura baze podataka i poslovna logika sistema.* [1]
+
+![UML Dijagram Klasa](img/uml-white.png)
+
+### UML dijagram klasa i opis relacija
+
+UML dijagram klasa služi kao vizuelni nacrt strukture podataka. On prikazuje kako se podaci transformišu kroz procese rezervacije i održavanja opreme, osiguravajući da sistem prati stroga medicinska pravila.
+
+### Opis ključnih relacija:
+
+* **Korisnik — Rezervacija (1 : 0..*):** Relacija pokazuje da jedan korisnik (laborant) može kreirati više rezervacija tokom vremena, dok svaka pojedinačna rezervacija mora imati tačno jednog vlasnika (odgovornu osobu).
+* **Oprema — Rezervacija (1 : 0..*):** Jedan komad medicinske opreme može biti predmet mnogih rezervacija u različitim terminima. Multiplicitet na strani opreme je strogo **1**, što znači da se jedna rezervacija ne može odnositi na više aparata istovremeno.
+* **Oprema — Servisni Karton (1 : 0..*):** Svaki aparat posjeduje svoju historiju održavanja. Ova relacija omogućava administratoru da prati pouzdanost uređaja i planira obavezne kalibracije.
+* **Korisnik — Audit Log (1 : 0..*):** Svaka akcija u sistemu (promjena statusa, odobrenje termina) vezana je za korisnički ID. Ovo garantuje da svaka promjena podataka ima digitalni potpis, što je ključno za sigurnost u medicini.
+* **Oprema — Zalihe (1..* : 0..*):** Relacija **više-prema-više (N:M)** pokazuje da jedan medicinski uređaj može trošiti više vrsta materijala (npr. različite reagenese), dok se ista vrsta materijala može koristiti na više različitih uređaja.
+
+### Tehnička napomena o atributima:
+Svi entiteti koriste jedinstvene identifikatore (**id**) kao primarne ključeve za povezivanje. Atributi su prikazani prema standardima baze podataka (npr. `String` za nazive, `DateTime` za termine, `Enum` za statuse), što omogućava precizno programiranje validacija, poput sprečavanja preklapanja termina ili automatskog upozorenja o niskim zalihama.
+
+
+
+------------------------------------------------------------
+### Autor
+1. [Kemal Mešić](https://github.com/mesicc) (236-ST)
+
+------------------------------------------------------------
+### Alati korištena za ovaj .md file
+[1]  Mermaid Live Editor- Official Website. Dostupno na: [Internet](https://mermaid.live/edit#pako:eNqlVV1O20AQvspqH9skip0mxBZCoqVVUaAgKC8oL4O9JOuf3Wh2nbZBOUIP0bu09-rYDokhi0xVP9je-WY83_z6gUc6FjzkUQbGnEiYIeRTxeiKJYrISq3Y2VUtqe-VJptolEbJlD3U0vJ6K2MWslNlm6JcXKJY0YOga4tSzRpoYQQqcGMLcvNNY_wZzNxpm-kZEHBTPj-qIm9gMdgin6CQCCoplU7Aiq9EotZZ78dzsUCRQ1s0RFcmJpXvUScuTgpWcukCcspy5gJMJlO4QSdmUajCKnltKRxDGjXJ-riL2BHNlVgJXEIkk9aQ0k0hT_chXblzAEvKgqDC6kjYdD-9TZ0JQvKChqniuIW5TcSy1GmwfkWMt5DJuWgLr6rIOTknOpCBK82pzmQkVYl9yjQ0rRMRSyUjOE8EOps0JziHTMlLhNnTDzgoHxextGd69h81gbQqqoPKkoolFDXnpYjAulMuF8cxCvPc3kH1mipRcpgAWloBLYRf7JRqEOtvPXbBEzNpJktAZzxWzMvU46m61_t8m1y3G6BJ8_CQhicXCOUKOzraAccxFW13PIM7TVvCtmyGXUO-ysmJNrZYKL2TfAFmqjwUO1kZ-2tm-B-dk6vfP0VKq6_h6yLWd7RPdFNyRyP6KNnmdLvZp9ybctbtHtFbv9d7Q4fmXglZWi3Y2mqzP1ttEsGwElBDKGj3uB2ZkC3xzy_JqgEo2pw-a9-Q0ZSyuTSWXO1b1zbd7s5-s1xCZlGTV97hM5QxDy0WosMp6TmUR16VY8rtnGZvykN6jQHTKZ-qNdksQN1qnT-aoS5mcx7eQ2boVCxoOMTml7uVUoligR90oSwP_aD6Bg8f-Hc6jQe9wPcGfW88Go6Cgd_hP3jo-T2v73sH437gDwfvDsb-usNXldd-bxwEQ3_oe4HX9w5GwajDaaFRDs43P_3ysf4LX2NhVA) <br>
