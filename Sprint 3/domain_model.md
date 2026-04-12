@@ -38,3 +38,13 @@ Logička povezanost sistema definisana je sljedećim relacijama:
 * **Oprema – Servisni Karton (1:1/N):** Svaki komad opreme ima svoju historiju servisa. Veza omogućava uvid u pouzdanost uređaja kroz vrijeme.
 * **Korisnik – Dnevnik Aktivnosti (1:N):** Svaka kritična akcija (brisanje opreme, odobravanje termina) vezana je za ID korisnika koji je akciju izvršio.
 
+## Poslovna pravila važna za domain model
+
+Ova pravila osiguravaju da sistem radi ispravno i sprječava ljudske greške (direktno vezano za **PB26** i **PB22**):
+
+* **Pravilo validacije termina:** Sistem ne smije dozvoliti kreiranje nove rezervacije ako se `vrijeme_pocetka` ili `vrijeme_kraja` preklapa sa već postojećom odobrenom rezervacijom za tu istu opremu.
+* **Pravilo dostupnosti opreme:** Rezervacija se može kreirati samo ako je status opreme postavljen na **"Dostupno"**. Ako je oprema u statusu **"Servis"**, ona se automatski izuzima iz kalendara rezervacija.
+* **Pravilo minimalnih zaliha:** Prilikom evidentiranja potrošnje materijala, ako `kolicina` padne ispod `minimalni_prag_zaliha`, sistem mora označiti taj materijal kao prioritet za nabavku.
+* **Pravilo autorizacije:** Samo korisnik sa ulogom **Administrator** ima pravo pristupa entitetu **Dnevnik Aktivnosti** i pravo promjene statusa u entitetu **Servisni Karton**.
+* **Pravilo integriteta brisanja:** Nije dozvoljeno brisanje entiteta **Oprema** iz sistema ukoliko za nju postoje aktivne ili buduće **Rezervacije**.
+
