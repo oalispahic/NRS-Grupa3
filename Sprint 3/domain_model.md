@@ -14,3 +14,16 @@ Na osnovu funkcionalnih potreba laboratorije, identifikovani su sljedeći osnovn
 5. **Dnevnik Aktivnosti (Audit Log):** Digitalni trag svih aktivnosti, što je ključno za sigurnost i naknadnu provjeru laboratorijskih radnji.
 6. **Servisni Karton (Maintenance Record):** Bilježi historiju kvarova i održavanja instrumenata.
 
+
+## 1.2 Ključni atributi
+
+U tabeli ispod su navedeni najbitniji podaci koje svaki entitet mora čuvati:
+
+| Entitet | Ključni atributi |
+| :--- | :--- |
+| **Korisnik** | korisnicko_ime, lozinka_hash, uloga (Admin/Laborant), email, datum_kreiranja |
+| **Oprema** | serijski_broj, naziv, model, trenutni_status (Dostupno/Servis), lokacija |
+| **Rezervacija** | vrijeme_pocetka, vrijeme_kraja, status_zahtjeva (Na čekanju/Odobreno), id_korisnika, id_opreme |
+| **Repromaterijal** | naziv_materijala, kolicina_na_stanju, mjerna_jedinica, minimalni_prag_zaliha |
+| **Dnevnik Aktivnosti** | vrijeme_akcije, opis_promjene, id_korisnika, ip_adresa |
+| **Servisni Karton** | datum_servisa, opis_kvara, cijena_popravke, tehnicar_info |
