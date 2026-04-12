@@ -1,3 +1,4 @@
-Domain model (model domene) je konceptualni prikaz sistema koji opisuje kako stvarni svijet (problem koji rješavaš) izgleda kroz objekte, njihove osobine i veze između njih.
+# 1. Domain Model - Sistem za upravljanje medicinskom laboratorijskom opremom
 
-To je “mapa” svih važnih stvari u tvom sistemu i kako su povezane.
+Domain model definiše glavnu poentu sistema kroz analizu ključnih objekata i njihovih međusobnih odnosa. Model je direktno izveden iz zahtjeva definisanih u **[Product Backlogu](../Sprint%202/product_backlog_v2.md)**, sa posebnim fokusom na integritet podataka u medicinskom laboratorijskom okruženju. Ukratko to je “mapa” svih važnih stvari u našoj aplikaciji i prikaz kako su povezane.
+
