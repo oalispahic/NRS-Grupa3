@@ -131,4 +131,46 @@ Potrebno je uvesti validaciju unosa i automatske kontrole konzistentnosti podata
 **Status:** Otvoren
 
 ---
+## R-07
+
+**ID:** R-07
+
+**Opis rizika:**
+Postoji rizik od širenja obima projekta i kašnjenja u realizaciji zbog nejasnih poslovnih pravila i otvorenih pitanja u zahtjevima. Ovakva situacija može dovesti do dodatnih izmjena tokom razvoja, probijanja rokova i otežanog planiranja sprintova.
+
+**Uzrok:**
+Rizik nastaje kada ključne funkcionalnosti nisu dovoljno precizno definisane, na primjer pravila odobravanja rezervacija, mogućnosti otkazivanja, detalji prikaza opreme ili način upravljanja statusima. Ako takva pitanja ostanu nerazriješena do početka implementacije, vrlo je vjerovatno da će tim naknadno mijenjati zahtjeve.
+
+**Vjerovatnoća:** Visoka <br>
+**Uticaj:** Srednji <br>
+**Prioritet rizika:** Visok <br>
+
+**Plan mitigacije:**
+Potrebno je prije početka implementacije razjasniti otvorena pitanja sa stakeholderima i dopuniti user storyje i acceptance kriterije. Također, korisno je voditi evidenciju donesenih odluka, formalno potvrđivati scope po sprintu i ograničiti izmjene zahtjeva nakon početka razvoja osim u opravdanim slučajevima.
+
+**Odgovorna osoba ili uloga:** Product Owner, Scrum Master / Projektni koordinator <br>
+**Status:** Otvoren
+
+---
+
+## R-08
+
+**ID:** R-08
+
+**Opis rizika:**
+Postoji rizik da sistem neće zadovoljiti zahtjeve performansi i upotrebljivosti, posebno pri radu sa većim brojem korisnika, većim brojem rezervacija i pristupom sa različitih uređaja. To može negativno uticati na korisničko iskustvo i smanjiti efikasnost rada u laboratoriji.
+
+**Uzrok:**
+Rizik može nastati zbog neoptimizovanih upita prema bazi podataka, nedovoljno testiranog rada pod opterećenjem ili neadekvatno prilagođenog korisničkog interfejsa za različite veličine ekrana. Problem je izraženiji ako se performanse prate tek pri kraju razvoja umjesto od ranijih faza projekta.
+
+**Vjerovatnoća:** Srednja <br>
+**Uticaj:** Srednji do visok <br>
+**Prioritet rizika:** Visok <br>
+
+**Plan mitigacije:**
+Potrebno je provoditi performance i load testove tokom razvoja, optimizovati rad sa bazom podataka i definisati prihvatljive granice vremena odziva sistema. Također, potrebno je testirati korisnički interfejs na desktop, tablet i mobilnim uređajima kako bi sistem ostao pregledan, responzivan i jednostavan za korištenje u svim relevantnim scenarijima.
+
+**Odgovorna osoba ili uloga:** Frontend Lead, Backend Lead, QA Lead <br>
+**Status:** Otvoren
+
 
