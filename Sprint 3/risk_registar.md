@@ -66,3 +66,69 @@ Neophodno je uspostaviti redovne automatske backup-e baze podataka i aplikacioni
 **Status:** Otvoren
 
 ---
+## R-04
+
+**ID:** R-04
+
+**Opis rizika:**
+Postoji rizik da sistem neće imati potpun i pouzdan audit trail, odnosno zapis o svim važnim akcijama koje su korisnici izvršili u aplikaciji. To može otežati praćenje grešaka, sigurnosnih incidenata i provjeru odgovornosti za izmjene u sistemu.
+
+**Uzrok:**
+Rizik nastaje kada sistem ne evidentira dovoljno detaljno prijave korisnika, promjene statusa opreme, odobravanja rezervacija i druge administrativne akcije. Također, problem može biti uzrokovan nejasno definisanim pravilima o tome koje aktivnosti se moraju logovati i koliko dugo se logovi čuvaju.
+
+**Vjerovatnoća:** Srednja <br>
+**Uticaj:** Visok <br>
+**Prioritet rizika:** Kritičan <br>
+
+**Plan mitigacije:**
+Potrebno je definisati jasna pravila za audit log i osigurati da sve važne korisničke i administrativne aktivnosti budu automatski evidentirane. Također, potrebno je redovno pregledati logove, zaštititi ih od neovlaštenih izmjena i osigurati usklađenost sistema sa sigurnosnim i regulatornim zahtjevima.
+
+**Odgovorna osoba ili uloga:** Security / Compliance Lead, Backend Lead <br>
+**Status:** Otvoren
+
+---
+
+## R-05
+
+**ID:** R-05
+
+**Opis rizika:**
+Postoji rizik da laboratorijska oprema u sistemu bude pogrešno označena kao dostupna, iako je u stvarnosti na održavanju, van upotrebe ili servisno blokirana. Takva greška može dovesti do pogrešnih rezervacija, prekida rada i dodatnih organizacionih problema u laboratoriji.
+
+**Uzrok:**
+Rizik može nastati zbog neusklađenosti između procesa održavanja opreme i njenog statusa u sistemu. Problem se može javiti i ako ne postoje jasno definisana pravila za promjenu statusa opreme ili ako se status ne ažurira pravovremeno nakon servisa, kvara ili povlačenja opreme iz upotrebe.
+
+**Vjerovatnoća:** Srednja <br>
+**Uticaj:** Visok <br>
+**Prioritet rizika:** Visok <br>
+
+**Plan mitigacije:**
+Potrebno je jasno definisati sve moguće statuse opreme i pravila prelaska iz jednog statusa u drugi. Također, sistem treba automatski blokirati rezervaciju opreme koja je označena kao nedostupna, a korisnicima prikazivati jasan razlog nedostupnosti kako bi imali tačne informacije prilikom planiranja rada.
+
+**Odgovorna osoba ili uloga:** Product Owner, Backend Lead <br>
+**Status:** Otvoren
+
+---
+
+## R-06
+
+**ID:** R-06
+
+**Opis rizika:**
+Postoji rizik da sistem prikazuje netačne podatke o potrošnji repromaterijala i stanju zaliha. To može dovesti do pogrešnog planiranja nabavke, nestašice materijala ili prekomjernog naručivanja.
+
+**Uzrok:**
+Ovaj rizik može biti uzrokovan ručnim unosom bez validacije, nepravilno implementiranom logikom obračuna potrošnje ili neusklađenošću između stvarnog stanja u laboratoriji i podataka evidentiranih u sistemu. Dodatni problem može nastati ako korisnici ne unose podatke dosljedno i na vrijeme.
+
+**Vjerovatnoća:** Srednja <br>
+**Uticaj:** Visok <br>
+**Prioritet rizika:** Visok <br>
+
+**Plan mitigacije:**
+Potrebno je uvesti validaciju unosa i automatske kontrole konzistentnosti podataka. Pored toga, preporučuje se testiranje logike obračuna potrošnje, redovno poređenje sistemskih i stvarnih zaliha, kao i definisanje odgovornosti za ažuriranje i provjeru ovih podataka.
+
+**Odgovorna osoba ili uloga:** Backend Lead, QA Lead, Domenski vlasnik procesa <br>
+**Status:** Otvoren
+
+---
+
