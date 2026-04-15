@@ -22,7 +22,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik otvara stranicu za prijavu. 2) Sistem prikazuje formu za unos korisničkog imena i lozinke. 3) Korisnik unosi podatke i potvrđuje. 4) Sistem validira podatke i utvrđuje ulogu. 5) Sistem kreira sesiju i preusmjerava na dashboard.
 
-**Alternativni tok:** A1 — Neispravni podaci: sistem prikazuje poruku o neuspješnoj prijavi. A2 — Prazna polja: sistem traži popunjavanje obaveznih polja.
+**Alternativni tok:** A1 - Neispravni podaci: sistem prikazuje poruku o neuspješnoj prijavi. A2 - Prazna polja: sistem traži popunjavanje obaveznih polja.
 
 ---
 
@@ -44,7 +44,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik otvara sekciju za pregled opreme. 2) Sistem dohvaća listu aktivne opreme. 3) Sistem prikazuje listu sa nazivom i statusom svake stavke.
 
-**Alternativni tok:** A1 — Nema opreme: sistem prikazuje poruku da oprema trenutno nije dostupna.
+**Alternativni tok:** A1 - Nema opreme: sistem prikazuje poruku da oprema trenutno nije dostupna.
 
 ---
 
@@ -56,7 +56,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik odabere stavku opreme. 2) Sistem prikazuje naziv, opis, status i dodatne podatke (specifikacije, pravila, ocjene). 3) Ako oprema nije dostupna, sistem prikazuje razlog nedostupnosti.
 
-**Alternativni tok:** A1 — Nepostojeća oprema: sistem prikazuje poruku o grešci.
+**Alternativni tok:** A1 - Nepostojeća oprema: sistem prikazuje poruku o grešci.
 
 ---
 
@@ -68,7 +68,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik unosi naziv u polje za pretragu ili odabire kategoriju/tip kao filter. 2) Sistem prikazuje stavke koje odgovaraju kriterijima. 3) Korisnik može kombinovati više filtera.
 
-**Alternativni tok:** A1 — Nema rezultata: sistem prikazuje poruku. A2 — Brisanje filtera/pretrage: sistem vraća puni prikaz.
+**Alternativni tok:** A1 - Nema rezultata: sistem prikazuje poruku. A2 - Brisanje filtera/pretrage: sistem vraća puni prikaz.
 
 ---
 
@@ -80,7 +80,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik otvara detalje opreme i bira opciju za rezervaciju. 2) Sistem prikazuje formu za unos termina (datum, vrijeme početka/završetka). 3) Korisnik unosi termin i potvrđuje. 4) Sistem provjerava preklapanje sa postojećim odobrenim rezervacijama. 5) Sistem evidentira zahtjev i prikazuje potvrdu.
 
-**Alternativni tok:** A1 — Konflikt termina: sistem prikazuje poruku da je termin zauzet. A2 — Nevažeći termin: sistem prikazuje grešku. A3 — Oprema nedostupna (na održavanju/van upotrebe): sistem ne dozvoljava rezervaciju.
+**Alternativni tok:** A1 - Konflikt termina: sistem prikazuje poruku da je termin zauzet. A2 - Nevažeći termin: sistem prikazuje grešku. A3 - Oprema nedostupna (na održavanju/van upotrebe): sistem ne dozvoljava rezervaciju.
 
 ---
 
@@ -92,7 +92,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik otvara „Moje rezervacije". 2) Sistem prikazuje listu sa nazivom opreme, datumom, terminom i statusom svake rezervacije.
 
-**Alternativni tok:** A1 — Nema rezervacija: sistem prikazuje odgovarajuću poruku.
+**Alternativni tok:** A1 - Nema rezervacija: sistem prikazuje odgovarajuću poruku.
 
 ---
 
@@ -104,7 +104,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik odabere rezervaciju i bira otkazivanje. 2) Sistem traži potvrdu. 3) Korisnik potvrđuje. 4) Sistem mijenja status u „otkazana" i oslobađa termin.
 
-**Alternativni tok:** A1 — Rezervacija već započela: sistem ne dozvoljava otkazivanje. A2 — Korisnik odustaje: nema promjena.
+**Alternativni tok:** A1 - Rezervacija već započela: sistem ne dozvoljava otkazivanje. A2 - Korisnik odustaje: nema promjena.
 
 ---
 
@@ -116,7 +116,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik odabere rezervaciju i bira izmjenu. 2) Sistem prikazuje formu sa trenutnim podacima. 3) Korisnik mijenja podatke. 4) Sistem provjerava dostupnost novog termina i sprema izmjene.
 
-**Alternativni tok:** A1 — Konflikt novog termina: sistem prikazuje poruku o konfliktu. A2 — Rezervacija već započela: izmjena nije dozvoljena.
+**Alternativni tok:** A1 - Konflikt novog termina: sistem prikazuje poruku o konfliktu. A2 - Rezervacija već započela: izmjena nije dozvoljena.
 
 ---
 
@@ -128,7 +128,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Korisnik odabere opremu. 2) Sistem prikazuje kalendar sa jasno označenim zauzetim i slobodnim terminima.
 
-**Alternativni tok:** A1 — Nema rezervacija: sistem prikazuje poruku da nema zauzeća.
+**Alternativni tok:** A1 - Nema rezervacija: sistem prikazuje poruku da nema zauzeća.
 
 ---
 
@@ -142,7 +142,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok (brisanje):** 1) Administrator bira brisanje stavke. 2) Sistem provjerava aktivne rezervacije. 3) Sistem uklanja stavku.
 
-**Alternativni tok:** A1 — Nepotpuni podaci: sistem traži popunjavanje. A2 — Aktivne rezervacije: brisanje nije dozvoljeno.
+**Alternativni tok:** A1 - Nepotpuni podaci: sistem traži popunjavanje. A2 - Aktivne rezervacije: brisanje nije dozvoljeno.
 
 ---
 
@@ -154,7 +154,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Administrator otvara uređivanje opreme. 2) Mijenja status ili detalje. 3) Sistem validira i sprema izmjene.
 
-**Alternativni tok:** A1 — Nevažeći status: sistem prikazuje grešku.
+**Alternativni tok:** A1 - Nevažeći status: sistem prikazuje grešku.
 
 ---
 
@@ -166,7 +166,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Sistem prikazuje zahtjeve „na čekanju". 2) Administrator pregledava i odobrava zahtjev. 3) Sistem provjerava konflikt termina i mijenja status u „odobrena".
 
-**Alternativni tok:** A1 — Odbijanje: status se mijenja u „odbijena". A2 — Konflikt: odobravanje nije dozvoljeno.
+**Alternativni tok:** A1 - Odbijanje: status se mijenja u „odbijena". A2 - Konflikt: odobravanje nije dozvoljeno.
 
 ---
 
@@ -188,7 +188,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Sistem na osnovu odobrenih rezervacija i aktuelnog vremena prikazuje opremu u upotrebi sa korisnikom, vremenom početka i planiranim završetkom.
 
-**Alternativni tok:** A1 — Nema aktivnog korištenja: sistem prikazuje poruku.
+**Alternativni tok:** A1 - Nema aktivnog korištenja: sistem prikazuje poruku.
 
 ---
 
@@ -200,7 +200,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Administrator odabere kontekst (rezervaciju/korisnika). 2) Unosi sadržaj i potvrđuje slanje. 3) Sistem validira, isporučuje i prikazuje potvrdu.
 
-**Alternativni tok:** A1 — Prazan sadržaj: slanje nije dozvoljeno.
+**Alternativni tok:** A1 - Prazan sadržaj: slanje nije dozvoljeno.
 
 ---
 
@@ -222,7 +222,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Administrator odabere materijal i unosi količinu potrošnje. 2) Sistem validira (pozitivan broj), evidentira i ažurira stanje.
 
-**Alternativni tok:** A1 — Nevažeća vrijednost: sistem ne dozvoljava spremanje. A2 — Niske zalihe: sistem prikazuje upozorenje.
+**Alternativni tok:** A1 - Nevažeća vrijednost: sistem ne dozvoljava spremanje. A2 - Niske zalihe: sistem prikazuje upozorenje.
 
 ---
 
@@ -244,7 +244,7 @@ Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema 
 
 **Osnovni tok:** 1) Administrator odabere period i filtere. 2) Sistem kreira izvještaj sa podacima o korištenju opreme.
 
-**Alternativni tok:** A1 — Nema podataka: sistem prikazuje poruku.
+**Alternativni tok:** A1 - Nema podataka: sistem prikazuje poruku.
 
 ---
 
