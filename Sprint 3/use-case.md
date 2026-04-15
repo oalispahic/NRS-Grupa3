@@ -1,4 +1,4 @@
-# Use Case specifikacija — Sistem za upravljanje medicinskom laboratorijskom opremom
+# Use Case specifikacija - Sistem za upravljanje medicinskom laboratorijskom opremom
 
 Use Case specifikacija opisuje interakcije između korisnika (aktera) i sistema kroz konkretne scenarije korištenja. Dokument je izveden iz [User Stories](../Sprint%202/user_stories.md) i [Acceptance Criteria](../Sprint%202/acceptance_criteria.md).
 
