@@ -1,4 +1,3 @@
-# 🧪 SVEOBUHVATNA STRATEGIJA TESTIRANJA: LABORATORIJSKI INFORMACIONI SISTEM (NRS-GRUPA3)
 
 ## 1. Cilj testiranja 
 Glavni cilj testiranja je da sistem bude pouzdan, siguran i funkcionalan u svakodnevnom radu laboratorije. Važno je spriječiti probleme kao što su duple rezervacije, neovlašten pristup administratorskim funkcijama i netačno evidentiranje aktivnosti u sistemu. Testiranjem želimo na vrijeme uočiti greške i potvrditi da sistem radi u skladu sa definisanim zahtjevima.
