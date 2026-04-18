@@ -95,7 +95,7 @@ U praksi to znači da se svaki acceptance kriterij može posmatrati kao uslov ko
       <td><b>US-01</b></td>
       <td>Pregled opreme</td>
       <td>Sistem mora filtrirati opremu po laboratorijama.</td>
-      <td>✅ Prošlo</td>
+      <td>Prošlo</td>
     </tr>
     <tr>
       <td><b>US-02</b></td>
