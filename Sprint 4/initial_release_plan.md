@@ -18,3 +18,12 @@ Initial Release Plan predstavlja strukturirani pregled svih planiranih aktivnost
  
 ---
 
+## Pregled faza projekta
+ 
+Projekt je organizovan u dvije jasno odvojene faze:
+ 
+**Human-First faza (Sprintovi 1–4):** Fokus je isključivo na istraživanju, planiranju i postavljanju temelja projekta. U ovoj fazi nema razvoja aplikacijskog koda. Tim radi na razumijevanju problema, prikupljanju i definisanju zahtjeva, modeliranju domene i uspostavljanju tehničke infrastrukture.
+ 
+**AI-Enabled faza (Sprintovi 5–11):** Fokus je na aktivnoj implementaciji sistema. Tim razvija sve funkcionalnosti prema prioritetima definisanim u Product Backlogu, uz kontinuirano testiranje i poboljšanja.
+ 
+---
