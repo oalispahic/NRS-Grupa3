@@ -1,4 +1,4 @@
-## 1. VIZIJA, STRATEGIJA I KONTEKST PROJEKTA (PRODUCT VISION)
+## 1. Vizija, Strategija i Kontekst projekta 
 
 ### 1.1 Detaljna analiza problemske domene
 U naučno-istraživačkim institucijama, oprema nije samo imovina; ona je osnovni alat čija preciznost direktno korelira sa validnošću naučnog rada. Trenutna analiza stanja u laboratorijama identifikovala je "crne rupe" u informacijama:
@@ -52,12 +52,12 @@ Glavni cilj sistema ISOLO je transformacija iz reaktivnog u prediktivni model od
 
 ---
 
-## 2. TEAM CHARTER I OPERATIVNI MODEL (POVELJA TIMA)
+## 2. Team Charter i Operativni model 
 *Lokacija: `/docs/management/TeamCharter.md`*
 
 Tim Grupe 3 funkcioniše kao agilna jedinica sa jasno definisanim granicama odgovornosti, ali visokim stepenom kolaboracije.
 
-### 2.1 Matrica odgovornosti (RACI)
+### 2.1 Matrica odgovornosti 
 - **Omer Alispahić (Tehnički vođa):** Odgovoran (R) za Backend arhitekturu, Konsultovan (C) za Frontend integraciju.
 - **Član 2 (Product Owner):** Odgovoran (R) za Backlog i validaciju User Story-ja, Obaviješten (I) o tehničkim dugovima.
 - **Član 3 (QA Lead):** Odgovoran (R) za integritet testova i automatizaciju, Konsultovan (C) kod dizajna API ruta.
@@ -70,7 +70,7 @@ Tim Grupe 3 funkcioniše kao agilna jedinica sa jasno definisanim granicama odgo
 
 ---
 
-## 3. PRODUCT BACKLOG I DETALJNA RAZRADA FUNKCIONALNOSTI
+## 3. Backglog i detaljna razrada funkcionalnosti
 *Lokacija: `/docs/product/ProductBacklog.md`*
 
 Naš backlog je baziran na **User-Centric** dizajnu, gdje svaki zahtjev direktno adresira bolnu tačku korisnika.
@@ -125,7 +125,7 @@ Naš backlog je baziran na **User-Centric** dizajnu, gdje svaki zahtjev direktno
 
 ---
 
-## 4. TEHNIČKA ARHITEKTURA I DIZAJN SISTEMA
+## 4. Tehnička ahitektura i dizajn sistema
 *Lokacija: `/docs/architecture/Architecture.md`*
 
 ### 4.1 Slojevita Arhitektura (Layered Architecture)
@@ -156,7 +156,7 @@ Sistem je strukturiran u četiri jasno razgraničena sloja kako bi se osigurala 
 
 ---
 
-## 5. RAZVOJNI DNEVNIK KROZ SPRINTove (SCRUM EXECUTION)
+## 5. Razvojni Dnevnik kroz Sprintove (SCRUM EXECUTION)
 
 ### 5.1 Sprint 1: Temelji i "Human-First" Inžinjering
 - **Fokus:** Postavljanje skeleta aplikacije i dizajn baze podataka.
@@ -177,7 +177,7 @@ Sistem je strukturiran u četiri jasno razgraničena sloja kako bi se osigurala 
 
 ---
 
-## 6. DECISION LOG (DETALJNA EVIDENCIJA ODLUKA I TRADE-OFFS)
+## 6. Decision Log 
 *Lokacija: `/docs/management/DecisionLog.md`*
 
 <table>
@@ -213,7 +213,7 @@ Sistem je strukturiran u četiri jasno razgraničena sloja kako bi se osigurala 
 
 ---
 
-## 7. STRATEGIJA TESTIRANJA I KVALITETA (QA)
+## 7. Strategija Testiranja i Kvaliteta (QA)
 
 ### 7.1 Hijerarhija testova
 1.  **Unit Testovi (Jest):** Testiranje izolovanih funkcija (npr. kalkulator datuma kalibracije). Cilj: 80% coverage.
@@ -318,7 +318,7 @@ Testna strategija sistema ISOLO zasnovana je na rigoroznoj verifikaciji tri krit
 </table>
 ---
 
-## 8. AI USAGE LOG (EVIDENCIJA AI ASISTENCIJE)
+## 8. AI Usage Log (Evidencija AI Assistance)
 *Lokacija: `/docs/management/AIUsageLog.md`*
 
 Ovdje dokumentujemo simbiozu ljudske inteligencije i vještačkih modela.
@@ -356,7 +356,7 @@ Ovdje dokumentujemo simbiozu ljudske inteligencije i vještačkih modela.
 
 ---
 
-## 9. DEFINITION OF DONE (DoD)
+## 9. Definition of Done (DoD)
 Stavka je gotova samo ako ispunjava:
 - [ ] Kod je prošao **Linting** (Prettier/ESLint).
 - [ ] Dokumentacija u `/docs/` je ažurirana (ako je bilo promjena šeme).
@@ -366,7 +366,7 @@ Stavka je gotova samo ako ispunjava:
 
 ---
 
-## 10. TEHNIČKI SETUP I INSTRUKCIJE ZA RAZVOJ
+## 10. Tehnički setup i instrukcije za razvoj
 
 ### 10.1 Preduslovi
 - **Node.js:** v18.16.0 ili noviji.
