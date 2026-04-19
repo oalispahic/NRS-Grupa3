@@ -58,7 +58,7 @@ Glavni cilj sistema ISOLO je transformacija iz reaktivnog u prediktivni model od
 Tim Grupe 3 funkcioniše kao agilna jedinica sa jasno definisanim granicama odgovornosti, ali visokim stepenom kolaboracije.
 
 ### 2.1 Matrica odgovornosti 
-- **Omer Alispahić (Tehnički vođa):** Odgovoran (R) za Backend arhitekturu, Konsultovan (C) za Frontend integraciju.
+- **Član 1 (Tehnički vođa):** Odgovoran (R) za Backend arhitekturu, Konsultovan (C) za Frontend integraciju.
 - **Član 2 (Product Owner):** Odgovoran (R) za Backlog i validaciju User Story-ja, Obaviješten (I) o tehničkim dugovima.
 - **Član 3 (QA Lead):** Odgovoran (R) za integritet testova i automatizaciju, Konsultovan (C) kod dizajna API ruta.
 - **Član 4 (UX/Frontend):** Odgovoran (R) za klijentsku stranu aplikacije i pristupačnost (Accessibility).
@@ -156,24 +156,34 @@ Sistem je strukturiran u četiri jasno razgraničena sloja kako bi se osigurala 
 
 ---
 
-## 5. Razvojni Dnevnik kroz Sprintove (SCRUM EXECUTION)
+## 5. Razvojni dnevnik kroz sprintove (SCRUM EXECUTION)
 
-### 5.1 Sprint 1: Temelji i "Human-First" Inžinjering
-- **Fokus:** Postavljanje skeleta aplikacije i dizajn baze podataka.
-- **Aktivnosti:** Ručno crtanje ER dijagrama, definisanje REST ruta na papiru, postavljanje Git flow-a.
-- **Tehnički izazov:** Implementacija dinamičkog generisanja QR kodova na serverskoj strani bez zavisnosti o eksternim API-jima (zbog privatnosti).
-- **Ishod:** Stabilna baza, Login sistem i osnovni pregled inventara.
+Proces planiranja i dokumentovanja sistema ISOLO odvija se kroz iterativne cikluse (sprintove). Do sada su završena tri sprinta koja su se fokusirala na **"Human-First"** inžinjering — temeljnu analizu i projektovanje bez upotrebe AI alata, oslanjajući se isključivo na istraživački rad i kolaboraciju članova tima.
 
-### 5.2 Sprint 2: Servisna logika i Ticketing (Intermedijarna faza)
-- **Fokus:** Workflow kvara i servisa.
-- **Aktivnosti:** Implementacija logike promjene stanja uređaja. Razvoj frontenda za prijavu kvara.
-- **AI Integracija:** Počeli smo koristiti GitHub Copilot za generisanje boilerplate koda za `Service` sloj.
-- **Ishod:** Funkcionalan sistem za prijavu kvarova i praćenje istorije popravki.
+### 5.1 Sprint 1: Defisanje Vizije i Analiza Problematike
+* **Fokus:** Identifikacija kritičnih tačaka u laboratorijskom okruženju i postavljanje ciljeva.
+* **Aktivnosti:** * Detaljna analiza "crnih rupa" u informacionim tokovima (informaciona asimetrija između laboranata i menadžmenta).
+    * Definisanje **Product Vision-a** i identifikacija ključnih korisnika sistema (Laborant, Šef laboratorije, Servisni tehničar).
+    * Izrada početne mape uticaja i interesa stakeholdera.
+    * **Komunikacijski kanali:** Uspostavljena primarna koordinacija putem **WhatsApp** grupe za brze dogovore i sinkronizaciju.
+* **Ishod:** Jasno definisan obuhvat (Scope) projekta i strateški pravci transformacije procesa održavanja.
 
-### 5.3 Sprint 3: AI-Enabled Optimizacija i QA
-- **Fokus:** Testiranje, poliranje UI-ja i automatizacija izvještaja.
-- **Aktivnosti:** Masovno generisanje **Unit testova** koristeći ChatGPT 4 (uz ljudsku validaciju). Refaktoring kompleksnih SQL upita za dashboard.
-- **Rezultat:** Povećana pokrivenost koda testovima sa 10% na 75% u samo jednoj sedmici. Implementiran izvoz podataka u PDF i Excel.
+### 5.2 Sprint 2: Operativni Model i Planiranje Timskih Protokola
+* **Fokus:** Uspostavljanje unutrašnje organizacije tima i pravila saradnje.
+* **Aktivnosti:** * Izrada **Team Charter-a** i definisanje **RACI matrice** (odgovornosti članova tima za dokumentaciju).
+    * Održavanje redovnih sastanaka putem **Google Meet** platforme radi detaljne diskusije o arhitekturi.
+    * Definisanje kodeksa ponašanja i protokola za rješavanje konflikata unutar tima.
+    * Postavljanje standarda za budući razvoj koda i politike pregleda (Code Review).
+* **Ishod:** Operativan tim sa usuglašenim metodama komunikacije i jasnim granicama odgovornosti.
+
+### 5.3 Sprint 3: Detaljna Specifikacija Arhitekture i QA Okvira
+* **Fokus:** Tehničko modeliranje i definisanje kriterija kvaliteta.
+* **Aktivnosti:** * Kreiranje prioritizovanog **Product Backlog-a** sa detaljnim korisničkim pričama (**User Stories**).
+    * Definisanje striktnih kriterija prihvatanja (**Acceptance Criteria**) i nefunkcionalnih zahtjeva (NFR).
+    * Modeliranje slojevite arhitekture sistema i ERD specifikacija baze podataka (entiteti i relacije).
+    * Definisanje **Definition of Done (DoD)** liste i tabele detaljnih testnih scenarija za osiguranje kvaliteta.
+* **Ishod:** Kompletirana tehnička i funkcionalna dokumentacija koja služi kao precizan nacrt za implementaciju softvera.
+
 
 ---
 
