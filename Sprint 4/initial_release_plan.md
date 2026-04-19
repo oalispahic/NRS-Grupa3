@@ -27,3 +27,45 @@ Projekt je organizovan u dvije jasno odvojene faze:
 **AI-Enabled faza (Sprintovi 5–11):** Fokus je na aktivnoj implementaciji sistema. Tim razvija sve funkcionalnosti prema prioritetima definisanim u Product Backlogu, uz kontinuirano testiranje i poboljšanja.
  
 ---
+
+## Planirani inkrementi / release cjeline
+ 
+Sistem je podijeljen na **5 inkremenata** koji se logički nadovezuju jedan na drugi. Svaki inkrement donosi grupu funkcionalnosti koje zajedno čine zaokruženu cjelinu koja se može demonstrirati i validirati.
+ 
+---
+ 
+### Inkrement 1 – Tehnička infrastruktura i temelji sistema
+ 
+| Kategorija | Sadržaj |
+|---|---|
+| **Naziv** | Tehnička infrastruktura i temelji sistema |
+| **Cilj** | Uspostaviti potpuno funkcionalno razvojno okruženje i definisati standarde rada koji će biti korišeni u svim narednim inkramentima. Na kraju ovog inkrementa, tim mora imati pokrenuto razvojno okruženje u kojem svaki član može razvijati i testirati kod lokalno, kao i zajednički dogovor o svim tehničkim pravilima. |
+| **Okvirni sprintovi** | Sprint 4 |
+ 
+**Glavne funkcionalnosti:**
+ 
+| ID | Funkcionalnost | Opis |
+|---|---|---|
+| – | Definition of Done | Dokument koji definiše kada se zadatak smatra završenim |
+| – | Skeleton projekta | Inicijalizovana React app, Express server i PostgreSQL konekcija |
+| – | GitHub repozitorij | Postavljeni branchevi, workflow za pull requestove i code review |
+| – | Initial Release Plan | Ovaj dokument – plan isporuke sistema |
+| – | Environment konfiguracija | `.env` fajlovi, dependency management, linting pravila |
+ 
+**Zavisnosti:**
+ 
+| Zavisnost | Opis |
+|---|---|
+| Nema prethodnih inkremenata | Ovo je polazna tačka – ne ovisi ni o čemu unutar projekta |
+| Domain Model (Sprint 3) | Struktura baze podataka mora biti usklađena sa definisanim entitetima |
+| Odabir tech stacka | Donesena odluka o React + Node.js + PostgreSQL mora biti finalizovana |
+ 
+**Glavni rizici:**
+ 
+| Rizik | Uticaj | Plan ublažavanja |
+|---|---|---|
+| Skeleton nije potpuno funkcionalan do kraja sprinta | Visok – blokira sve naredne inkrement | Skeleton je apsolutni prioritet broj jedan, svi ostali deliverable-i su sekundarni |
+| Različita lokalna okruženja članova tima uzrokuju "radi kod mene" probleme | Srednji | Dokumentovati tačne verzije Node.js i PostgreSQL, koristiti `.nvmrc` fajl |
+ 
+---
+
