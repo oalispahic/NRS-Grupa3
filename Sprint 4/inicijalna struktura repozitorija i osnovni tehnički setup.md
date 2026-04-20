@@ -12,7 +12,7 @@ Glavni cilj sistema ISOLO je transformacija iz reaktivnog u prediktivni model od
 - **Sistem ranog upozoravanja:** Algoritam za proračun preostalog vremena do kalibracije baziran na specifikacijama proizvođača i intenzitetu korištenja.
 - **Incident Lifecycle Management:** Automatizacija ticketing sistema od momenta skeniranja QR koda na uređaju do zatvaranja radnog naloga od strane servisera.
 
-### 1.3 Proširena Stakeholder Map (Analiza uticaja i interesa)
+### 1.3 Stakeholder Map (Analiza uticaja i interesa)
 <table>
   <thead>
     <tr>
@@ -119,9 +119,102 @@ Naš backlog je baziran na **User-Centric** dizajnu, gdje svaki zahtjev direktno
 </table>
 
 ### 3.2 Nefunkcionalni zahtjevi (NFR)
-1.  **Performanse:** Vrijeme učitavanja profila opreme ne smije prelaziti 1.5s pod opterećenjem od 50 istovremenih korisnika.
-2.  **Sigurnost:** Svi podaci u tranzitu moraju biti enkriptovani (TLS). Lozinke se čuvaju koristeći Argon2 ili Bcrypt sa salt-om.
-3.  **Dostupnost:** Sistem mora biti responzivan na mobilnim uređajima (Mobile-first design) zbog terenskog rada.
+
+Nefunkcionalni zahtjevi definišu operativne standarde i kvalitativne atribute sistema ISOLO. Ovi parametri osiguravaju da sistem ne samo "radi", već da radi pouzdano, sigurno i efikasno u specifičnom okruženju medicinskih i naučnih laboratorija gdje je preciznost imperativ.
+
+#### 1. Performanse i Skalabilnost
+Sistem mora osigurati fluidno korisničko iskustvo čak i u uslovima povećanog intenziteta rada, kao što su periodične revizije opreme ili masovni upisi novih instrumenata u bazu. Fokus je na brzini odziva jer laboranti na terenu ne smiju gubiti vrijeme čekajući na učitavanje stranica.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parametar</th>
+      <th>Ciljna vrijednost</th>
+      <th>Metrika / Alat</th>
+      <th>Opis i Obrazloženje</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Latenza profila</b></td>
+      <td>&lt; 1.5 sekundi</td>
+      <td>Lighthouse / DevTools</td>
+      <td>Vrijeme od klika na "Detalji" ili skeniranja QR koda do potpunog prikaza Digital Twin profila uređaja.</td>
+    </tr>
+    <tr>
+      <td><b>Odziv API-ja</b></td>
+      <td>&lt; 200 ms</td>
+      <td>Postman / k6</td>
+      <td>Maksimalno vrijeme obrade zahtjeva na backendu za standardne GET operacije nad listom opreme.</td>
+    </tr>
+    <tr>
+      <td><b>Konkurentnost</b></td>
+      <td>50+ sesija</td>
+      <td>Node.js Cluster</td>
+      <td>Broj istovremenih korisnika koji mogu obavljati transakcije (npr. prijava kvara) bez degradacije brzine.</td>
+    </tr>
+    <tr>
+      <td><b>Optimizacija medija</b></td>
+      <td>Auto-compression</td>
+      <td>Sharp (Node.js)</td>
+      <td>Sve slike kvarova se automatski optimizuju na max 800KB prije pohrane radi uštede prostora i bandwidth-a.</td>
+    </tr>
+  </tbody>
+</table>
+
+* **Skalabilnost baze podataka:** Arhitektura baze je dizajnirana tako da performanse pretrage ostaju konzistentne čak i kada broj zapisa o servisima premaši 100.000, koristeći indeksiranje nad poljima `serial_number` i `equipment_id`.
+* **Keširanje:** Implementacija klijentskog keširanja (React Query) smanjuje broj suvišnih API poziva za statične podatke (npr. kategorije opreme ili lokacije).
+
+#### 2. Sigurnost i Integritet Podataka
+Zaštita istraživačkih metapodataka i nepovredivost zapisa o održavanju su ključni za dobijanje laboratorijskih akreditacija. ISOLO koristi višeslojni pristup sigurnosti.
+
+<table>
+  <thead>
+    <tr>
+      <th>Sigurnosni sloj</th>
+      <th>Tehnologija</th>
+      <th>Metoda Implementacije</th>
+      <th>Cilj zaštite</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Enkripcija u tranzitu</b></td>
+      <td>TLS 1.3 (SSL)</td>
+      <td>Let's Encrypt / HTTPS</td>
+      <td>Sprečavanje "Man-in-the-Middle" napada i prisluškivanja saobraćaja.</td>
+    </tr>
+    <tr>
+      <td><b>Zaštita lozinki</b></td>
+      <td>Argon2 / Bcrypt</td>
+      <td>Salt factor 12</td>
+      <td>Onemogućavanje dešifrovanja lozinki čak i u slučaju kompromitacije same baze podataka.</td>
+    </tr>
+    <tr>
+      <td><b>Upravljanje pristupom</b></td>
+      <td>JWT + RBAC</td>
+      <td>HttpOnly Cookies</td>
+      <td>Stroga kontrola ko može editovati podatke o kalibraciji u odnosu na obične korisnike (laborante).</td>
+    </tr>
+    <tr>
+      <td><b>Integritet unosa</b></td>
+      <td>Zod Validation</td>
+      <td>Schema Validation</td>
+      <td>Sprečavanje SQL injection napada i unosa nevalidnih formata podataka u sistem.</td>
+    </tr>
+  </tbody>
+</table>
+
+* **Audit Log (Trag revizije):** Svaka kritična akcija (promjena statusa, brisanje zapisa) kreira neizbrisiv trag u bazi podataka. Sistem bilježi ko je izvršio promjenu, kada, i koja je bila prethodna vrijednost.
+* **Rate Limiting:** Implementirana zaštita od "Brute Force" napada na login rutu, ograničavajući broj pokušaja na 5 unutar 15 minuta po IP adresi.
+
+#### Dostupnost i Pouzdanost (Reliability)
+Laboratorije rade 24/7, stoga sistem za praćenje opreme mora pratiti taj tempo. Neplanirani zastoji direktno utiču na produktivnost naučnog osoblja.
+
+* **Uptime i Disaster Recovery:** Ciljana dostupnost je **99.9%**. U slučaju fatalne greške, sistem posjeduje strategiju oporavka baziranu na inkrementalnom backupu baze podataka svakih 24h, sa maksimalnim gubitkom podataka od 1 sata (RPO = 1h).
+* **Mobile-First Design:** Korisnički interfejs je primarno razvijen za mobilne uređaje (tablete i telefone). Elementi su dizajnirani da budu "tap-friendly", sa jasnim vizuelnim indikatorima statusa (zeleno/crveno) koji su vidljivi čak i pod lošim laboratorijskim osvjetljenjem.
+* **Efikasnost skeniranja:** QR kod integracija omogućava da od momenta skeniranja do prikaza ključne informacije o "ispravnosti" uređaja ne prođe više od dvije sekunde, čime se minimizira kognitivno opterećenje korisnika.
+* **Fault Tolerance (Otpornost na greške):** Ako servis za generisanje PDF izvještaja nije dostupan, jezgro sistema (pregled opreme i prijava kvarova) nastavlja funkcionisati nezavisno.
 
 ---
 
