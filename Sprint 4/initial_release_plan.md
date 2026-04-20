@@ -233,4 +233,14 @@ Sistem je podijeljen na **5 inkremenata** koji se logički nadovezuju jedan na d
  
 ---
 
-
+## Sumarni pregled svih inkremenata
+ 
+| Inkrement | Naziv | Sprintovi | PB stavke | Status |
+|---|---|---|---|---|
+| **I1** | Tehnička infrastruktura i temelji | Sprint 4 | – | 🔄 U toku |
+| **I2** | Osnovne funkcionalnosti – MVP Core | Sprint 5–6 | PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB23, PB24, PB26 | 📋 Planirano |
+| **I3** | Poboljšano korisničko iskustvo | Sprint 7–8 | PB8, PB9, PB10, PB11, PB12, PB13, PB14, PB15, PB25 | 📋 Planirano |
+| **I4** | Laboratorijske funkcionalnosti i analitika | Sprint 9–10 | PB16, PB17, PB21, PB22, PB27 | 📋 Planirano |
+| **I5** | Finalizacija i priprema za isporuku | Sprint 11 | PB18, PB19, PB20 | 📋 Planirano |
+ 
+---
