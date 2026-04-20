@@ -6,7 +6,7 @@
 
 ## 1. Kratak opis arhitektonskog pristupa
 
-Sistem koristi **troslojnu (three-tier) klijent-server arhitekturu** sa jasnim razdvajanjem odgovornosti između prezentacijskog sloja (frontend), poslovne logike (backend) i sloja podataka (baza). Komunikacija između frontenda i backenda odvija se putem **RESTful API-ja**, čime se osigurava labava spregnutost (loose coupling) komponenti i mogućnost nezavisnog razvoja i deployementa.
+Sistem koristi **troslojnu (three-tier)  arhitekturu** sa jasnim razdvajanjem odgovornosti između prezentacijskog sloja (frontend), poslovne logike (backend) i sloja podataka (baza). Komunikacija između frontenda i backenda odvija se putem **RESTful API-ja**, čime se osigurava labava spregnutost (loose coupling) komponenti i mogućnost nezavisnog razvoja i deployementa.
 
 Ovaj pristup je odabran iz sljedećih razloga:
 
