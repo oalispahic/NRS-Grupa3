@@ -201,22 +201,76 @@ Proces planiranja i dokumentovanja sistema ISOLO odvija se kroz iterativne ciklu
   </thead>
   <tbody>
     <tr>
-      <td>DEC-01</td>
+      <td><b>DEC-01</b></td>
       <td>Tehnologija za Backend</td>
-      <td>1. Python/Django (Brz razvoj)<br>2. Node.js (Uniforman jezik sa FE)</td>
-      <td><b>Node.js:</b> Odabrano jer cijeli tim poznaje JavaScript, što smanjuje kognitivno opterećenje.</td>
+      <td>1. Python/Django (Brz razvoj)<br>2. Node.js/Express (JavaScript)</td>
+      <td><b>Node.js:</b> Odabrano zbog uniformnosti jezika sa Frontend-om (Full-stack JS), što ubrzava razvoj i olakšava Code Review unutar tima.</td>
     </tr>
     <tr>
-      <td>DEC-02</td>
-      <td>Strategija za Slike</td>
-      <td>1. Base64 u bazi (Sporo)<br>2. S3 Bucket (Dodatni trošak)<br>3. Lokalni Storage</td>
-      <td><b>Lokalni Storage:</b> Odlučeno za MVP fazu zbog nulte cijene, uz plan migracije na S3 kasnije.</td>
+      <td><b>DEC-02</b></td>
+      <td>Strategija pohrane slika</td>
+      <td>1. Base64 u bazi (Sporo)<br>2. S3 Bucket (Dodatni trošak)<br>3. Lokalni Storage (FS)</td>
+      <td><b>Lokalni Storage:</b> Odlučeno za MVP fazu (lokalni <code>/uploads</code> folder). Jednostavnije za dev okruženje uz planiranu migraciju na S3 kasnije.</td>
     </tr>
     <tr>
-      <td>DEC-03</td>
+      <td><b>DEC-03</b></td>
       <td>Validacija podataka</td>
-      <td>1. Ručna validacija u controlleru<br>2. Zod/Joi biblioteke</td>
-      <td><b>Zod:</b> Omogućava TypeScript-like tipizaciju i automatsku validaciju šeme na ulazu.</td>
+      <td>1. Ručna validacija u kontrolerima<br>2. Zod/Joi biblioteke</td>
+      <td><b>Zod:</b> Omogućava TypeScript-like tipizaciju i "Schema-first" pristup koji automatski generiše tipove, smanjujući runtime greške.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-04</b></td>
+      <td>ORM (Object-Relational Mapper)</td>
+      <td>1. TypeORM (Kompleksan)<br>2. Sequelize (Stabilan, odlična dokumentacija)<br>3. Raw SQL</td>
+      <td><b>Sequelize:</b> Odabran zbog moćnog migracijskog sistema i stabilne podrške za relacije između opreme, korisnika i servisnih zapisa.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-05</b></td>
+      <td>Autentifikacija</td>
+      <td>1. Session/Cookies (Stateful)<br>2. JWT - JSON Web Tokens (Stateless)</td>
+      <td><b>JWT:</b> Omogućava skalabilnost i lakšu integraciju sa mobilnim skenerima u budućnosti. Čuva se u <code>HttpOnly</code> cookie-u radi sigurnosti.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-06</b></td>
+      <td>State Management (Frontend)</td>
+      <td>1. Redux (Robustan, ali "težak")<br>2. Context API (Ugrađen)<br>3. Zustand (Lagan i brz)</td>
+      <td><b>Zustand + Context:</b> Context API koristimo za Auth stanje, a Zustand za globalno upravljanje filterima opreme i stanjem modala.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-07</b></td>
+      <td>Generisanje QR kodova</td>
+      <td>1. Serverski generisane slike<br>2. Client-side generisanje (Library)</td>
+      <td><b>Client-side (qrcode.react):</b> Smanjuje opterećenje servera i pohranu. QR kod se generiše dinamički na osnovu UUID-a uređaja prilikom prikaza.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-08</b></td>
+      <td>Baza Podataka</td>
+      <td>1. MongoDB (NoSQL)<br>2. PostgreSQL (Relaciona baza)</td>
+      <td><b>PostgreSQL:</b> Relacioni integritet je kritičan. Foreign Key ograničenja osiguravaju da se ne obriše uređaj koji ima aktivne servisne zapise.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-09</b></td>
+      <td>Rukovanje datumima</td>
+      <td>1. Native JS Date (Nepouzdan)<br>2. Day.js (Lagan i modularan)</td>
+      <td><b>Day.js:</b> Neophodan za preciznu kalkulaciju kalibracijskih intervala (npr. dodavanje 6 ili 12 mjeseci na datum zadnjeg servisa).</td>
+    </tr>
+    <tr>
+      <td><b>DEC-10</b></td>
+      <td>UI Styling</td>
+      <td>1. Klasični CSS/SASS<br>2. Tailwind CSS (Utility-first)</td>
+      <td><b>Tailwind CSS:</b> Omogućava ultra-brz razvoj responzivnog sučelja koje je optimizovano za tablete koje laboranti koriste na terenu.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-11</b></td>
+      <td>Logging i Error Tracking</td>
+      <td>1. console.log (Samo dev)<br>2. Winston / Morgan (Strukturirani logovi)</td>
+      <td><b>Winston + Morgan:</b> Omogućava bilježenje grešaka u <code>error.log</code> datoteke, što je ključno za debuggiranje produkcijskih problema.</td>
+    </tr>
+    <tr>
+      <td><b>DEC-12</b></td>
+      <td>API Arhitektura</td>
+      <td>1. Monolitni kontroleri<br>2. Layered Architecture (Controller-Service-Repo)</td>
+      <td><b>Layered:</b> Razdvajanje poslovne logike (Service) od HTTP logike (Controller) olakšava pisanje Unit testova i održavanje koda.</td>
     </tr>
   </tbody>
 </table>
