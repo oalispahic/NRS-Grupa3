@@ -193,3 +193,44 @@ Sistem je podijeljen na **5 inkremenata** koji se logički nadovezuju jedan na d
 | Dashboard (PB27) može prerasti u zasebnu mini-aplikaciju | Nizak | Ograničiti scope na 4-5 ključnih widgeta, ne dodavati nove bez odobrenja tima |
  
 ---
+
+### Inkrement 5 – Finalizacija, dodatne funkcionalnosti i priprema za isporuku
+ 
+| Kategorija | Sadržaj |
+|---|---|
+| **Naziv** | Finalizacija, dodatne funkcionalnosti i priprema za isporuku |
+| **Cilj** | Implementirati preostale Nice-to-Have funkcionalnosti iz backlog-a, provesti sveobuhvatno testiranje cijelog sistema, otkloniti sve poznate greške i pripremiti sistem za finalnu demonstraciju i predaju. Po završetku ovog inkrementa, sistem je potpuno funkcionalan, testiran i dokumentovan. |
+| **Okvirni sprintovi** | Sprint 11 |
+ 
+**Glavne funkcionalnosti:**
+ 
+| ID | Funkcionalnost | Prioritet | Sprint |
+|---|---|---|---|
+| PB18 | Dodavanje slika i tehničkih specifikacija opreme (admin) | 🟢 Nice to Have | Sprint 11 |
+| PB19 | Ocjenjivanje opreme od strane laboranta nakon korištenja | 🟢 Nice to Have | Sprint 11 |
+| PB20 | Export podataka u CSV format (oprema, rezervacije, zalihe) | 🟢 Nice to Have | Sprint 11 |
+| – | End-to-end testiranje svih kritičnih korisničkih tokova | Obavezno | Sprint 11 |
+| – | Sigurnosni pregled svih API ruta i autorizacijskih provjera | Obavezno | Sprint 11 |
+| – | Korisnička dokumentacija – vodič za laborante i administratore | Obavezno | Sprint 11 |
+| – | Priprema za deployment (Docker konfiguracija, environment varijable) | Obavezno | Sprint 11 |
+ 
+**Zavisnosti:**
+ 
+| Zavisnost | Opis |
+|---|---|
+| Svi prethodni inkrementi moraju biti završeni | Testiranje i finalizacija pretpostavljaju potpuno funkcionalan sistem |
+| PB18 ovisi o PB2 | Slike i specifikacije se dodaju na stranicu detalja opreme koja mora postojati |
+| PB19 ovisi o PB3 i PB4 | Ocjenjivanje je moguće samo za rezervacije koje su završene |
+| PB20 ovisi o PB12 i PB21 | Export podataka o rezervacijama i zalihama ovisi o tim funkcionalnostima |
+ 
+**Glavni rizici:**
+ 
+| Rizik | Uticaj | Plan ublažavanja |
+|---|---|---|
+| Nedovoljno vremena za testiranje zbog nagomilanog tehničkog duga | Visok | Kontinuirano testirati tokom svakog sprinta, ne čekati kraj projekta |
+| PB18, PB19 i PB20 se ne stignu implementirati | Nizak | Sve tri stavke su Nice-to-Have i ne utiču na MVP – mogu biti odgođene |
+| Problemi sa deployment konfiguracijom u zadnji čas | Srednji | Testirati Docker konfiguraciju već u Sprintu 10, ne ostavljati za Sprint 11 |
+ 
+---
+
+
