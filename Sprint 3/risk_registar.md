@@ -228,6 +228,283 @@ Rizik nastaje kada validacija i sanitizacija ulaza nije dosljedno implementirana
 **Plan mitigacije:**  
 Potrebno je implementirati server-side validaciju svih ulaza, koristiti parametrizovane upite i ORM/Query Builder mehanizme, uvesti escaping izlaza na frontendu, CSRF zaštitu gdje je primjenjivo, sigurnosne HTTP headere i redovno OWASP sigurnosno testiranje.
 
+## R-11
+
+**ID:** R-11  
+**Kategorija:** Sigurnost / Autentifikacija
+
+**Opis rizika:**  
+Postoji rizik od brute-force napada, korištenja slabih lozinki ili kompromitacije korisničkih naloga zbog nedovoljne politike autentifikacije.
+
+**Uzrok:**  
+Rizik može nastati ako sistem ne ograničava broj neuspješnih pokušaja prijave, ne zahtijeva dovoljno jake lozinke ili ne prati sumnjivo ponašanje korisnika na login ruti.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je definisati politiku kompleksnosti lozinki, uvesti rate limiting i privremeno zaključavanje naloga nakon više neuspjelih pokušaja, logovati sumnjive prijave i po potrebi razmotriti MFA za administratorske naloge.
+
+**Odgovorna osoba ili uloga:** Security Lead, Backend Lead  
+**Status:** Otvoren
+
+---
+
+## R-12
+
+**ID:** R-12  
+**Kategorija:** Arhitektura / Dostupnost
+
+**Opis rizika:**  
+Postoji rizik da kvar jednog modula ili jednog servera obori cijeli sistem, jer je MVP zasnovan na monolitnoj arhitekturi i jednom serveru bez redundancije.
+
+**Uzrok:**  
+Rizik proizlazi iz centralizovanog deployment modela, zajedničkog procesa za više modula i nedostatka failover mehanizama u ranoj fazi projekta.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je uvesti process manager sa automatskim restartom, health check-ove, odvajanje kritičnih poslova u pozadinske radnike gdje je moguće, redovan monitoring resursa i plan za buduću redundanciju ili horizontalno skaliranje.
+
+**Odgovorna osoba ili uloga:** DevOps Lead, Backend Lead  
+**Status:** Otvoren
+
+---
+
+## R-13
+
+**ID:** R-13  
+**Kategorija:** Sigurnost / Upravljanje ulogama
+
+**Opis rizika:**  
+Postoji rizik da promjena korisničke uloge ili odjava ne budu odmah efektivne zbog stateless JWT pristupa, pa korisnik privremeno zadrži stara ovlaštenja.
+
+**Uzrok:**  
+Ovaj rizik proizlazi iz činjenice da token može ostati važeći do isteka čak i ako je korisniku u međuvremenu promijenjena uloga ili je nalog deaktiviran.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji do visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je koristiti kratkotrajne tokene, mehanizam refresh tokena, opcionalnu blacklistu za kritične situacije i dodatnu provjeru statusa korisnika za visoko rizične administrativne akcije.
+
+**Odgovorna osoba ili uloga:** Security Lead, Backend Lead  
+**Status:** Otvoren
+
+---
+
+## R-14
+
+**ID:** R-14  
+**Kategorija:** Performanse / Skala podataka
+
+**Opis rizika:**  
+Postoji rizik da pretraga, filtriranje, dashboard i izvještaji postanu spori kako broj opreme, rezervacija i audit log zapisa raste.
+
+**Uzrok:**  
+Rizik može nastati zbog nedostatka indeksa, neoptimizovanih JOIN upita, neefikasne paginacije ili generisanja teških izvještaja direktno nad produkcionim tabelama bez optimizacije.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je planirati indeksiranje od početka, koristiti paginaciju i filtriranje na serveru, profilisati upite, odvojiti teške izvještaje u asinhrone procese i provoditi load testove na realističnim setovima podataka.
+
+**Odgovorna osoba ili uloga:** Backend Lead, DBA / DevOps, QA Lead  
+**Status:** Otvoren
+
+---
+
+## R-15
+
+**ID:** R-15  
+**Kategorija:** Operacije / Monitoring
+
+**Opis rizika:**  
+Postoji rizik da tim prekasno primijeti incidente, spor rad sistema, neuspjele backup-e ili rast sigurnosnih prijetnji jer monitoring i alerting nisu dovoljno razvijeni.
+
+**Uzrok:**  
+Rizik nastaje kada se oslanja isključivo na ručno uočavanje problema ili prijave korisnika, bez centralizovanog prikupljanja logova, metrika i automatskih upozorenja.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je uvesti centralizovano logovanje, dashboard za metrike, alarme za pad servisa, greške login-a, spore upite i neuspjele backup-e, te definisati procedure reagovanja na incidente.
+
+**Odgovorna osoba ili uloga:** DevOps Lead, Security Lead  
+**Status:** Otvoren
+
+---
+
+## R-16
+
+**ID:** R-16  
+**Kategorija:** Kvalitet / Testiranje
+
+**Opis rizika:**  
+Postoji rizik da kritične putanje sistema ne budu dovoljno testirane, zbog čega ozbiljne greške mogu ostati neotkrivene do kasnih faza razvoja ili produkcije.
+
+**Uzrok:**  
+Ovaj rizik može nastati zbog ograničenog vremena, nedovoljno definisanog test plana, oslanjanja samo na ručno testiranje ili manjka automatizovanih testova za RBAC, rezervacije, audit log i rad sa zalihama.
+
+**Vjerovatnoća:** Visoka  
+**Uticaj:** Visok  
+**Prioritet rizika:** Kritičan
+
+**Plan mitigacije:**  
+Potrebno je prioritetno automatizovati testove za najrizičnije scenarije, uvesti minimalni prag test coverage-a, testirati konkurentne scenarije rezervacija i napraviti jasnu vezu između acceptance kriterija i test slučajeva.
+
+**Odgovorna osoba ili uloga:** QA Lead, Backend Lead, Frontend Lead  
+**Status:** Otvoren
+
+---
+
+## R-17
+
+**ID:** R-17  
+**Kategorija:** Dokumentacija / Tehnička usklađenost
+
+**Opis rizika:**  
+Postoji rizik od konfuzije u timu i pogrešnog planiranja implementacije zato što tehnička dokumentacija nije u potpunosti usklađena oko tehnološkog stacka i alata za testiranje.
+
+**Uzrok:**  
+Rizik nastaje kada jedan dio dokumentacije opisuje Node.js/Express/React/PostgreSQL arhitekturu, a drugi koristi terminologiju i alate karakteristične za Spring Boot, JPA, Mockito ili JaCoCo. To može uzrokovati pogrešne procjene zadataka, pogrešan izbor alata i neujednačen rad tima.
+
+**Vjerovatnoća:** Visoka  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je hitno uskladiti svu projektnu dokumentaciju sa stvarno odabranim stackom, jasno označiti koji dokument je “source of truth”, ukloniti zastarjele reference i potvrditi tooling za razvoj i testiranje na nivou cijelog tima.
+
+**Odgovorna osoba ili uloga:** Arhitekta sistema, Documentation Lead, QA Lead  
+**Status:** Otvoren
+
+---
+
+## R-18
+
+**ID:** R-18  
+**Kategorija:** Tehničke odluke / Arhitektura
+
+**Opis rizika:**  
+Postoji rizik da ključne tehničke odluke budu donesene prekasno ili nedovoljno jasno, što može usporiti razvoj i dovesti do naknadnih prepravki.
+
+**Uzrok:**  
+Otvorena pitanja oko refresh token strategije, storage-a slika opreme, notifikacija, export biblioteka, deployment modela i load testing pristupa mogu ostati neriješena duže nego što je zdravo za projekat.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je evidentirati sva otvorena tehnička pitanja, postaviti rokove za odluke, dokumentovati trade-offe i zabraniti paralelnu implementaciju više kontradiktornih pristupa bez arhitektonske odluke.
+
+**Odgovorna osoba ili uloga:** Arhitekta sistema, Backend Lead, Frontend Lead  
+**Status:** Otvoren
+
+---
+
+## R-19
+
+**ID:** R-19  
+**Kategorija:** Podaci / Migracija
+
+**Opis rizika:**  
+Postoji rizik da inicijalni unos ili migracija podataka o opremi, korisnicima i zalihama iz postojećih evidencija bude netačna ili nepotpuna.
+
+**Uzrok:**  
+Rizik može nastati ako postojeći podaci dolaze iz Excel tabela, ručnih evidencija ili neformalnih spiskova sa nekonzistentnim nazivima, duplikatima ili nedostajućim poljima.
+
+**Vjerovatnoća:** Visoka  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je definisati šablone za import, validirati obavezna polja, provoditi čišćenje podataka prije uvoza, raditi probni import na testnom okruženju i imenovati osobu odgovornu za poslovnu validaciju migriranih podataka.
+
+**Odgovorna osoba ili uloga:** Product Owner, Backend Lead, Domenski vlasnik procesa  
+**Status:** Otvoren
+
+---
+
+## R-20
+
+**ID:** R-20  
+**Kategorija:** Rezervacije / Datum i vrijeme
+
+**Opis rizika:**  
+Postoji rizik od pogrešnog tumačenja datuma, vremena i vremenskih zona, što može uzrokovati rezervacije u pogrešnom terminu, posebno pri eksportu, izvještajima ili radu na više uređaja.
+
+**Uzrok:**  
+Rizik može nastati zbog neujednačenog formata datuma između frontenda, backenda i baze, lokalnih postavki preglednika, server timezone-a ili nekonzistentne upotrebe UTC/lokalnog vremena.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je standardizovati format datuma i vremena, čuvati vrijeme u UTC formatu gdje je prikladno, jasno prikazivati lokalno vrijeme korisniku i testirati granične scenarije kao što su prelaz dana, promjene termina i eksport podataka.
+
+**Odgovorna osoba ili uloga:** Backend Lead, Frontend Lead, QA Lead  
+**Status:** Otvoren
+
+---
+
+## R-21
+
+**ID:** R-21  
+**Kategorija:** Notifikacije / Workflow
+
+**Opis rizika:**  
+Postoji rizik da korisnici ne dobiju pravovremeno obavještenje o promjeni statusa rezervacije, održavanju opreme ili niskim zalihama, što može poremetiti rad laboratorije.
+
+**Uzrok:**  
+Rizik proizlazi iz polling pristupa u MVP-u, mogućeg kašnjenja u obradi notifikacija, nedovoljne preglednosti notifikacija u interfejsu ili nepostojanja alternativnih kanala obavještavanja.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Srednji do visok
+
+**Plan mitigacije:**  
+Potrebno je definisati jasna SLA očekivanja za notifikacije, prikazivati vidljive statuse u aplikaciji i periodično osvježavati podatke. Za kritične događaje treba planirati email ili drugi dodatni kanal obavještavanja u kasnijim iteracijama.
+
+**Odgovorna osoba ili uloga:** Frontend Lead, Backend Lead, Product Owner  
+**Status:** Otvoren
+
+---
+
+## R-22
+
+**ID:** R-22  
+**Kategorija:** Integritet podataka / Oprema
+
+**Opis rizika:**  
+Postoji rizik da brisanje ili arhiviranje opreme sa aktivnim ili budućim rezervacijama naruši integritet podataka i ostavi “viseće” rezervacije bez validne reference.
+
+**Uzrok:**  
+Rizik nastaje ako poslovna pravila i database ograničenja ne blokiraju takvu operaciju ili ako administrator nema dovoljno jasan pregled posljedica prije potvrde brisanja.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je zabraniti brisanje opreme sa aktivnim ili budućim rezervacijama, koristiti foreign key ograničenja i preferirati “soft delete” ili arhiviranje. Također, treba korisniku prikazati jasnu poruku sa listom zavisnih rezervacija.
+
+**Odgovorna osoba ili uloga:** Backend Lead, DBA  
+**Status:** Otvoren
+
+---
+
+
 **Odgovorna osoba ili uloga:** Security Lead, Backend Lead  
 **Status:** Otvoren
 
