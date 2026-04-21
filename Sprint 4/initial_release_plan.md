@@ -244,3 +244,39 @@ Sistem je podijeljen na **5 inkremenata** koji se logički nadovezuju jedan na d
 | **I5** | Finalizacija i priprema za isporuku | Sprint 11 | PB18, PB19, PB20 | 📋 Planirano |
  
 ---
+
+## MVP – Minimum Viable Product
+ 
+MVP verzija sistema, koja pokriva sve High prioritet stavke iz Product Backlog-a, mora biti funkcionalna po završetku **Inkrementa 2** (kraj Sprinta 6).
+ 
+| ID | Naziv | Prioritet | Inkrement | Sprint |
+|---|---|---|---|---|
+| PB23 | Autentifikacija korisnika | 🔴 Must Have | I2 | Sprint 5 |
+| PB1 | Pregled opreme | 🔴 Must Have | I2 | Sprint 5 |
+| PB2 | Detalji opreme | 🔴 Must Have | I2 | Sprint 5 |
+| PB5 | Upravljanje opremom (admin) | 🔴 Must Have | I2 | Sprint 5 |
+| PB3 | Rezervacija opreme | 🔴 Must Have | I2 | Sprint 5 |
+| PB4 | Moje rezervacije | 🔴 Must Have | I2 | Sprint 5 |
+| PB24 | Autorizacija (RBAC) | 🔴 Must Have | I2 | Sprint 6 |
+| PB26 | Sprječavanje konflikta rezervacija | 🔴 Must Have | I2 | Sprint 6 |
+| PB6 | Odobravanje rezervacija (admin) | 🔴 Must Have | I2 | Sprint 6 |
+| PB7 | Status opreme (admin) | 🔴 Must Have | I2 | Sprint 6 |
+| PB21 | Potrošnja repromaterijala | 🔴 Must Have | I4 | Sprint 9 |
+| PB8 | Kalendar zauzeća | 🟡 Should Have | I3 | Sprint 7 |
+| PB9 | Pretraga opreme | 🟡 Should Have | I3 | Sprint 7 |
+| PB10 | Filtriranje opreme | 🟡 Should Have | I3 | Sprint 7 |
+| PB13 | Otkazivanje rezervacije | 🟡 Should Have | I3 | Sprint 7 |
+| PB14 | Izmjena rezervacije | 🟡 Should Have | I3 | Sprint 7 |
+| PB11 | Notifikacije | 🟡 Should Have | I3 | Sprint 8 |
+| PB12 | Pregled svih rezervacija (admin) | 🟡 Should Have | I3 | Sprint 8 |
+| PB15 | Trenutno korištenje opreme | 🟡 Should Have | I3 | Sprint 8 |
+| PB25 | Logovanje aktivnosti | 🟡 Should Have | I3 | Sprint 8 |
+| PB22 | Pravila korištenja opreme | 🟡 Should Have | I4 | Sprint 9 |
+| PB27 | Dashboard pregled | 🟢 Nice to Have | I4 | Sprint 10 |
+| PB17 | Održavanje opreme | 🟢 Nice to Have | I4 | Sprint 10 |
+| PB16 | Izvještaji | 🟢 Nice to Have | I4 | Sprint 10 |
+| PB18 | Specifikacije i slike opreme | 🟢 Nice to Have | I5 | Sprint 11 |
+| PB19 | Ocjenjivanje opreme | 🟢 Nice to Have | I5 | Sprint 11 |
+| PB20 | Export podataka (CSV) | 🟢 Nice to Have | I5 | Sprint 11 |
+ 
+---
