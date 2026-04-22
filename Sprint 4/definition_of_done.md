@@ -99,7 +99,6 @@ tehnička osnova već bude oblikovana u skladu s potrebama domene za koju se sis
 razvija. U ovom slučaju riječ je o sistemu za upravljanje medicinskom laboratorijskom
 opremom, što podrazumijeva osjetljivost podataka, potrebu za preglednim praćenjem
 statusa opreme, rezervacija i kasnijih servisnih procesa.
-
 Zbog toga tehnička rješenja postavljena u ovom sprintu ne bi trebala biti potpuno generička.
 Naprimjer, struktura foldera, imenovanje modula, planirane rute, konekcija prema bazi i
 opšta organizacija projekta trebaju pokazivati da je sistem zamišljen za konkretan domen, a
@@ -137,7 +136,6 @@ backend dijela sistema.
 - [ ] Projekat se može preuzeti iz repozitorija i lokalno pokrenuti bez dodatnih skrivenih
 podešavanja.
 - [ ] `.env.example` je ažuriran ukoliko su uvedene nove konfiguracijske varijable.
-
 - [ ] Instalacija zavisnosti i pokretanje projekta mogu se izvršiti prema dokumentovanim
 koracima.
 - [ ] Konekcija sa bazom podataka je provjerena i funkcioniše bez kritičnih grešaka.
@@ -157,4 +155,4 @@ strukturi, konfiguraciji ili načinu pokretanja projekta.
 - [ ] Pull request je pregledao najmanje jedan drugi član tima.
 - [ ] Komentari iz code review procesa su riješeni ili adekvatno obrazloženi.
 - [ ] Zadatak je spreman da posluži kao stabilna osnova za naredne sprintove razvoja
-sistema za upravljanje laboratorijskom opremom.
+sistema za upravljanje laboratorijskom opremom
