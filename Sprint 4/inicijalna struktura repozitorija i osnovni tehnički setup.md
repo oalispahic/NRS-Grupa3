@@ -733,11 +733,6 @@ Nakon puštanja verzije 1.0, tim postupa po sljedećem protokolu:
 
 
 
-
-
-
-
-
 ## 11. Tehnički setup i instrukcije za razvoj
 
 ### 11.1 Preduslovi
