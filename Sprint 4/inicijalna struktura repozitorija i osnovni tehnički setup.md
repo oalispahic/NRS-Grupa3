@@ -58,10 +58,74 @@ Glavni cilj sistema ISOLO je transformacija iz reaktivnog u prediktivni model od
 Tim Grupe 3 funkcioniše kao agilna jedinica sa jasno definisanim granicama odgovornosti, ali visokim stepenom kolaboracije.
 
 ### 2.1 Matrica odgovornosti 
-- **Član 1 (Tehnički vođa):** Odgovoran (R) za Backend arhitekturu, Konsultovan (C) za Frontend integraciju.
-- **Član 2 (Product Owner):** Odgovoran (R) za Backlog i validaciju User Story-ja, Obaviješten (I) o tehničkim dugovima.
-- **Član 3 (QA Lead):** Odgovoran (R) za integritet testova i automatizaciju, Konsultovan (C) kod dizajna API ruta.
-- **Član 4 (UX/Frontend):** Odgovoran (R) za klijentsku stranu aplikacije i pristupačnost (Accessibility).
+
+Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u timu od 8 članova, primjenjujemo RACI model (Responsible, Accountable, Consulted, Informed). Svaki član tima ima jasno definisanu primarnu ulogu u životnom ciklusu razvoja sistema ISOLO.
+
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th align="left">Član tima</th>
+      <th align="left">Primarna uloga</th>
+      <th align="left">Glavne odgovornosti (RACI)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Omar Alispahić</b></td>
+      <td>Tehnički vođa (Tech Lead)</td>
+      <td><b>(A/R)</b> Backend arhitektura, dizajn baze podataka i sigurnosni protokoli. <b>(C)</b> Frontend integracija.</td>
+    </tr>
+    <tr>
+      <td><b>Elma Dedić</b></td>
+      <td>Product Owner / Scrum Master</td>
+      <td><b>(A/R)</b> Upravljanje backlog-om, validacija User Story-ja i prioritizacija sprinteva. <b>(I)</b> Tehnički dug.</td>
+    </tr>
+    <tr>
+      <td><b>Iman Salanović</b></td>
+      <td>QA Lead (Kvalitet)</td>
+      <td><b>(R)</b> Testiranje integriteta podataka i automatizacija testova (Jest/Supertest). <b>(C)</b> Dizajn API ruta.</td>
+    </tr>
+    <tr>
+      <td><b>Ilda Avdić</b></td>
+      <td>Backend Developer</td>
+      <td><b>(R)</b> Implementacija Business Logic sloja i API endpoint-a. <b>(C)</b> Optimizacija SQL upita i migracija.</td>
+    </tr>
+    <tr>
+      <td><b>Amina Rovčanin</b></td>
+      <td>Database & DevOps Eng.</td>
+      <td><b>(R)</b> Upravljanje PostgreSQL bazom, Docker konfiguracija i CI/CD pipeline na GitHub-u. <b>(A)</b> Integritet podataka.</td>
+    </tr>
+    <tr>
+      <td><b>Harun Zukanović</b></td>
+      <td>Frontend Developer</td>
+      <td><b>(R)</b> Implementacija React komponenti i State management (Zustand). <b>(C)</b> API integracija.</td>
+    </tr>
+    <tr>
+      <td><b>Kemal Mešić</b></td>
+      <td>Full-stack Developer</td>
+      <td><b>(R)</b> Razvoj "end-to-end" funkcionalnosti (npr. QR skener modul). <b>(C)</b> Code review za oba stacka.</td>
+    </tr>
+    <tr>
+      <td><b>Suljo Ruvić</b></td>
+      <td>UX/UI & Frontend Lead</td>
+      <td><b>(R)</b> Klijentska strana aplikacije, Tailwind CSS styling i pristupačnost (Accessibility). <b>(A)</b> Design system.</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Ključne definicije uloga:
+* **Responsible (R):** Osoba koja direktno izvršava zadatak.
+* **Accountable (A):** Osoba koja snosi krajnju odgovornost za uspjeh zadatka i odobrava rad (obično vođa modula).
+* **Consulted (C):** Osoba čije se stručno mišljenje traži prije donošenja finalne odluke.
+* **Informed (I):** Osoba koja se obavještava o progresu ili ishodu nakon što je odluka donesena.
+
+---
+
+### Operativni model rada
+S obzirom na veličinu tima, rad je organizovan kroz:
+1.  **Peer-to-Peer Review:** Nijedan kod ne ulazi u `main` bez odobrenja barem jednog člana koji nije autor koda (npr. Ilda pregleda Omarov kod).
+2.  **Cross-functional kolaboracija:** QA (Iman) blisko sarađuje sa Backend timom (Omar, Ilda) već u fazi dizajna API specifikacija.
+3.  **UI Sync:** UX/UI Lead (Suljo) i Frontend tim (Harun) vrše sedmične provjere vizuelne konzistentnosti prema definisanom prototipu.
 
 ### 2.2 Kodeks ponašanja i rešavanje konflikata
 - **Dnevna komunikacija:** Koristimo Discord kanale razvrstane po temama (`#database`, `#frontend`, `#devops`). Sve odluke donesene na sastancima moraju biti sumirane u `DecisionLog.md`.
@@ -513,13 +577,93 @@ Ovdje dokumentujemo simbiozu ljudske inteligencije i vještačkih modela.
 
 ---
 
-## 9. Definition of Done (DoD)
-Stavka je gotova samo ako ispunjava:
-- [ ] Kod je prošao **Linting** (Prettier/ESLint).
-- [ ] Dokumentacija u `/docs/` je ažurirana (ako je bilo promjena šeme).
-- [ ] Napisani Unit testovi za novu funkcionalnost.
-- [ ] Pull Request je prošao bar jedan ljudski Code Review.
-- [ ] Funkcionalnost testirana na mobilnom prikazu.
+### 9. Definition of Done (DoD)
+
+**Definition of Done (DoD)** predstavlja finalni set striktnih kriterija koje svaka funkcionalnost, User Story ili ispravka bug-a mora ispuniti prije nego što se smatra završenom. Cilj je osigurati nultu stopu tehničkog duga i stopostotnu pouzdanost sistema u medicinskom okruženju.
+
+#### 9.1 Arhitektura i Standardi Kodiranja
+Prije nego što se kod pošalje na pregled, moraju biti ispunjeni sljedeći tehnički preduslovi:
+
+<table>
+  <thead>
+    <tr>
+      <th width="25%">Kategorija</th>
+      <th width="45%">Kriterij ispunjenosti</th>
+      <th width="30%">Metoda Provjere</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Struktura koda</b></td>
+      <td>Kod prati <i>Layered Architecture</i> (Controller-Service-Repository). Nema direktnih SQL upita u kontrolerima.</td>
+      <td>Manual Code Review</td>
+    </tr>
+    <tr>
+      <td><b>Clean Code</b></td>
+      <td>Promjenljive i funkcije imaju deskriptivna imena (CamelCase). Prolazak kroz <b>ESLint</b> i <b>Prettier</b> bez upozorenja.</td>
+      <td>Statička analiza (Linting)</td>
+    </tr>
+    <tr>
+      <td><b>Validacija</b></td>
+      <td>Svi ulazni parametri su validirani na klijentu (React Hook Form + Zod) i serveru (Middleware schema check).</td>
+      <td>Zod Schema Validation</td>
+    </tr>
+    <tr>
+      <td><b>Integritet Baze</b></td>
+      <td>Sve promjene u šemi su definisane kroz <b>Sequelize migracije</b>. Upiti su optimizovani (N+1 query problem eliminisan).</td>
+      <td>DB Migration Logs</td>
+    </tr>
+  </tbody>
+</table>
+
+#### 9.2 Kvalitet, Testiranje i Sigurnost
+Kvalitet softvera u ISOLO sistemu se ne provjerava samo manuelno, već kroz automatizovane procese:
+
+* **Unit & Integration Testovi:** * Svaki novi endpoint mora imati set testova (Jest/Supertest) koji pokrivaju *Happy Path* i *Edge Cases* (npr. nevalidan JWT, nepostojeći ID).
+    * Ukupna pokrivenost koda (Code Coverage) ne smije pasti ispod **80%** nakon uvođenja nove funkcionalnosti.
+* **Security Audit:**
+    * Nema hardkodovanih tajnih ključeva ili lozinki (korištenje `.env` varijabli).
+    * Sve rute koje nisu javne (poput QR statusa) zahtijevaju validan `Authorization` header.
+    * Rukovanje greškama ne otkriva detalje o infrastrukturi (Stack Trace je skriven u produkciji).
+* **Performance Check:**
+    * Novi upiti ne smiju usporiti učitavanje profila opreme iznad definisanih **1.5s**.
+    * Slike se moraju obrađivati kroz `Sharp` biblioteku kako bi se smanjila težina fajlova na serveru.
+
+#### 9.3 Dokumentacija i Korisničko Iskustvo (UX)
+Funkcionalnost nije završena ako nije adekvatno dokumentovana i testirana na stvarnim uređajima:
+
+<table>
+  <thead>
+    <tr>
+      <th width="30%">Tip Dokumentacije</th>
+      <th width="70%">Zahtjev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Tehnička (API)</b></td>
+      <td>Ažurirana Swagger/OpenAPI specifikacija. Svi novi <i>Request/Response</i> modeli su definisani.</td>
+    </tr>
+    <tr>
+      <td><b>Korisnička</b></td>
+      <td>Upute za rad sa novom funkcijom dodate u internu Wiki bazu tima.</td>
+    </tr>
+    <tr>
+      <td><b>Vizuelna (UX)</b></td>
+      <td>Dizajn je 100% u skladu sa Figma prototipom. Responzivnost potvrđena na rezolucijama (360px, 768px, 1440px).</td>
+    </tr>
+  </tbody>
+</table>
+
+#### 9.4 Finalni Deployment Protokol
+Tek kada su svi gore navedeni koraci potvrđeni, pristupa se finalizaciji:
+
+1.  **Peer Review:** Najmanje jedan senior developer ili Tech Lead je odobrio Pull Request (PR) na GitHubu.
+2.  **Conflict Resolution:** Grana je sinhronizovana sa `main` granom i nema konflikata.
+3.  **CI/CD Pipeline:** Sve faze automatizovanog build-a na GitHub Actions su prošle zeleno.
+4.  **PO Acceptance:** Product Owner je testirao funkcionalnost u *Staging* okruženju i potvrdio da ispunjava biznis zahtjeve.
+
+> **Napomena:** Svako odstupanje od ovog DoD protokola zahtijeva pismeno obrazloženje u `DecisionLog.md` dokumentu pod oznakom "Technical Debt".
 
 ---
 
