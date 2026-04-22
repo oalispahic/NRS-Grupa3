@@ -667,39 +667,11 @@ Tek kada su svi gore navedeni koraci potvrđeni, pristupa se finalizaciji:
 
 ---
 
-## 10. Tehnički setup i instrukcije za razvoj
-
-### 10.1 Preduslovi
-- **Node.js:** v18.16.0 ili noviji.
-- **Baza:** PostgreSQL v15.
-- **Docker:** Opcionalno za izolaciju baze.
-
-### 10.2 Brzo pokretanje
-```bash
-# 1. Kloniranje projekta
-git clone [https://github.com/oalispahic/NRS-Grupa3.git](https://github.com/oalispahic/NRS-Grupa3.git)
-
-# 2. Instalacija svih zavisnosti (Mono-repo style)
-npm install
-
-# 3. Postavljanje okruženja
-cp .env.example .env 
-# Obavezno podesiti DB_URL, JWT_SECRET i PORT
-
-# 4. Migracije i Seeding (Inicijalni podaci)
-npx sequelize-cli db:migrate
-npx sequelize-cli db:seed:all
-
-# 5. Pokretanje razvojnih servera (paralelno)
-npm run dev
-
-
-
-## 11. Initial Release Plan (Plan puštanja prve verzije)
+## 10. Initial Release Plan (Plan puštanja prve verzije)
 
 Ovaj plan definiše strategiju i korake prelaska sistema ISOLO iz razvojnog okruženja u produkciju, osiguravajući stabilnost za laborante i administratore.
 
-### 11.1 Faze puštanja (Release Phases)
+### 10.1 Faze puštanja (Release Phases)
 
 Sistem će biti puštan u fazama kako bi se minimizovali rizici i omogućila brza adaptacija korisnika na novi digitalni proces.
 
@@ -734,7 +706,7 @@ Sistem će biti puštan u fazama kako bi se minimizovali rizici i omogućila brz
   </tbody>
 </table>
 
-### 11.2 Strategija Deploymenta i CI/CD
+### 10.2 Strategija Deploymenta i CI/CD
 U skladu sa vašim tehničkim stack-om, koristimo automatizovani proces isporuke koda:
 
 * **Infrastruktura:** Aplikacija se hostuje u **Docker** kontejnerima. Backend (Node.js/Express) komunicira sa PostgreSQL bazom, dok se Frontend (Vite/React) servira kao statički build.
@@ -743,7 +715,7 @@ U skladu sa vašim tehničkim stack-om, koristimo automatizovani proces isporuke
     2.  Security scan (provjera `.env` varijabli i zavisnosti).
     3.  Automatski deployment na produkcijski server u slučaju uspješnog builda.
 
-### 11.3 Kriteriji za uspješan Release (Checklist)
+### 10.3 Kriteriji za uspješan Release (Checklist)
 
 Prije nego što **Elma Dedić** (Scrum Master) potvrdi "Go-Live", moraju biti ispunjeni sljedeći uslovi:
 
@@ -753,8 +725,44 @@ Prije nego što **Elma Dedić** (Scrum Master) potvrdi "Go-Live", moraju biti is
 * [ ] **Performanse:** Vrijeme učitavanja QR profila je ispod 1.5s (prema NFR zahtjevu).
 * [ ] **Dokumentacija:** Swagger dokumentacija je dostupna za sve aktivne API rute.
 
-### 11.4 Monitoring i podrška nakon puštanja
+### 10.4 Monitoring i podrška nakon puštanja
 Nakon puštanja verzije 1.0, tim postupa po sljedećem protokolu:
 1.  **Praćenje logova:** Korištenje *Morgan/Winston* logera za identifikaciju 500 (Server Error) grešaka u realnom vremenu.
 2.  **Korisnički feedback:** **Suljo Ruvić** i **Harun Zukanović** prate interakciju korisnika sa mobilnim sučeljem radi UI optimizacije.
 3.  **Hotfix:** Svaki kritični bug (P0) otkriven na produkciji mora biti adresiran u roku od 24h kroz ubrzani CI/CD ciklus.
+
+
+
+
+
+
+
+
+## 11. Tehnički setup i instrukcije za razvoj
+
+### 11.1 Preduslovi
+- **Node.js:** v18.16.0 ili noviji.
+- **Baza:** PostgreSQL v15.
+- **Docker:** Opcionalno za izolaciju baze.
+
+### 11.2 Brzo pokretanje
+```bash
+# 1. Kloniranje projekta
+git clone [https://github.com/oalispahic/NRS-Grupa3.git](https://github.com/oalispahic/NRS-Grupa3.git)
+
+# 2. Instalacija svih zavisnosti (Mono-repo style)
+npm install
+
+# 3. Postavljanje okruženja
+cp .env.example .env 
+# Obavezno podesiti DB_URL, JWT_SECRET i PORT
+
+# 4. Migracije i Seeding (Inicijalni podaci)
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
+
+# 5. Pokretanje razvojnih servera (paralelno)
+npm run dev
+
+
+
