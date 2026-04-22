@@ -692,3 +692,69 @@ npx sequelize-cli db:seed:all
 
 # 5. Pokretanje razvojnih servera (paralelno)
 npm run dev
+
+
+
+## 11. Initial Release Plan (Plan puštanja prve verzije)
+
+Ovaj plan definiše strategiju i korake prelaska sistema ISOLO iz razvojnog okruženja u produkciju, osiguravajući stabilnost za laborante i administratore.
+
+### 11.1 Faze puštanja (Release Phases)
+
+Sistem će biti puštan u fazama kako bi se minimizovali rizici i omogućila brza adaptacija korisnika na novi digitalni proces.
+
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th align="left">Faza</th>
+      <th align="left">Cilj i Opseg</th>
+      <th align="left">Glavni Stakeholderi</th>
+      <th align="left">Tehnički fokus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>MVP (Alpha)</b></td>
+      <td>Osnovni CRUD opreme, generisanje QR kodova i autentifikacija korisnika.</td>
+      <td>Interni razvojni tim</td>
+      <td>Stabilnost baze i API rute</td>
+    </tr>
+    <tr>
+      <td><b>Beta Release</b></td>
+      <td>Modul za prijavu kvarova (Incidents) i osnovni pregled profila putem QR koda.</td>
+      <td>Odabrani laboranti (Testers)</td>
+      <td>UI/UX feedback i bug fixing</td>
+    </tr>
+    <tr>
+      <td><b>V1.0 (Public)</b></td>
+      <td>Puna integracija: Kalendari održavanja, PDF izvještaji i Dashboard analitika.</td>
+      <td>Svi zaposlenici laboratorije</td>
+      <td>Performanse i NFR provjera</td>
+    </tr>
+  </tbody>
+</table>
+
+### 11.2 Strategija Deploymenta i CI/CD
+U skladu sa vašim tehničkim stack-om, koristimo automatizovani proces isporuke koda:
+
+* **Infrastruktura:** Aplikacija se hostuje u **Docker** kontejnerima. Backend (Node.js/Express) komunicira sa PostgreSQL bazom, dok se Frontend (Vite/React) servira kao statički build.
+* **Pipeline:** Svaki "Merge Request" u `main` granu koji odobri **Omar Alispahić** ili **Ilda Avdić** pokreće GitHub Actions:
+    1.  Izvršavanje Jest testova (QA verifikacija - **Iman Salanović**).
+    2.  Security scan (provjera `.env` varijabli i zavisnosti).
+    3.  Automatski deployment na produkcijski server u slučaju uspješnog builda.
+
+### 11.3 Kriteriji za uspješan Release (Checklist)
+
+Prije nego što **Elma Dedić** (Scrum Master) potvrdi "Go-Live", moraju biti ispunjeni sljedeći uslovi:
+
+* [ ] **Integritet koda:** Svi zadaci ispunjavaju *Definition of Done (DoD)*.
+* [ ] **Migracije:** Sve Sequelize migracije su uspješno izvršene na produkcijskoj bazi.
+* [ ] **Sigurnost:** SSL certifikat je aktivan i JWT tajni ključevi su sigurno pohranjeni.
+* [ ] **Performanse:** Vrijeme učitavanja QR profila je ispod 1.5s (prema NFR zahtjevu).
+* [ ] **Dokumentacija:** Swagger dokumentacija je dostupna za sve aktivne API rute.
+
+### 11.4 Monitoring i podrška nakon puštanja
+Nakon puštanja verzije 1.0, tim postupa po sljedećem protokolu:
+1.  **Praćenje logova:** Korištenje *Morgan/Winston* logera za identifikaciju 500 (Server Error) grešaka u realnom vremenu.
+2.  **Korisnički feedback:** **Suljo Ruvić** i **Harun Zukanović** prate interakciju korisnika sa mobilnim sučeljem radi UI optimizacije.
+3.  **Hotfix:** Svaki kritični bug (P0) otkriven na produkciji mora biti adresiran u roku od 24h kroz ubrzani CI/CD ciklus.
