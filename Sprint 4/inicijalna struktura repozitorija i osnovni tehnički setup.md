@@ -77,8 +77,9 @@ Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u
     </tr>
     <tr>
       <td><b>Bilal Ozdić</b></td>
-      <td>Product Owner</td>
-      <td><b>(A/R)</b> Definisanje vizije proizvoda, prioritizacija backlog-a i komunikacija sa klijentom.</td>
+      <td>Team Lead / Project Coordinator</td>
+      <td><b>(R)</b> Koordinacija između članova tima, praćenje rokova sprinta i usklađivanje zahtjeva sa profesorima.</td>
+    </tr>
     </tr>
     <tr>
       <td><b>Elma Dedić</b></td>
