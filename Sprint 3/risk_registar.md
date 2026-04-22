@@ -509,3 +509,234 @@ Potrebno je zabraniti brisanje opreme sa aktivnim ili budućim rezervacijama, ko
 **Status:** Otvoren
 
 ---
+
+## R-23
+
+**ID:** R-23  
+**Kategorija:** Master podaci / Kvalitet evidencije
+
+**Opis rizika:**  
+Postoji rizik od duplih serijskih brojeva, nekompletnih tehničkih podataka ili nekonzistentnih naziva opreme, što može otežati pretragu, rezervaciju i održavanje.
+
+**Uzrok:**  
+Rizik može nastati zbog nepostojanja obaveznih polja, nedostatka jedinstvenih ograničenja u bazi ili ručnog unosa bez jasnih pravila imenovanja.
+
+**Vjerovatnoća:** Visoka  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je definisati obavezna polja za opremu, uvesti unique constraint za serijski broj gdje je primjenjivo, standardizovati šifre i nazive opreme i provoditi periodične revizije kvaliteta master podataka.
+
+**Odgovorna osoba ili uloga:** Product Owner, Backend Lead, Administrator sistema  
+**Status:** Otvoren
+
+---
+
+## R-24
+
+**ID:** R-24  
+**Kategorija:** Privatnost / Povjerljivost
+
+**Opis rizika:**  
+Postoji rizik da audit log, izvještaji ili istorija aktivnosti sadrže više osjetljivih podataka nego što je potrebno i da budu dostupni širem krugu korisnika nego što bi smjeli.
+
+**Uzrok:**  
+Rizik nastaje kada se u logovima čuvaju osjetljivi detalji bez potrebe, kada nisu definisana pravila maskiranja podataka ili kada pristup logovima nije strogo ograničen na administratore.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Kritičan
+
+**Plan mitigacije:**  
+Potrebno je minimizirati količinu osjetljivih podataka u logovima, primijeniti maskiranje gdje je moguće, jasno ograničiti pristup audit logu i definisati politiku retention-a i brisanja log zapisa u skladu sa regulatornim zahtjevima.
+
+**Odgovorna osoba ili uloga:** Security / Compliance Lead, Backend Lead  
+**Status:** Otvoren
+
+---
+
+## R-25
+
+**ID:** R-25  
+**Kategorija:** Compliance / Regulatorni zahtjevi
+
+**Opis rizika:**  
+Postoji rizik da sistem ne ispuni zahtjeve GDPR-a, ISO 15189 ili drugih relevantnih sigurnosnih i laboratorijskih standarda, što može dovesti do pravnih i reputacijskih posljedica.
+
+**Uzrok:**  
+Rizik nastaje kada compliance zahtjevi nisu prevedeni u konkretne tehničke i procesne kontrole, ili kada se regulatorni aspekt provjerava tek pred kraj projekta.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Kritičan
+
+**Plan mitigacije:**  
+Potrebno je rano mapirati sve regulatorne zahtjeve na konkretne funkcionalne i nefunkcionalne kontrole, uključiti compliance provjeru u review cikluse i voditi trag dokaza o implementaciji sigurnosti, sljedivosti i privatnosti.
+
+**Odgovorna osoba ili uloga:** Compliance Lead, Product Owner, Security Lead  
+**Status:** Otvoren
+
+---
+
+## R-26
+
+**ID:** R-26  
+**Kategorija:** Upotrebljivost / Pristupačnost
+
+**Opis rizika:**  
+Postoji rizik da sistem bude težak za korištenje laborantima i administratorima, što može povećati broj operativnih grešaka, usporiti rad i smanjiti prihvaćenost rješenja.
+
+**Uzrok:**  
+Rizik može nastati zbog složenih formi, loše hijerarhije informacija, nedovoljne prilagođenosti tabletima ili nepridržavanja pristupačnosti i WCAG smjernica.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Srednji do visok
+
+**Plan mitigacije:**  
+Potrebno je uključiti korisnike u rane UX provjere, provoditi usability testove, pojednostaviti najčešće radnje i provjeravati pristupačnost interfejsa automatskim i ručnim metodama.
+
+**Odgovorna osoba ili uloga:** UX / Frontend Lead, Product Owner, QA Lead  
+**Status:** Otvoren
+
+---
+
+## R-27
+
+**ID:** R-27  
+**Kategorija:** Održavanje / Sigurnost rada
+
+**Opis rizika:**  
+Postoji rizik da servisni kartoni, historija kvarova i podaci o kalibraciji opreme budu nepotpuni ili neažurni, pa se oprema koristi iako nije tehnički spremna.
+
+**Uzrok:**  
+Rizik nastaje kada održavanje nije integrisano u svakodnevni workflow, kada ne postoje obavezna polja za servisne intervencije ili kada nema podsjetnika za periodične preglede i kalibracije.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je uvesti obavezne evidencije servisa i kalibracije, definisati statusne blokade za opremu kojoj je istekao servisni interval i redovno provjeravati usklađenost stvarnog stanja sa servisnim kartonima.
+
+**Odgovorna osoba ili uloga:** Service Lead, Administrator sistema, Product Owner  
+**Status:** Otvoren
+
+---
+
+## R-28
+
+**ID:** R-28  
+**Kategorija:** Tehnički dug / Ovisnosti
+
+**Opis rizika:**  
+Postoji rizik da biblioteke, framework-i i zavisnosti koje aplikacija koristi sadrže poznate sigurnosne ranjivosti ili postanu zastarjele tokom razvoja.
+
+**Uzrok:**  
+Rizik može nastati zbog izostanka redovnog ažuriranja paketa, nekontrolisanog dodavanja ovisnosti ili nedostatka automatizovanog skeniranja zavisnosti.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je uvesti dependency scanning, redovne sigurnosne revizije paketa, politiku minimalnog broja eksternih biblioteka i planirano ažuriranje ključnih ovisnosti između sprintova.
+
+**Odgovorna osoba ili uloga:** Backend Lead, Frontend Lead, Security Lead  
+**Status:** Otvoren
+
+---
+
+## R-29
+
+**ID:** R-29  
+**Kategorija:** Tim / Koordinacija
+
+**Opis rizika:**  
+Postoji rizik od usporene koordinacije, nejasnog donošenja odluka i dupliranja posla zato što tim radi zajednički bez formalno imenovanog vođe, a uključuje veći broj članova.
+
+**Uzrok:**  
+Rizik nastaje kada nije jasno ko finalno donosi odluku u slučaju neslaganja, ko prati blokere i ko osigurava da tehničke i dokumentacijske aktivnosti ostanu usklađene između više paralelnih zadataka.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je formalno definisati ko je odgovoran za koordinaciju sprinta, tehničke odluke, kvalitet i dokumentaciju, te koristiti kratke sedmične sync sastanke sa jasno evidentiranim zaključcima i vlasnicima akcija.
+
+**Odgovorna osoba ili uloga:** Projektni koordinator / cijeli tim  
+**Status:** Otvoren
+
+---
+
+## R-30
+
+**ID:** R-30  
+**Kategorija:** Tim / Kontinuitet znanja
+
+**Opis rizika:**  
+Postoji rizik da ključna znanja o arhitekturi, testiranju ili domenskim pravilima ostanu koncentrisana kod malog broja članova tima, što povećava zavisnost od pojedinaca.
+
+**Uzrok:**  
+Rizik nastaje kada dokumentacija nije dovoljno detaljna, kada nema code review kulture i kada samo jedan ili dva člana dubinski razumiju određeni modul ili proces.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je dijeliti znanje kroz code review, zajedničke walkthrough-e, kratke interne demo sesije i dokumentovati ključne odluke, API-je i poslovna pravila tako da svaki kritični modul ima najmanje dvije osobe koje ga razumiju.
+
+**Odgovorna osoba ili uloga:** Arhitekta sistema, QA Lead, Documentation Lead  
+**Status:** Otvoren
+
+---
+
+## R-31
+
+**ID:** R-31  
+**Kategorija:** Izvještaji / Export podataka
+
+**Opis rizika:**  
+Postoji rizik da PDF/Excel export i izvještaji prikažu pogrešne ili previše široke podatke, što može dovesti do curenja osjetljivih informacija ili donošenja pogrešnih odluka.
+
+**Uzrok:**  
+Rizik može nastati zbog loše implementiranih filtera, nedosljedne provjere uloga, grešaka pri mapiranju podataka u export format ili nejasno definisanih poslovnih pravila za izvještavanje.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je striktno kontrolisati koje role imaju pravo na koje izvještaje, testirati export nad različitim skupovima podataka, uvesti preview prije preuzimanja i jasno evidentirati generisanje osjetljivih izvještaja u audit log.
+
+**Odgovorna osoba ili uloga:** Backend Lead, QA Lead, Security Lead  
+**Status:** Otvoren
+
+---
+
+## R-32
+
+**ID:** R-32  
+**Kategorija:** Inventar / Poslovna pravila
+
+**Opis rizika:**  
+Postoji rizik da minimalni pragovi zaliha, pravila upozorenja i obračun potrošnje budu pogrešno podešeni, pa sistem generiše lažne alarme ili propusti stvarni manjak repromaterijala.
+
+**Uzrok:**  
+Rizik može nastati ako pragovi nisu definisani po tipu materijala, ako se koriste generičke vrijednosti bez domenske provjere ili ako nije jasno kako se trošak i potrošnja vežu za određenu opremu i radni proces.
+
+**Vjerovatnoća:** Srednja  
+**Uticaj:** Srednji do visok  
+**Prioritet rizika:** Visok
+
+**Plan mitigacije:**  
+Potrebno je validirati pragove zaliha sa domenskim stručnjacima, omogućiti pregled i odobravanje pravila obračuna, periodično revidirati potrošnju po uređaju i testirati alarmne scenarije na realnim ili simuliranim podacima.
+
+**Odgovorna osoba ili uloga:** Product Owner, Domenski vlasnik procesa, Backend Lead  
+**Status:** Otvoren
+
+---
+
