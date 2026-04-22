@@ -57,9 +57,9 @@ Glavni cilj sistema ISOLO je transformacija iz reaktivnog u prediktivni model od
 
 Tim Grupe 3 funkcioniše kao agilna jedinica sa jasno definisanim granicama odgovornosti, ali visokim stepenom kolaboracije.
 
-### 2.1 Matrica odgovornosti 
+### 2.1 Matrica odgovornosti (RACI)
 
-Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u timu od 8 članova, primjenjujemo RACI model (Responsible, Accountable, Consulted, Informed). Svaki član tima ima jasno definisanu primarnu ulogu u životnom ciklusu razvoja sistema ISOLO.
+Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u proširenom timu, primjenjujemo RACI model. Svaki član tima ima jasno definisanu primarnu ulogu u životnom ciklusu razvoja sistema ISOLO.
 
 <table style="width:100%">
   <thead>
@@ -73,27 +73,32 @@ Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u
     <tr>
       <td><b>Omar Alispahić</b></td>
       <td>Tehnički vođa (Tech Lead)</td>
-      <td><b>(A/R)</b> Backend arhitektura, dizajn baze podataka i sigurnosni protokoli. <b>(C)</b> Frontend integracija.</td>
+      <td><b>(A/R)</b> Backend arhitektura i sigurnosni protokoli. <b>(C)</b> Frontend integracija.</td>
+    </tr>
+    <tr>
+      <td><b>Bilal Ozdić</b></td>
+      <td>Product Owner</td>
+      <td><b>(A/R)</b> Definisanje vizije proizvoda, prioritizacija backlog-a i komunikacija sa klijentom.</td>
     </tr>
     <tr>
       <td><b>Elma Dedić</b></td>
-      <td>Product Owner / Scrum Master</td>
-      <td><b>(A/R)</b> Upravljanje backlog-om, validacija User Story-ja i prioritizacija sprinteva. <b>(I)</b> Tehnički dug.</td>
+      <td>Scrum Master</td>
+      <td><b>(R)</b> Facilitacija ceremonija (Daily, Retro), uklanjanje prepreka u timu i praćenje brzine (Velocity).</td>
     </tr>
     <tr>
       <td><b>Iman Salanović</b></td>
       <td>QA Lead (Kvalitet)</td>
-      <td><b>(R)</b> Testiranje integriteta podataka i automatizacija testova (Jest/Supertest). <b>(C)</b> Dizajn API ruta.</td>
+      <td><b>(R)</b> Testiranje integriteta podataka i automatizacija (Jest). <b>(C)</b> Dizajn API ruta.</td>
     </tr>
     <tr>
       <td><b>Ilda Avdić</b></td>
       <td>Backend Developer</td>
-      <td><b>(R)</b> Implementacija Business Logic sloja i API endpoint-a. <b>(C)</b> Optimizacija SQL upita i migracija.</td>
+      <td><b>(R)</b> Implementacija Business Logic sloja i razvoj API endpoint-a. <b>(C)</b> Optimizacija SQL-a.</td>
     </tr>
     <tr>
       <td><b>Amina Rovčanin</b></td>
       <td>Database & DevOps Eng.</td>
-      <td><b>(R)</b> Upravljanje PostgreSQL bazom, Docker konfiguracija i CI/CD pipeline na GitHub-u. <b>(A)</b> Integritet podataka.</td>
+      <td><b>(R)</b> Upravljanje PostgreSQL bazom, Docker konfiguracija i CI/CD pipeline na GitHub-u.</td>
     </tr>
     <tr>
       <td><b>Harun Zukanović</b></td>
@@ -103,21 +108,21 @@ Kako bi se osigurala maksimalna efikasnost i izbjeglo preklapanje nadležnosti u
     <tr>
       <td><b>Kemal Mešić</b></td>
       <td>Full-stack Developer</td>
-      <td><b>(R)</b> Razvoj "end-to-end" funkcionalnosti (npr. QR skener modul). <b>(C)</b> Code review za oba stacka.</td>
+      <td><b>(R)</b> Razvoj unikatnih modula (npr. QR skener). <b>(C)</b> Code review za frontend i backend.</td>
     </tr>
     <tr>
       <td><b>Suljo Ruvić</b></td>
       <td>UX/UI & Frontend Lead</td>
-      <td><b>(R)</b> Klijentska strana aplikacije, Tailwind CSS styling i pristupačnost (Accessibility). <b>(A)</b> Design system.</td>
+      <td><b>(R)</b> Klijentska strana aplikacije, Tailwind CSS styling i pristupačnost (Accessibility).</td>
     </tr>
   </tbody>
 </table>
 
 #### Ključne definicije uloga:
 * **Responsible (R):** Osoba koja direktno izvršava zadatak.
-* **Accountable (A):** Osoba koja snosi krajnju odgovornost za uspjeh zadatka i odobrava rad (obično vođa modula).
-* **Consulted (C):** Osoba čije se stručno mišljenje traži prije donošenja finalne odluke.
-* **Informed (I):** Osoba koja se obavještava o progresu ili ishodu nakon što je odluka donesena.
+* **Accountable (A):** Osoba koja snosi krajnju odgovornost za uspjeh zadatka i odobrava rad.
+* **Consulted (C):** Osoba čije se stručno mišljenje traži prije donošenja odluke.
+* **Informed (I):** Osoba koja se obavještava o progresu ili ishodu nakon što je rad završen.
 
 ---
 
