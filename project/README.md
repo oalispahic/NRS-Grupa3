@@ -8,8 +8,8 @@ Full-stack aplikacija: Node.js/Express backend + React/Vite frontend, PostgreSQL
 
 | Servis   | URL |
 |----------|-----|
-| Frontend | https://nrs-grupa3-95bq.vercel.app |
-| Backend  | https://nrs-grupa3.vercel.app/     |
+| Frontend | https://nrs.marexdev.com/        |
+| Backend  | https://api.nrs.marexdev.com/    |
 
 > Frontend je React aplikacija koju korisnici otvaraju u browseru.
 > Backend je Express API — ne otvara se u browseru, koristi se za API pozive.
@@ -111,7 +111,7 @@ Preview deployment URL se pojavljuje direktno u PR-u na GitHubu kao komentar od 
 
 ## API Endpointi
 
-Base URL (produkcija): `https://nrs-grupa3.vercel.app/`
+Base URL (produkcija): `https://www.api.nrs.marexdev.com/`
 
 Base URL (lokalno): `http://localhost:3001`
 
