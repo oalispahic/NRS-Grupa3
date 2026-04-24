@@ -588,11 +588,11 @@ export default function HomePage() {
         >
           <div style={{ borderRadius: 12, overflow: "hidden" }}>
             <img
-              src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?w=800&q=80"
+              src="/bili.webp"
               alt="Laboratorija"
               style={{
                 width: "100%",
-                height: 280,
+                height: 340,
                 objectFit: "cover",
                 borderRadius: 12,
               }}
