@@ -1,89 +1,111 @@
 import { useState, useEffect } from "react";
 
-const PRIMARY = "#185FA5";
-
-const features = [
-  {
-    icon: "📅",
-    bg: "#E6F1FB",
-    title: "Sistem rezervacija",
-    desc: "Laboranti kreiraju zahtjeve za željeni termin. Automatska detekcija konflikata sprečava dvostruke rezervacije.",
-  },
-  {
-    icon: "🔬",
-    bg: "#EAF3DE",
-    title: "Evidencija opreme",
-    desc: "Kompletan inventar svakog aparata s detaljima, statusom i lokacijom. Administrator upravlja opremom u realnom vremenu.",
-  },
-  {
-    icon: "📦",
-    bg: "#FAEEDA",
-    title: "Zalihe repromaterijala",
-    desc: "Praćenje potrošnog materijala s automatskim upozorenjima ispod minimalnog praga.",
-  },
-  {
-    icon: "🔐",
-    bg: "#FBEAF0",
-    title: "Kontrola pristupa",
-    desc: "JWT autentifikacija i role-based access control. Laborant i administrator imaju jasno odvojena ovlaštenja.",
-  },
-  {
-    icon: "📋",
-    bg: "#E1F5EE",
-    title: "Dnevnik aktivnosti",
-    desc: "Svaka kritična akcija u sistemu ostavlja digitalni trag. Administrator ima potpun uvid u historiju promjena.",
-  },
-  {
-    icon: "📊",
-    bg: "#F1EFE8",
-    title: "Izvještaji i analitika",
-    desc: "Statistike iskorištenosti opreme i export podataka u CSV format za eksternu analizu.",
-  },
-];
-
-const reservations = [
-  {
-    user: "Dr. Hadžić A.",
-    equipment: "Centrifuga Hettich EBA 200",
-    termin: "24.04. · 09:00–11:00",
-    status: "Odobreno",
-    statusBg: "#EAF3DE",
-    statusColor: "#3B6D11",
-  },
-  {
-    user: "Tehn. Kovač M.",
-    equipment: "Mikroskop Olympus CX23",
-    termin: "24.04. · 13:00–15:30",
-    status: "Na čekanju",
-    statusBg: "#FAEEDA",
-    statusColor: "#854F0B",
-  },
-  {
-    user: "Dr. Begić S.",
-    equipment: "Spektrofotometar UV-1900",
-    termin: "25.04. · 10:00–12:00",
-    status: "Odbijeno",
-    statusBg: "#FCEBEB",
-    statusColor: "#A32D2D",
-  },
-];
+const PRIMARY = "#2563EB";
+const PRIMARY_LIGHT = "#EFF6FF";
 
 const laborantItems = [
-  "Pregled dostupne opreme",
-  "Kreiranje zahtjeva za rezervacijom",
-  "Pregled vlastitih rezervacija",
-  "Kalendar zauzeća opreme",
+  "Pregled opreme i specifikacija",
+  "Kreiranje rezervacija",
+  "Moje rezervacije i historija",
+  "Kalendar zauzeća",
   "Otkazivanje i izmjena rezervacije",
   "Ocjenjivanje opreme nakon korištenja",
 ];
 
 const adminItems = [
-  "Dodavanje i brisanje opreme",
+  "Upravljanje opremom (dodavanje / brisanje)",
   "Odobravanje i odbijanje rezervacija",
   "Promjena statusa opreme",
-  "Praćenje potrošnje repromaterijala",
-  "Dnevnik aktivnosti (audit log)",
-  "Generisanje izvještaja i export CSV",
+  "Praćenje repromaterijala i zaliha",
+  "Dnevnik aktivnosti i audit log",
+  "Generisanje izvještaja",
+  "Export podataka u CSV",
+];
+
+const features = [
+  {
+    icon: "📅",
+    title: "Sistem rezervacija",
+    desc: "Laboranti kreiraju zahtjeve za željeni termin. Automatska detekcija konflikata (PB26) sprečava dvostruke rezervacije.",
+  },
+  {
+    icon: "🔬",
+    title: "Evidencija opreme",
+    desc: "Kompletan inventar svakog aparata s detaljima, statusom i lokacijom. Administrator upravlja opremom u realnom vremenu.",
+  },
+  {
+    icon: "📦",
+    title: "Zalihe repromaterijala",
+    desc: "Praćenje potrošnog materijala s automatskim upozorenjima ispod minimalnog praga. Proaktivno upravljanje umjesto reaktivnog.",
+  },
+  {
+    icon: "🔐",
+    title: "Kontrola pristupa",
+    desc: "JWT autentifikacija i role-based access control. Laborant i administrator imaju jasno odvojena ovlaštenja i vidljive funkcije.",
+  },
+  {
+    icon: "📋",
+    title: "Dnevnik aktivnosti",
+    desc: "Svaka kritična akcija u sistemu ostavlja digitalni trag. Administrator ima potpun uvid u historiju promjena i ko je šta uradio.",
+  },
+  {
+    icon: "📊",
+    title: "Izvještaji i analitika",
+    desc: "Statistike iskorištenosti opreme, servisni kartoni i export podataka u CSV format za eksternu analizu.",
+  },
+];
+
+const sprints = [
+  {
+    num: 5,
+    title: "Sprint 5: Osnovne funkcionalnosti",
+    desc: "Autentifikacija, pregled opreme i osnovni mehanizam rezervacije.",
+    tags: ["PB1", "PB5", "PB23"],
+  },
+  {
+    num: 6,
+    title: "Sprint 6: Kontrola i validacija",
+    desc: "Tok odobravanja rezervacija, RBAC i zaštita od vremenskih konflikata.",
+    tags: ["PB6", "PB24", "PB26"],
+  },
+  {
+    num: 7,
+    title: "Sprint 7: Korisnički interfejs",
+    desc: "Kalendar zauzeća, pretraga opreme i izmjena postojećih rezervacija.",
+    tags: ["PB8", "PB13", "PB14"],
+  },
+  {
+    num: 8,
+    title: "Sprint 8: Administracija",
+    desc: "Notifikacije, audit log i pregled stanja sistema iz administratorskog ugla.",
+    tags: ["PB11", "PB15", "PB25"],
+  },
+  {
+    num: 9,
+    title: "Sprint 9: Laboratorijske funkcije",
+    desc: "Repromaterijal, evidencija potrošnje i pravila korištenja opreme.",
+    tags: ["PB21", "PB22"],
+  },
+  {
+    num: 10,
+    title: "Sprint 10: Analitika",
+    desc: "Izvještaji, servisni karton aparata i analitički dashboard.",
+    tags: ["PB16", "PB17", "PB27"],
+  },
+  {
+    num: 11,
+    title: "Sprint 11: Finalizacija",
+    desc: "Specifikacije, ocjenjivanje opreme, export podataka i završno testiranje.",
+    tags: ["PB18", "PB19", "PB20"],
+  },
+];
+
+const techStack = [
+  { icon: "⚛️", name: "React" },
+  { icon: "🟩", name: "Node.js + Express" },
+  { icon: "🐘", name: "PostgreSQL" },
+  { icon: "🔑", name: "JWT" },
+  { icon: "🌿", name: "Git" },
 ];
 
 export default function HomePage() {
@@ -99,30 +121,32 @@ export default function HomePage() {
     <div
       style={{
         fontFamily: "'Inter', 'Segoe UI', sans-serif",
-        color: "#1a1a1a",
+        color: "#111",
         background: "#fff",
+        margin: 0,
+        padding: 0,
       }}
     >
-      {/* NAV */}
+      {/* ── NAV ── */}
       <nav
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "16px 64px",
-          borderBottom: "1px solid #e8e8e8",
+          padding: "14px 48px",
           background: "#fff",
+          borderBottom: "1px solid #f0f0f0",
           position: "sticky",
           top: 0,
           zIndex: 100,
-          boxShadow: scrolled ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
+          boxShadow: scrolled ? "0 1px 8px rgba(0,0,0,0.07)" : "none",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
-              width: 36,
-              height: 36,
+              width: 34,
+              height: 34,
               background: PRIMARY,
               borderRadius: 8,
               display: "flex",
@@ -131,8 +155,8 @@ export default function HomePage() {
             }}
           >
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
@@ -140,13 +164,11 @@ export default function HomePage() {
               strokeLinecap="round"
             >
               <path d="M9 3H15M12 3V7M8 7H16L17.5 17C17.5 18.1 16.6 19 15.5 19H8.5C7.4 19 6.5 18.1 6.5 17L8 7Z" />
-              <circle cx="10.5" cy="13" r="1" fill="#fff" stroke="none" />
-              <circle cx="13.5" cy="11.5" r="1" fill="#fff" stroke="none" />
             </svg>
           </div>
-          <span style={{ fontSize: 17, fontWeight: 600 }}>LabManager</span>
+          <span style={{ fontWeight: 700, fontSize: 16 }}>LabManager</span>
         </div>
-        <div style={{ display: "flex", gap: 32 }}>
+        <div style={{ display: "flex", gap: 36 }}>
           {[
             "O nama",
             "Korisnici",
@@ -158,7 +180,7 @@ export default function HomePage() {
               key={l}
               style={{
                 fontSize: 14,
-                color: "#555",
+                color: "#444",
                 textDecoration: "none",
                 cursor: "pointer",
               }}
@@ -167,22 +189,23 @@ export default function HomePage() {
             </a>
           ))}
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <button
             style={{
-              padding: "8px 20px",
-              border: "1px solid #d0d0d0",
+              padding: "8px 18px",
+              border: "1px solid #d4d4d4",
               borderRadius: 8,
-              background: "transparent",
+              background: "#fff",
               fontSize: 14,
               cursor: "pointer",
+              color: "#111",
             }}
           >
             Registracija
           </button>
           <button
             style={{
-              padding: "8px 20px",
+              padding: "8px 18px",
               border: "none",
               borderRadius: 8,
               background: PRIMARY,
@@ -197,18 +220,16 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* ── HERO ── */}
       <section
         style={{
           position: "relative",
-          minHeight: 480,
+          minHeight: 520,
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          textAlign: "center",
-          padding: "80px 32px 60px",
           overflow: "hidden",
+          background: "#f8fafc",
         }}
       >
         <div
@@ -216,33 +237,40 @@ export default function HomePage() {
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1400&q=80')",
+              "url('https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1600&q=80')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            filter: "brightness(0.2)",
+            opacity: 0.18,
             zIndex: 0,
           }}
         />
-        <div style={{ position: "relative", zIndex: 2 }}>
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            padding: "80px 32px 60px",
+            maxWidth: 720,
+            margin: "0 auto",
+          }}
+        >
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
-              background: "rgba(230,241,251,0.9)",
-              border: "1px solid #B5D4F4",
+              border: "1px solid #d1d5db",
               borderRadius: 99,
-              padding: "5px 14px",
+              padding: "4px 14px",
               fontSize: 13,
-              color: PRIMARY,
-              marginBottom: 24,
-              fontWeight: 500,
+              color: "#555",
+              marginBottom: 28,
             }}
           >
             <div
               style={{
-                width: 7,
-                height: 7,
+                width: 6,
+                height: 6,
                 borderRadius: "50%",
                 background: PRIMARY,
               }}
@@ -251,34 +279,39 @@ export default function HomePage() {
           </div>
           <h1
             style={{
-              fontSize: 46,
-              fontWeight: 700,
-              lineHeight: 1.15,
-              color: "#fff",
-              maxWidth: 640,
+              fontSize: 48,
+              fontWeight: 800,
+              lineHeight: 1.13,
+              color: "#0f172a",
               margin: "0 auto 20px",
             }}
           >
-            Upravljanje{" "}
-            <span style={{ color: "#60a5e8" }}>laboratorijskom</span> opremom
-            bez komplikacija
+            Upravljanje <span style={{ color: PRIMARY }}>laboratorijskom</span>{" "}
+            opremom bez komplikacija
           </h1>
           <p
             style={{
               fontSize: 16,
-              color: "rgba(255,255,255,0.85)",
-              maxWidth: 500,
-              margin: "0 auto 32px",
+              color: "#64748b",
+              maxWidth: 480,
+              margin: "0 auto 36px",
               lineHeight: 1.7,
             }}
           >
             Rezervišite aparate, pratite zalihe, vodite servisne kartone i
             kontrolišite pristup – sve na jednom mjestu.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              justifyContent: "center",
+              marginBottom: 52,
+            }}
+          >
             <button
               style={{
-                padding: "12px 32px",
+                padding: "12px 28px",
                 background: PRIMARY,
                 color: "#fff",
                 border: "none",
@@ -292,10 +325,10 @@ export default function HomePage() {
             </button>
             <button
               style={{
-                padding: "12px 32px",
-                background: "rgba(255,255,255,0.15)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.4)",
+                padding: "12px 28px",
+                background: "#fff",
+                color: "#111",
+                border: "1px solid #d4d4d4",
                 borderRadius: 8,
                 fontSize: 15,
                 cursor: "pointer",
@@ -304,596 +337,691 @@ export default function HomePage() {
               Saznaj više
             </button>
           </div>
+          {/* STATS */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            {[
+              { num: "27+", lbl: "FUNKCIONALNOSTI" },
+              { num: "2", lbl: "TIPA KORISNIKA" },
+              { num: "100%", lbl: "CLOUD-BASED" },
+              { num: "REST", lbl: "API ARHITEKTURA" },
+            ].map((s, i, arr) => (
+              <div
+                key={s.lbl}
+                style={{
+                  padding: "20px 12px",
+                  textAlign: "center",
+                  borderRight:
+                    i < arr.length - 1 ? "1px solid #e5e7eb" : "none",
+                }}
+              >
+                <div
+                  style={{ fontSize: 26, fontWeight: 700, color: "#0f172a" }}
+                >
+                  {s.num}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "#94a3b8",
+                    marginTop: 4,
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  {s.lbl}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* STATS BAR */}
-      <div
+      {/* ── ABOUT / DIGITAL PARTNER ── */}
+      <section
         style={{
-          display: "flex",
-          justifyContent: "center",
-          borderTop: "1px solid #e8e8e8",
-          borderBottom: "1px solid #e8e8e8",
+          padding: "80px 80px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 64,
+          alignItems: "center",
+          maxWidth: 1100,
+          margin: "0 auto",
         }}
       >
-        {[
-          { num: "27+", lbl: "Funkcionalnosti" },
-          { num: "2", lbl: "Tipa korisnika" },
-          { num: "100%", lbl: "Cloud-based" },
-          { num: "REST", lbl: "API arhitektura" },
-        ].map((s, i, arr) => (
-          <div
-            key={s.lbl}
+        <div style={{ borderRadius: 12, overflow: "hidden" }}>
+          <img
+            src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?w=800&q=80"
+            alt="Laboratorija"
             style={{
-              flex: 1,
-              maxWidth: 200,
-              padding: "24px 16px",
-              textAlign: "center",
-              borderRight: i < arr.length - 1 ? "1px solid #e8e8e8" : "none",
+              width: "100%",
+              height: 280,
+              objectFit: "cover",
+              borderRadius: 12,
             }}
-          >
-            <div style={{ fontSize: 28, fontWeight: 700, color: PRIMARY }}>
-              {s.num}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: "#888",
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-                marginTop: 4,
-              }}
-            >
-              {s.lbl}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* BROWSER MOCKUP */}
-      <div style={{ padding: "60px 64px", background: "#f7f8fa" }}>
-        <div
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            border: "1px solid #e0e0e0",
-            boxShadow: "0 8px 40px rgba(0,0,0,0.10)",
-          }}
-        >
+          />
+        </div>
+        <div>
           <div
             style={{
-              background: "#f0f0f0",
-              padding: "10px 16px",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              borderBottom: "1px solid #e0e0e0",
+              display: "inline-block",
+              border: "1px solid #d1d5db",
+              borderRadius: 99,
+              padding: "4px 14px",
+              fontSize: 13,
+              color: "#555",
+              marginBottom: 20,
             }}
           >
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                background: "#FC5F57",
-              }}
-            />
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                background: "#FEBC2E",
-              }}
-            />
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                background: "#27C840",
-              }}
-            />
-            <div
-              style={{
-                flex: 1,
-                background: "#fff",
-                borderRadius: 6,
-                padding: "4px 12px",
-                fontSize: 12,
-                color: "#888",
-                border: "1px solid #e0e0e0",
-                margin: "0 8px",
-              }}
-            >
-              nrs-grupa3-95bq.vercel.app/dashboard
-            </div>
+            Napravljeno za stvarne laboratorije
           </div>
-          <div style={{ background: "#fff", padding: 24 }}>
+          <h2
+            style={{
+              fontSize: 32,
+              fontWeight: 700,
+              color: "#0f172a",
+              marginBottom: 16,
+              lineHeight: 1.2,
+            }}
+          >
+            Digitalni partner u{" "}
+            <span style={{ color: PRIMARY }}>svakodnevnom radu</span>
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              color: "#64748b",
+              lineHeight: 1.7,
+              marginBottom: 24,
+            }}
+          >
+            LabManager je projektovan zajedno sa medicinskim osobljem. Svaki
+            ekran prati stvarne korake u laboratoriji — od prijema uzorka, preko
+            korištenja opreme, do generisanja izvještaja.
+          </p>
+          {[
+            "Brza evidencija svakog uređaja u realnom vremenu",
+            "Manje papirologije, više vremena za pacijente",
+            "Transparentnost rada cijelog tima u jednom prikazu",
+          ].map((item) => (
             <div
+              key={item}
               style={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                marginBottom: 20,
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 12,
               }}
             >
-              <div>
-                <div style={{ fontSize: 20, fontWeight: 700 }}>Pregled</div>
-                <div style={{ fontSize: 13, color: "#888", marginTop: 2 }}>
-                  Sažetak aktivnosti laboratorije
-                </div>
-              </div>
-              <div style={{ fontSize: 13, color: "#888" }}>Danas, 24.04.</div>
+              <span style={{ color: PRIMARY, fontWeight: 700, fontSize: 16 }}>
+                ✓
+              </span>
+              <span style={{ fontSize: 14, color: "#374151" }}>{item}</span>
             </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: 16,
-                marginBottom: 24,
-              }}
-            >
-              <div
-                style={{
-                  border: "1px solid #e8e8e8",
-                  borderRadius: 10,
-                  padding: 16,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: "#888" }}>
-                    Ukupno opreme
-                  </div>
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      background: "#E6F1FB",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 16,
-                    }}
-                  >
-                    🔬
-                  </div>
-                </div>
-                <div style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>
-                  24
-                </div>
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "3px 10px",
-                    borderRadius: 99,
-                    fontSize: 12,
-                    fontWeight: 500,
-                    background: "#EAF3DE",
-                    color: "#3B6D11",
-                    marginTop: 8,
-                  }}
-                >
-                  18 dostupno
-                </div>
-              </div>
-              <div
-                style={{
-                  border: "1px solid #e8e8e8",
-                  borderRadius: 10,
-                  padding: 16,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: "#888" }}>
-                    Aktivne rezervacije
-                  </div>
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      background: "#FAEEDA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 16,
-                    }}
-                  >
-                    📅
-                  </div>
-                </div>
-                <div style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>
-                  7
-                </div>
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "3px 10px",
-                    borderRadius: 99,
-                    fontSize: 12,
-                    fontWeight: 500,
-                    background: "#FAEEDA",
-                    color: "#854F0B",
-                    marginTop: 8,
-                  }}
-                >
-                  3 na čekanju
-                </div>
-              </div>
-              <div
-                style={{
-                  border: "1px solid #e8e8e8",
-                  borderRadius: 10,
-                  padding: 16,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: "#888" }}>
-                    Kritične zalihe
-                  </div>
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      background: "#FCEBEB",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 16,
-                    }}
-                  >
-                    ⚠️
-                  </div>
-                </div>
-                <div style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>
-                  2
-                </div>
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "3px 10px",
-                    borderRadius: 99,
-                    fontSize: 12,
-                    fontWeight: 500,
-                    background: "#FCEBEB",
-                    color: "#A32D2D",
-                    marginTop: 8,
-                  }}
-                >
-                  ispod minimuma
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                border: "1px solid #e8e8e8",
-                borderRadius: 10,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  padding: "14px 16px",
-                  borderBottom: "1px solid #e8e8e8",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span style={{ fontWeight: 600, fontSize: 14 }}>
-                  Nedavne rezervacije
-                </span>
-                <span
-                  style={{ fontSize: 13, color: PRIMARY, cursor: "pointer" }}
-                >
-                  Sve rezervacije →
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 2fr 1.5fr 1fr",
-                  padding: "10px 16px",
-                  background: "#f7f8fa",
-                  borderBottom: "1px solid #e8e8e8",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "#888",
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}
-              >
-                <span>Korisnik</span>
-                <span>Oprema</span>
-                <span>Termin</span>
-                <span>Status</span>
-              </div>
-              {reservations.map((r) => (
-                <div
-                  key={r.user}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 2fr 1.5fr 1fr",
-                    padding: "12px 16px",
-                    borderBottom: "1px solid #f0f0f0",
-                    fontSize: 14,
-                    alignItems: "center",
-                  }}
-                >
-                  <span>{r.user}</span>
-                  <span>{r.equipment}</span>
-                  <span style={{ fontSize: 13, color: "#666" }}>
-                    {r.termin}
-                  </span>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "3px 10px",
-                      borderRadius: 99,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      background: r.statusBg,
-                      color: r.statusColor,
-                    }}
-                  >
-                    {r.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* FEATURES */}
-      <section style={{ padding: "64px 64px" }}>
-        <h2
+      {/* ── ROLES ── */}
+      <section
+        style={{ padding: "0 80px 80px", maxWidth: 1100, margin: "0 auto" }}
+      >
+        <div
           style={{
-            textAlign: "center",
-            fontSize: 30,
-            fontWeight: 700,
-            marginBottom: 8,
+            display: "inline-block",
+            border: "1px solid #d1d5db",
+            borderRadius: 99,
+            padding: "4px 14px",
+            fontSize: 13,
+            color: "#555",
+            marginBottom: 16,
           }}
         >
-          Sve što laboratorija treba
+          Korisnički tipovi
+        </div>
+        <h2
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: "#0f172a",
+            marginBottom: 10,
+          }}
+        >
+          Dvije uloge, jasno razdvojena ovlaštenja
         </h2>
         <p
           style={{
-            textAlign: "center",
-            color: "#666",
             fontSize: 15,
-            marginBottom: 48,
+            color: "#64748b",
+            marginBottom: 40,
+            maxWidth: 560,
           }}
         >
-          Od rezervacija do izvještaja – sistem pokriva cijeli operativni tok
-          laboratorije.
+          Sistem razlikuje laboranta i šefa laboratorije. Svaka uloga vidi tačno
+          one funkcije koje su joj potrebne.
         </p>
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 1,
-            background: "#e8e8e8",
-            border: "1px solid #e8e8e8",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}
         >
-          {features.map((f) => (
+          {/* Laborant card */}
+          <div
+            style={{
+              border: "1px solid #e5e7eb",
+              borderRadius: 16,
+              padding: 32,
+            }}
+          >
             <div
-              key={f.title}
-              style={{ background: "#fff", padding: "32px 28px" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 20,
+              }}
             >
               <div
                 style={{
                   width: 40,
                   height: 40,
                   borderRadius: 10,
-                  background: f.bg,
+                  background: "#EFF6FF",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 14,
-                  fontSize: 18,
                 }}
               >
-                {f.icon}
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={PRIMARY}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
               </div>
-              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>
-                {f.title}
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 16 }}>Laborant</div>
+                <div style={{ fontSize: 13, color: "#94a3b8" }}>
+                  Korisnik — svakodnevni rad sa opremom
+                </div>
               </div>
-              <div style={{ fontSize: 13, color: "#666", lineHeight: 1.65 }}>
-                {f.desc}
+            </div>
+            {laborantItems.map((item) => (
+              <div
+                key={item}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "8px 0",
+                  borderBottom: "1px solid #f1f5f9",
+                }}
+              >
+                <span style={{ color: PRIMARY, fontSize: 14 }}>✓</span>
+                <span style={{ fontSize: 14, color: "#374151" }}>{item}</span>
+              </div>
+            ))}
+          </div>
+          {/* Admin card */}
+          <div
+            style={{
+              border: `1.5px solid ${PRIMARY}`,
+              borderRadius: 16,
+              padding: 32,
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 20,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: "#EFF6FF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke={PRIMARY}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  >
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 16 }}>
+                    Administrator
+                  </div>
+                  <div style={{ fontSize: 13, color: "#94a3b8" }}>
+                    Šef laboratorije — upravljanje sistemom
+                  </div>
+                </div>
+              </div>
+              <div
+                style={{
+                  background: PRIMARY_LIGHT,
+                  color: PRIMARY,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  padding: "4px 12px",
+                  borderRadius: 99,
+                }}
+              >
+                Povišena prava
+              </div>
+            </div>
+            {adminItems.map((item) => (
+              <div
+                key={item}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "8px 0",
+                  borderBottom: "1px solid #f1f5f9",
+                }}
+              >
+                <span style={{ color: PRIMARY, fontSize: 14 }}>✓</span>
+                <span style={{ fontSize: 14, color: "#374151" }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES ── */}
+      <section
+        style={{
+          background: "#f8fafc",
+          padding: "80px 80px",
+          maxWidth: "100%",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div
+            style={{
+              display: "inline-block",
+              border: "1px solid #d1d5db",
+              borderRadius: 99,
+              padding: "4px 14px",
+              fontSize: 13,
+              color: "#555",
+              marginBottom: 16,
+            }}
+          >
+            Funkcionalnosti
+          </div>
+          <h2
+            style={{
+              fontSize: 36,
+              fontWeight: 700,
+              color: "#0f172a",
+              marginBottom: 10,
+              maxWidth: 480,
+            }}
+          >
+            Sve što laboratorija treba na jednom mjestu
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              color: "#64748b",
+              marginBottom: 48,
+              maxWidth: 480,
+            }}
+          >
+            Modularne funkcije prilagođene svakodnevnom radu medicinskog osoblja
+            — od rezervacija do izvještaja.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: 16,
+            }}
+          >
+            {features.map((f) => (
+              <div
+                key={f.title}
+                style={{
+                  background: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: 12,
+                  padding: 28,
+                }}
+              >
+                <div style={{ fontSize: 24, marginBottom: 14 }}>{f.icon}</div>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 600,
+                    color: "#0f172a",
+                    marginBottom: 8,
+                  }}
+                >
+                  {f.title}
+                </div>
+                <div
+                  style={{ fontSize: 13, color: "#64748b", lineHeight: 1.65 }}
+                >
+                  {f.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SPRINTS TIMELINE ── */}
+      <section
+        style={{ padding: "80px 80px", maxWidth: 1100, margin: "0 auto" }}
+      >
+        <div
+          style={{
+            display: "inline-block",
+            border: "1px solid #d1d5db",
+            borderRadius: 99,
+            padding: "4px 14px",
+            fontSize: 13,
+            color: "#555",
+            marginBottom: 16,
+          }}
+        >
+          Razvoj
+        </div>
+        <h2
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            color: "#0f172a",
+            marginBottom: 10,
+          }}
+        >
+          Sedam sprinteva, jedan sistem
+        </h2>
+        <p
+          style={{
+            fontSize: 15,
+            color: "#64748b",
+            marginBottom: 48,
+            maxWidth: 520,
+          }}
+        >
+          Razvoj je organizovan kroz iterativne sprinteve, svaki sa jasnim
+          ciljem i isporučenim Product Backlog stavkama.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {sprints.map((s) => (
+            <div
+              key={s.num}
+              style={{
+                display: "flex",
+                gap: 24,
+                alignItems: "flex-start",
+                borderBottom: "1px solid #f1f5f9",
+                padding: "20px 0",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 700,
+                  color: "#94a3b8",
+                  minWidth: 24,
+                  paddingTop: 2,
+                }}
+              >
+                {s.num}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 15,
+                      color: "#0f172a",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {s.title}
+                  </div>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {s.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        style={{
+                          background: "#f1f5f9",
+                          color: "#64748b",
+                          fontSize: 12,
+                          padding: "3px 8px",
+                          borderRadius: 6,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ fontSize: 13, color: "#64748b" }}>{s.desc}</div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ROLES */}
-      <section style={{ padding: "0 64px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 700, marginBottom: 8 }}>
-          Dvije korisničke uloge
-        </h2>
-        <p style={{ color: "#666", fontSize: 15, marginBottom: 32 }}>
-          Svaki korisnik vidi i može raditi samo ono za šta je ovlašten.
-        </p>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}
-        >
+      {/* ── TECH STACK ── */}
+      <section style={{ background: "#f8fafc", padding: "80px 80px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div
             style={{
-              border: "1px solid #e8e8e8",
-              borderRadius: 12,
-              padding: 28,
+              display: "inline-block",
+              border: "1px solid #d1d5db",
+              borderRadius: 99,
+              padding: "4px 14px",
+              fontSize: 13,
+              color: "#555",
+              marginBottom: 20,
             }}
           >
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
-              👨‍🔬 Laborant
-            </div>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {laborantItems.map((item) => (
-                <li
-                  key={item}
-                  style={{
-                    fontSize: 14,
-                    color: "#444",
-                    padding: "6px 0",
-                    borderBottom: "1px solid #f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <span style={{ color: "#3B6D11" }}>✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+            Tehnologije
           </div>
-          <div
+          <h2
             style={{
-              border: `2px solid ${PRIMARY}`,
-              borderRadius: 12,
-              padding: 28,
-              position: "relative",
+              fontSize: 36,
+              fontWeight: 700,
+              color: "#0f172a",
+              marginBottom: 48,
             }}
           >
-            <div
+            Moderni stack, provjerena rješenja
+          </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
+              gap: 0,
+              border: "1px solid #e5e7eb",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            {techStack.map((t, i, arr) => (
+              <div
+                key={t.name}
+                style={{
+                  background: "#fff",
+                  padding: "32px 16px",
+                  textAlign: "center",
+                  borderRight:
+                    i < arr.length - 1 ? "1px solid #e5e7eb" : "none",
+                }}
+              >
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{t.icon}</div>
+                <div
+                  style={{ fontSize: 14, color: "#374151", fontWeight: 500 }}
+                >
+                  {t.name}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 14, color: "#94a3b8", marginTop: 24 }}>
+            Full-stack aplikacija deployovana na Vercel, baza podataka na
+            Supabase.
+          </p>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section
+        style={{ padding: "60px 80px", maxWidth: 1100, margin: "0 auto" }}
+      >
+        <div
+          style={{
+            background: "#f8fafc",
+            border: "1px solid #e5e7eb",
+            borderRadius: 16,
+            padding: "48px 48px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            <h2
               style={{
-                position: "absolute",
-                top: -12,
-                left: 24,
-                background: PRIMARY,
-                color: "#fff",
-                fontSize: 12,
-                fontWeight: 600,
-                padding: "3px 12px",
-                borderRadius: 99,
+                fontSize: 28,
+                fontWeight: 700,
+                color: "#0f172a",
+                marginBottom: 8,
               }}
             >
-              Proširena ovlaštenja
-            </div>
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
-              🛡️ Administrator
-            </div>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {adminItems.map((item) => (
-                <li
-                  key={item}
-                  style={{
-                    fontSize: 14,
-                    color: "#444",
-                    padding: "6px 0",
-                    borderBottom: "1px solid #f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <span style={{ color: PRIMARY }}>✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+              Spreman za upotrebu u laboratoriji
+            </h2>
+            <p style={{ fontSize: 15, color: "#64748b" }}>
+              Prijavite se i počnite upravljati opremom odmah.
+            </p>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <button
+              style={{
+                padding: "12px 28px",
+                background: PRIMARY,
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Prijava u sistem
+            </button>
+            <button
+              style={{
+                padding: "12px 28px",
+                background: "#fff",
+                color: "#111",
+                border: "1px solid #d4d4d4",
+                borderRadius: 8,
+                fontSize: 14,
+                cursor: "pointer",
+              }}
+            >
+              Registracija
+            </button>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <div
-        style={{
-          background: PRIMARY,
-          padding: "48px 64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#fff",
-              marginBottom: 8,
-            }}
-          >
-            Spreman za upotrebu u laboratoriji
-          </div>
-          <div style={{ fontSize: 14, color: "rgba(255,255,255,0.8)" }}>
-            Prijavite se i počnite upravljati opremom odmah.
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <button
-            style={{
-              padding: "12px 28px",
-              background: "#fff",
-              color: PRIMARY,
-              border: "none",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Prijava u sistem
-          </button>
-          <button
-            style={{
-              padding: "12px 28px",
-              background: "transparent",
-              color: "#fff",
-              border: "1px solid rgba(255,255,255,0.5)",
-              borderRadius: 8,
-              fontSize: 14,
-              cursor: "pointer",
-            }}
-          >
-            API dokumentacija
-          </button>
-        </div>
-      </div>
-
-      {/* FOOTER */}
+      {/* ── FOOTER ── */}
       <footer
         style={{
-          padding: "20px 64px",
-          borderTop: "1px solid #e8e8e8",
+          borderTop: "1px solid #f0f0f0",
+          padding: "24px 80px",
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <div style={{ fontSize: 14, fontWeight: 600 }}>
-          LabManager — NRS Grupa 3
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              background: PRIMARY,
+              borderRadius: 6,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <path d="M9 3H15M12 3V7M8 7H16L17.5 17C17.5 18.1 16.6 19 15.5 19H8.5C7.4 19 6.5 18.1 6.5 17L8 7Z" />
+            </svg>
+          </div>
+          <span style={{ fontSize: 14, fontWeight: 600 }}>
+            LabManager — NRS Grupa 3
+          </span>
         </div>
-        <div style={{ fontSize: 13, color: "#888" }}>
-          React + Node.js + PostgreSQL · Supabase · Vercel
+        <div style={{ display: "flex", gap: 28 }}>
+          {["Frontend", "Backend API", "GitHub"].map((l) => (
+            <a
+              key={l}
+              style={{
+                fontSize: 14,
+                color: "#64748b",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              {l}
+            </a>
+          ))}
+        </div>
+        <div style={{ fontSize: 13, color: "#94a3b8" }}>
+          React + Node.js + PostgreSQL
         </div>
       </footer>
     </div>
