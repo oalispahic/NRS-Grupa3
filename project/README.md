@@ -2,39 +2,53 @@
 
 Full-stack aplikacija: Node.js/Express backend + React/Vite frontend, PostgreSQL baza podataka.
 
-## Preduslovi
+---
+
+## Produkcijski URL-ovi
+
+| Servis   | URL |
+|----------|-----|
+| Frontend | https://nrs-grupa3-95bq.vercel.app |
+| Backend  | https://nrs-grupa3.vercel.app/     |
+
+> Frontend je React aplikacija koju korisnici otvaraju u browseru.
+> Backend je Express API — ne otvara se u browseru, koristi se za API pozive.
+> `/api/health` na backend URL-u treba vraćati `{"status":"ok"}`.
+
+---
+
+## Struktura projekta
+
+```
+project/
+├── migrations/          # SQL migracije za bazu podataka
+├── backend/             # Node.js/Express API server
+└── frontend/            # React/Vite aplikacija
+```
+
+---
+
+## Lokalni razvoj
+
+### Preduslovi
 
 - Node.js 18+
-- PostgreSQL baza podataka ([Neon](https://neon.tech) ili [Supabase](https://supabase.com) — besplatni tier je dovoljan)
+- Pristup Supabase projektu (pitaj voditelja tima za `.env` podatke)
 
----
-
-## 1. Setup baze podataka
-
-1. Kreirati besplatnu bazu na [neon.tech](https://neon.tech) ili [supabase.com](https://supabase.com)
-2. Kopirati connection string (format: `postgresql://user:pass@host/db?sslmode=require`)
-3. Pokrenuti migraciju:
-   - Otvoriti SQL editor u Neon/Supabase dashboardu
-   - Zalijepiti i izvršiti sadržaj fajla `migrations/001_initial_schema.sql`
-
----
-
-## 2. Backend — lokalni razvoj
+### 1. Backend
 
 ```bash
 cd project/backend
 cp .env.example .env
-# Urediti .env: postaviti DATABASE_URL i JWT_SECRET
+# Popuniti .env sa podacima od voditelja tima
 npm install
 npm run dev
 # Server sluša na http://localhost:3001
 ```
 
-Provjera: `curl http://localhost:3001/api/health`
+Provjera da radi: `curl http://localhost:3001/api/health` → treba vratiti `{"status":"ok"}`
 
----
-
-## 3. Frontend — lokalni razvoj
+### 2. Frontend
 
 ```bash
 cd project/frontend
@@ -43,67 +57,104 @@ npm run dev
 # Aplikacija dostupna na http://localhost:5173
 ```
 
-Vite dev server automatski proxira `/api/*` zahtjeve na `http://localhost:3001`.
+Vite automatski proxira `/api/*` pozive na `http://localhost:3001` tokom lokalnog razvoja — nije potrebno ništa dodatno konfigurirati.
+
+### .env fajl
+
+Kopiraj `.env.example` u `.env` i popuni vrijednosti:
+
+```
+DB_HOST=aws-0-eu-west-1.pooler.supabase.com
+DB_PORT=5432
+DB_USER=postgres.<project_ref>
+DB_PASSWORD=<lozinka>
+DB_NAME=postgres
+
+JWT_SECRET=<tajni_kljuc>
+JWT_EXPIRES_IN=15m
+PORT=3001
+FRONTEND_URL=http://localhost:5173
+```
+
+> `.env` se nikad ne commituje u git. Sadrži tajne podatke i svako ga kreira lokalno.
 
 ---
 
-## 4. Deploy na Vercel
+## Git workflow
 
-### Backend
+Radimo po feature branchevima:
 
-1. Push repozitorij na GitHub
-2. Otvoriti [vercel.com](https://vercel.com) → New Project → importovati repo
-3. Postaviti **Root Directory** na `project/backend`
-4. Dodati environment varijable:
-   - `DATABASE_URL`
-   - `JWT_SECRET`
-   - `JWT_EXPIRES_IN` (npr. `15m`)
-   - `FRONTEND_URL` (URL deployovanog frontenda)
-5. Deploy
+```bash
+# 1. Kreirati branch za svoju funkcionalnost
+git checkout -b feature/naziv-featurea
 
-### Frontend
+# 2. Raditi na kodu, commitovati
+git add .
+git commit -m "Kratak opis promjene"
 
-1. Vercel → New Project → importovati isti repo
-2. Postaviti **Root Directory** na `project/frontend`
-3. Dodati environment varijablu: `VITE_API_URL=https://your-backend.vercel.app`
-4. Deploy
+# 3. Pushati branch
+git push origin feature/naziv-featurea
 
-> Napomena: Deplouj backend prvi, pa onda frontend kako bi imao URL za `VITE_API_URL`.
+# 4. Otvoriti Pull Request na GitHubu prema main branchu
+```
+
+### Automatski deployment
+
+| Akcija | Rezultat |
+|--------|----------|
+| Push na bilo koji branch / otvaranje PR-a | Vercel kreira **preview deployment** sa privremenim URL-om |
+| Merge PR-a u `main` | Vercel automatski deploya na **produkciju** |
+
+Preview deployment URL se pojavljuje direktno u PR-u na GitHubu kao komentar od Vercel bota — možeš testirati promjene prije mergea u main.
 
 ---
 
 ## API Endpointi
 
-| Metoda | Putanja                  | Auth       | Opis                        |
-|--------|--------------------------|------------|-----------------------------|
-| GET    | /api/health              | —          | Health check                |
-| POST   | /api/auth/register       | —          | Registracija novog korisnika|
-| POST   | /api/auth/login          | —          | Login, vraća JWT token      |
-| GET    | /api/equipment           | —          | Lista sve opreme            |
-| GET    | /api/equipment/:id       | —          | Detalji opreme              |
-| POST   | /api/equipment           | Admin JWT  | Dodaj novu opremu           |
-| DELETE | /api/equipment/:id       | Admin JWT  | Obriši opremu               |
-| POST   | /api/reservations        | JWT        | Kreiraj rezervaciju         |
-| GET    | /api/reservations/my     | JWT        | Moje rezervacije            |
+Base URL (produkcija): `https://nrs-grupa3-iq68qz3g1-omars-projects-875a9d42.vercel.app`
+
+Base URL (lokalno): `http://localhost:3001`
+
+| Metoda | Putanja                 | Auth       | Opis                         |
+|--------|-------------------------|------------|------------------------------|
+| GET    | /api/health             | —          | Health check                 |
+| POST   | /api/auth/register      | —          | Registracija novog korisnika |
+| POST   | /api/auth/login         | —          | Login, vraća JWT token       |
+| GET    | /api/equipment          | —          | Lista sve opreme             |
+| GET    | /api/equipment/:id      | —          | Detalji opreme               |
+| POST   | /api/equipment          | Admin JWT  | Dodaj novu opremu            |
+| DELETE | /api/equipment/:id      | Admin JWT  | Obriši opremu                |
+| POST   | /api/reservations       | JWT        | Kreiraj rezervaciju          |
+| GET    | /api/reservations/my    | JWT        | Moje rezervacije             |
 
 ### Autentifikacija
 
-Za zaštićene endpointe slati JWT token u headeru:
+Zaštićeni endpointi zahtijevaju JWT token u headeru:
 
 ```
 Authorization: Bearer <token>
 ```
 
-Token se dobija putem `POST /api/auth/login`.
+Token se dobija putem `POST /api/auth/login`. Admin rola je potrebna za upravljanje opremom.
 
 ---
 
-## Arhitektura
+## Arhitektura backenda
 
-Backend koristi **Controller → Service → Repository** pattern:
+Pattern: **Controller → Service → Repository**
 
-- **Controller** — prima HTTP request, poziva service, vraća response
-- **Service** — business logika i validacija
-- **Repository** — SQL upiti, direktan pristup bazi
+| Sloj       | Odgovornost                                  |
+|------------|----------------------------------------------|
+| Controller | Prima HTTP request, poziva service, vraća response |
+| Service    | Business logika i validacija                 |
+| Repository | SQL upiti, direktan pristup bazi             |
 
 Greške se propagiraju kroz `next(err)` prema centralnom `errorHandler` middlewareu.
+
+---
+
+## Baza podataka
+
+Tabele: `users`, `equipment`, `reservations`
+
+Za inicijalni setup baze pokrenuti: `migrations/001_initial_schema.sql` u Supabase SQL editoru.
