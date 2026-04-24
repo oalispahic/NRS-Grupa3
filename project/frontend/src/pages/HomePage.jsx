@@ -32,7 +32,7 @@ const NAV_LINKS = [
 
 const STATS = [
   { num: "27+", lbl: "Funkcionalnosti" },
-  { num: "2", lbl: "Tipa korisnika" },
+  { num: "5", lbl: "Stakeholdera" },
   { num: "100%", lbl: "Cloud-based" },
   { num: "REST", lbl: "API arhitektura" },
 ];
@@ -632,7 +632,7 @@ export default function HomePage() {
                 marginBottom: 24,
               }}
             >
-              LabManager je projektovan zajedno sa medicinskim osobljem. Svaki
+              LabManager je projekat EtfSa Studenata. Svaki
               ekran prati stvarne korake u laboratoriji — od prijema uzorka,
               preko korištenja opreme, do generisanja izvještaja.
             </p>
@@ -685,7 +685,7 @@ export default function HomePage() {
             marginBottom: 10,
           }}
         >
-          Dvije uloge, jasno razdvojena ovlaštenja
+          Dvije glavne uloge, jasno razdvojena ovlaštenja
         </h2>
         <p
           style={{
@@ -695,7 +695,7 @@ export default function HomePage() {
             maxWidth: 560,
           }}
         >
-          Sistem razlikuje laboranta i šefa laboratorije. Svaka uloga vidi tačno
+          Sistem razlikuje 5 stakeholdera od kojih je laborant i šefa laboratorije najvažniji za rad cijelog sistema. Svaka uloga vidi tačno
           one funkcije koje su joj potrebne.
         </p>
         <div className="roles-grid" style={{ display: "grid", gap: 24 }}>
