@@ -111,7 +111,7 @@ Preview deployment URL se pojavljuje direktno u PR-u na GitHubu kao komentar od 
 
 ## API Endpointi
 
-Base URL (produkcija): `https://nrs-grupa3-iq68qz3g1-omars-projects-875a9d42.vercel.app`
+Base URL (produkcija): `https://nrs-grupa3.vercel.app/`
 
 Base URL (lokalno): `http://localhost:3001`
 
@@ -157,4 +157,3 @@ Greške se propagiraju kroz `next(err)` prema centralnom `errorHandler` middlewa
 
 Tabele: `users`, `equipment`, `reservations`
 
-Za inicijalni setup baze pokrenuti: `migrations/001_initial_schema.sql` u Supabase SQL editoru.
