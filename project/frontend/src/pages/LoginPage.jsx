@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { FlaskConical, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { ArrowLeft, FlaskConical, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { PRIMARY, C, FONT, GLOBAL_CSS } from '../theme';
 
@@ -89,6 +89,14 @@ export default function LoginPage() {
       <div style={bgImageStyle} />
 
       <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 400 }}>
+
+        <Link
+          to="/"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 22, color: C.body, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}
+        >
+          <ArrowLeft size={16} />
+          Povratak na pocetnu
+        </Link>
 
         {/* Logo and title */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
