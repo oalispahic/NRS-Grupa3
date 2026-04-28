@@ -16,9 +16,25 @@ export const C = {
 export const GLOBAL_CSS = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: ${FONT}; color: ${C.body}; background: ${C.bg}; }
-  button, input, select, textarea { font-family: inherit; }
+  html, body, #root { min-height: 100%; }
+  body { font-family: ${FONT}; color: ${C.body}; background: ${C.bg}; overflow-x: hidden; }
+  button, input, select, textarea { font-family: inherit; min-width: 0; }
+  button { touch-action: manipulation; }
   a { font-family: inherit; }
+  img, svg { max-width: 100%; }
+
+  .app-shell {
+    padding-top: 60px;
+    min-height: 100vh;
+    background: ${C.bgFaint};
+  }
+
+  .app-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px;
+  }
 
   .app-link { color: ${PRIMARY}; text-decoration: none; font-size: 14px; }
   .app-link:hover { text-decoration: underline; }
@@ -32,9 +48,130 @@ export const GLOBAL_CSS = `
   .row-hover:hover  { background: ${C.bgFaint}; }
   .nav-link-app:hover { color: ${PRIMARY} !important; }
 
+  .auth-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 18px;
+  }
+
+  .auth-nav-links,
+  .auth-nav-user {
+    display: flex;
+    align-items: center;
+  }
+
+  .auth-nav-links { gap: 2px; }
+  .auth-nav-user { gap: 12px; }
+
+  .auth-nav-menu-button,
+  .auth-nav-mobile {
+    display: none;
+  }
+
+  .equipment-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .reservation-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .responsive-table-card-list {
+    display: none;
+  }
+
   @media (max-width: 900px) {
     .hide-mobile { display: none !important; }
     .section-pad { padding-left: 20px !important; padding-right: 20px !important; }
+    .app-container { padding: 28px 20px; }
+
+    .auth-nav-inner { padding: 0 20px; }
+    .auth-nav-links,
+    .auth-nav-user {
+      display: none !important;
+    }
+    .auth-nav-menu-button {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-nav-mobile.open {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: #fff;
+      border-bottom: 1px solid ${C.border};
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+      padding: 10px 16px 16px;
+      gap: 8px;
+    }
+
+    .detail-layout {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .table-desktop { display: none !important; }
+    .responsive-table-card-list {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .app-shell { padding-top: 56px; }
+    .app-container { padding: 24px 16px; }
+    .auth-nav-inner { height: 56px; padding: 0 16px; }
+    .auth-nav-mobile.open { top: 56px; }
+    .equipment-card-grid { grid-template-columns: minmax(0, 1fr); }
+    .detail-header { align-items: flex-start; }
+    .reservation-form-grid { grid-template-columns: 1fr; }
+    .action-row,
+    .action-row > button,
+    .action-row > a {
+      width: 100%;
+    }
+    .action-row > button,
+    .action-row > a {
+      justify-content: center;
+    }
   }
 `;
 

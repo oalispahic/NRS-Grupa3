@@ -55,10 +55,10 @@ export default function EquipmentDetailPage() {
         <ChevronLeft size={15} /> Nazad na listu
       </Link>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 32, alignItems: 'start' }}>
+      <div className="detail-layout">
         <div>
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          <div className="detail-header">
             <div style={iconBox(48, 12)}>
               <Microscope size={22} color={PRIMARY} />
             </div>
@@ -104,9 +104,11 @@ export default function EquipmentDetailPage() {
               {!showForm ? (
                 <div style={{ marginTop: 12 }}>
                   <p style={{ fontSize: 13, color: C.muted, marginBottom: 14 }}>Oprema je dostupna. Odaberite termin i kreirajte zahtjev za rezervaciju.</p>
-                  <button className="btn-primary" onClick={() => setShowForm(true)} style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                    <Calendar size={14} /> Odaberi termin
-                  </button>
+                  <div className="action-row">
+                    <button className="btn-primary" onClick={() => setShowForm(true)} style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <Calendar size={14} /> Odaberi termin
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleReserve}>
@@ -115,7 +117,7 @@ export default function EquipmentDetailPage() {
                       <AlertCircle size={14} style={{ flexShrink: 0 }} /> {errorMsg}
                     </div>
                   )}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
+                  <div className="reservation-form-grid">
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: C.body, marginBottom: 6 }}>Početak</label>
                       <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} required
@@ -131,7 +133,7 @@ export default function EquipmentDetailPage() {
                       />
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: 10 }}>
+                  <div className="action-row">
                     <button type="submit" disabled={submitting} className="btn-primary"
                       style={{ ...BTN.primary, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}>
                       {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}

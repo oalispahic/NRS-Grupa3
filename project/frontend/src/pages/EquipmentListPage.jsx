@@ -29,7 +29,7 @@ export default function EquipmentListPage() {
           <p style={{ fontSize: 15, color: C.muted }}>Oprema trenutno nije dostupna.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 16 }}>
+        <div className="equipment-card-grid">
           {equipment.map(item => {
             const st = STATUS_EQUIPMENT[item.status] || STATUS_EQUIPMENT.out_of_service;
             return (
