@@ -1,52 +1,84 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt    = require('jsonwebtoken');
 const userRepo = require('../repositories/user.repository');
 
-const SALT_ROUNDS = 12;
+const BCRYPT_ROUNDS = 12;
 
-async function register({ email, password, fullName }) {
+/**
+ * Handles new user registration.
+ * Validates input, checks for duplicates, hashes password and creates user.
+ */
+async function registerUser({ email, password, fullName }) {
   if (!email || !password || !fullName) {
-    const err = new Error('email, password and fullName are required');
+    const err = new Error('Sva polja su obavezna: email, lozinka, ime i prezime');
     err.status = 400;
     throw err;
   }
-  const existing = await userRepo.findByEmail(email);
-  if (existing) {
-    const err = new Error('Email already in use');
+
+  const existingUser = await userRepo.findByEmail(email);
+  if (existingUser) {
+    const err = new Error('Korisnik sa ovim emailom vec postoji');
     err.status = 409;
     throw err;
   }
-  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-  return userRepo.create({ email, passwordHash, fullName });
+
+  const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+  const newUser = await userRepo.create({
+    email,
+    passwordHash: hashedPassword,
+    fullName,
+  });
+
+  return newUser;
 }
 
-async function login({ email, password }) {
+/**
+ * Handles user login.
+ * Verifies credentials and returns a signed JWT token.
+ */
+async function loginUser({ email, password }) {
   if (!email || !password) {
-    const err = new Error('email and password are required');
+    const err = new Error('Email i lozinka su obavezni');
     err.status = 400;
     throw err;
   }
-  const user = await userRepo.findByEmail(email);
-  if (!user) {
-    const err = new Error('Invalid credentials');
+
+  const foundUser = await userRepo.findByEmail(email);
+  if (!foundUser) {
+    const err = new Error('Pogresni pristupni podaci');
     err.status = 401;
     throw err;
   }
-  const match = await bcrypt.compare(password, user.password_hash);
-  if (!match) {
-    const err = new Error('Invalid credentials');
+
+  const passwordValid = await bcrypt.compare(password, foundUser.password_hash);
+  if (!passwordValid) {
+    const err = new Error('Pogresni pristupni podaci');
     err.status = 401;
     throw err;
   }
-  const token = jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '8h' }
-  );
+
+  const tokenPayload = {
+    id:    foundUser.id,
+    email: foundUser.email,
+    role:  foundUser.role,
+  };
+
+  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || '8h',
+  });
+
   return {
     token,
-    user: { id: user.id, email: user.email, role: user.role, full_name: user.full_name },
+    user: {
+      id:        foundUser.id,
+      email:     foundUser.email,
+      role:      foundUser.role,
+      full_name: foundUser.full_name,
+    },
   };
 }
 
-module.exports = { register, login };
+module.exports = {
+  register: registerUser,
+  login:    loginUser,
+};

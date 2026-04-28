@@ -4,46 +4,65 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken]     = useState(null);
+  const [isLoading, setIsLoading]     = useState(true);
   const navigate = useNavigate();
 
+  // On app load, check if there is a saved session
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
-    const storedUser = sessionStorage.getItem('user');
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    const savedToken = sessionStorage.getItem('token');
+    const savedUser  = sessionStorage.getItem('user');
+
+    if (savedToken && savedUser) {
+      setAuthToken(savedToken);
+      setCurrentUser(JSON.parse(savedUser));
     }
-    setLoading(false);
+    setIsLoading(false);
   }, []);
 
+  // Send credentials to backend and store the session
   const login = useCallback(async (email, password) => {
-    const res = await fetch('/api/auth/login', {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Prijava neuspješna');
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Prijava neuspjesna');
+    }
+
     sessionStorage.setItem('token', data.token);
     sessionStorage.setItem('user', JSON.stringify(data.user));
-    setToken(data.token);
-    setUser(data.user);
+
+    setAuthToken(data.token);
+    setCurrentUser(data.user);
+
     return data.user;
   }, []);
 
+  // Clear session and redirect to login page
   const logout = useCallback(() => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
-    setToken(null);
-    setUser(null);
+    setAuthToken(null);
+    setCurrentUser(null);
     navigate('/login');
   }, [navigate]);
 
+  const contextValue = {
+    user:    currentUser,
+    token:   authToken,
+    loading: isLoading,
+    login,
+    logout,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
