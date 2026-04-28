@@ -5,6 +5,7 @@ const equipmentController = require('../controllers/equipment.controller');
 router.get('/', equipmentController.list);
 router.get('/:id', equipmentController.getOne);
 router.post('/', authenticate, requireRole('admin'), equipmentController.create);
+router.put('/:id', authenticate, requireRole('admin'), equipmentController.update);
 router.delete('/:id', authenticate, requireRole('admin'), equipmentController.remove);
 
 module.exports = router;

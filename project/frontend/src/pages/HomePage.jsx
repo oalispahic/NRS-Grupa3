@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -154,6 +154,7 @@ function scrollTo(id) {
 }
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -323,6 +324,7 @@ export default function HomePage() {
             </button>
             <button
               className="btn-primary"
+              onClick={() => navigate('/login')}
               style={{
                 padding: "8px 18px",
                 border: "none",
@@ -389,6 +391,7 @@ export default function HomePage() {
             </button>
             <button
               className="btn-primary"
+              onClick={() => navigate('/login')}
               style={{
                 flex: 1,
                 padding: "10px",
@@ -1171,6 +1174,7 @@ export default function HomePage() {
           >
             <button
               className="btn-primary"
+              onClick={() => navigate('/login')}
               style={{
                 padding: "12px 28px",
                 background: PRIMARY,

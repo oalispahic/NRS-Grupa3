@@ -1,0 +1,72 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { BookOpen, SearchX } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { PRIMARY, C, STATUS_RESERVATION } from '../theme';
+
+function fmt(dt) {
+  if (!dt) return '—';
+  return new Date(dt).toLocaleString('bs-BA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+export default function MyReservationsPage() {
+  const { token } = useAuth();
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading]           = useState(true);
+
+  useEffect(() => {
+    fetch('/api/reservations/my', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json()).then(d => setReservations(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
+  }, [token]);
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
+          Moje rezervacije
+        </div>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: C.heading }}>Rezervacije</h1>
+        <p style={{ marginTop: 6, fontSize: 15, color: C.muted }}>Pregled svih vaših zahtjeva za opremu.</p>
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '60px 0', color: C.muted, fontSize: 14 }}>Učitavanje...</div>
+      ) : reservations.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <SearchX size={40} color={C.subtle} style={{ margin: '0 auto 16px' }} />
+          <p style={{ fontSize: 15, color: C.muted, marginBottom: 16 }}>Nemate evidentiranih rezervacija.</p>
+          <Link to="/equipment" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: PRIMARY, color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+            <BookOpen size={14} /> Pregledaj opremu
+          </Link>
+        </div>
+      ) : (
+        <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: C.bgFaint }}>
+                {['Oprema', 'Početak', 'Kraj', 'Status'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '12px 20px', fontSize: 11, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {reservations.map((r, i) => {
+                const sc = STATUS_RESERVATION[r.status] || { bg: '#f1f5f9', color: '#475569', label: r.status };
+                return (
+                  <tr key={r.id} className="row-hover" style={{ borderTop: `1px solid ${C.borderFaint}` }}>
+                    <td style={{ padding: '14px 20px', fontSize: 14, fontWeight: 500, color: C.heading }}>{r.equipment_name || '—'}</td>
+                    <td style={{ padding: '14px 20px', fontSize: 13, color: C.muted }}>{fmt(r.start_time)}</td>
+                    <td style={{ padding: '14px 20px', fontSize: 13, color: C.muted }}>{fmt(r.end_time)}</td>
+                    <td style={{ padding: '14px 20px' }}>
+                      <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99 }}>{sc.label}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

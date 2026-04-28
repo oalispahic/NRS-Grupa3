@@ -25,6 +25,20 @@ async function create({ name, description, status = 'available', location }) {
   return rows[0];
 }
 
+async function update(id, { name, description, status, location }) {
+  const { rows } = await pool.query(
+    `UPDATE equipment
+     SET name        = COALESCE($2, name),
+         description = COALESCE($3, description),
+         status      = COALESCE($4, status),
+         location    = COALESCE($5, location)
+     WHERE id = $1
+     RETURNING *`,
+    [id, name, description, status, location]
+  );
+  return rows[0] || null;
+}
+
 async function remove(id) {
   const { rowCount } = await pool.query(
     'DELETE FROM equipment WHERE id = $1',
@@ -33,4 +47,4 @@ async function remove(id) {
   return rowCount > 0;
 }
 
-module.exports = { findAll, findById, create, remove };
+module.exports = { findAll, findById, create, update, remove };

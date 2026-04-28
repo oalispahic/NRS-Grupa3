@@ -27,6 +27,15 @@ async function create(req, res, next) {
   }
 }
 
+async function update(req, res, next) {
+  try {
+    const equipment = await equipmentService.update(req.params.id, req.body);
+    res.json(equipment);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function remove(req, res, next) {
   try {
     await equipmentService.remove(req.params.id);
@@ -36,4 +45,4 @@ async function remove(req, res, next) {
   }
 }
 
-module.exports = { list, getOne, create, remove };
+module.exports = { list, getOne, create, update, remove };
