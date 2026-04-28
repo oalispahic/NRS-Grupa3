@@ -1,26 +1,26 @@
 const authService = require('../services/auth.service');
 
 /**
- * Kontroler za registraciju novog korisnika.
- * Prima email, password i fullName iz request body-ja.
+ * Controller for user registration.
+ * Accepts email, password and fullName from request body.
  */
 async function handleRegister(req, res, next) {
   try {
-    const noviKorisnik = await authService.register(req.body);
-    return res.status(201).json({ user: noviKorisnik });
+    const newUser = await authService.register(req.body);
+    return res.status(201).json({ user: newUser });
   } catch (err) {
     next(err);
   }
 }
 
 /**
- * Kontroler za prijavu korisnika.
- * Vraca JWT token i korisnicke podatke ako su kredencijali ispravni.
+ * Controller for user login.
+ * Returns JWT token and user data if credentials are valid.
  */
 async function handleLogin(req, res, next) {
   try {
-    const rezultat = await authService.login(req.body);
-    return res.json(rezultat);
+    const result = await authService.login(req.body);
+    return res.json(result);
   } catch (err) {
     next(err);
   }

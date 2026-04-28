@@ -4,24 +4,24 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [korisnik, setKorisnik]     = useState(null);
-  const [authToken, setAuthToken]   = useState(null);
-  const [ucitavanje, setUcitavanje] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken]     = useState(null);
+  const [isLoading, setIsLoading]     = useState(true);
   const navigate = useNavigate();
 
-  // Pri pokretanju aplikacije, provjeri da li postoji sacuvana sesija
+  // On app load, check if there is a saved session
   useEffect(() => {
-    const sacuvaniToken    = sessionStorage.getItem('token');
-    const sacuvaniKorisnik = sessionStorage.getItem('user');
+    const savedToken = sessionStorage.getItem('token');
+    const savedUser  = sessionStorage.getItem('user');
 
-    if (sacuvaniToken && sacuvaniKorisnik) {
-      setAuthToken(sacuvaniToken);
-      setKorisnik(JSON.parse(sacuvaniKorisnik));
+    if (savedToken && savedUser) {
+      setAuthToken(savedToken);
+      setCurrentUser(JSON.parse(savedUser));
     }
-    setUcitavanje(false);
+    setIsLoading(false);
   }, []);
 
-  // Funkcija za prijavu - salje kredencijale na backend
+  // Send credentials to backend and store the session
   const login = useCallback(async (email, password) => {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
@@ -29,41 +29,40 @@ export function AuthProvider({ children }) {
       body: JSON.stringify({ email, password }),
     });
 
-    const podaci = await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(podaci.error || 'Prijava neuspješna');
+      throw new Error(data.error || 'Login failed');
     }
 
-    // Cuvanje tokena i korisnickih podataka u sessionStorage
-    sessionStorage.setItem('token', podaci.token);
-    sessionStorage.setItem('user', JSON.stringify(podaci.user));
+    sessionStorage.setItem('token', data.token);
+    sessionStorage.setItem('user', JSON.stringify(data.user));
 
-    setAuthToken(podaci.token);
-    setKorisnik(podaci.user);
+    setAuthToken(data.token);
+    setCurrentUser(data.user);
 
-    return podaci.user;
+    return data.user;
   }, []);
 
-  // Funkcija za odjavu - brise sesiju i vraca na login
+  // Clear session and redirect to login page
   const logout = useCallback(() => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
     setAuthToken(null);
-    setKorisnik(null);
+    setCurrentUser(null);
     navigate('/login');
   }, [navigate]);
 
-  const contextVrijednost = {
-    user:    korisnik,
+  const contextValue = {
+    user:    currentUser,
     token:   authToken,
-    loading: ucitavanje,
+    loading: isLoading,
     login,
     logout,
   };
 
   return (
-    <AuthContext.Provider value={contextVrijednost}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

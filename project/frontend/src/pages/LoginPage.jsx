@@ -5,32 +5,32 @@ import { useAuth } from '../hooks/useAuth';
 import { PRIMARY, C, FONT, GLOBAL_CSS } from '../theme';
 
 export default function LoginPage() {
-  const { user, login }         = useAuth();
-  const navigate                = useNavigate();
-  const [email, setEmail]       = useState('');
-  const [lozinka, setLozinka]   = useState('');
-  const [greska, setGreska]     = useState('');
-  const [slanje, setSlanje]     = useState(false);
+  const { user, login }               = useAuth();
+  const navigate                      = useNavigate();
+  const [email, setEmail]             = useState('');
+  const [password, setPassword]       = useState('');
+  const [errorMsg, setErrorMsg]       = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Ako je korisnik vec prijavljen, preusmjeri na dashboard
+  // If already logged in, redirect to dashboard
   if (user) return <Navigate to="/dashboard" replace />;
 
-  async function handlePrijava(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setGreska('');
-    setSlanje(true);
+    setErrorMsg('');
+    setIsSubmitting(true);
 
     try {
-      await login(email, lozinka);
+      await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setGreska(err.message);
+      setErrorMsg(err.message);
     } finally {
-      setSlanje(false);
+      setIsSubmitting(false);
     }
   }
 
-  // Stilovi za stranicu
+  // Style objects
   const pageStyle = {
     fontFamily: FONT,
     minHeight: '100vh',
@@ -74,13 +74,13 @@ export default function LoginPage() {
   const btnStyle = {
     width: '100%',
     padding: 11,
-    background: slanje ? '#93c5fd' : PRIMARY,
+    background: isSubmitting ? '#93c5fd' : PRIMARY,
     color: '#fff',
     border: 'none',
     borderRadius: 8,
     fontSize: 14,
     fontWeight: 600,
-    cursor: slanje ? 'not-allowed' : 'pointer',
+    cursor: isSubmitting ? 'not-allowed' : 'pointer',
   };
 
   return (
@@ -90,7 +90,7 @@ export default function LoginPage() {
 
       <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 400 }}>
 
-        {/* Logo i naslov */}
+        {/* Logo and title */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
             <div style={{
@@ -110,11 +110,11 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Forma za prijavu */}
+        {/* Login form */}
         <div style={cardStyle}>
 
-          {/* Prikaz greske ako postoji */}
-          {greska && (
+          {/* Error message display */}
+          {errorMsg && (
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8,
               background: '#fef2f2', border: '1px solid #fecaca',
@@ -122,12 +122,12 @@ export default function LoginPage() {
               marginBottom: 20, fontSize: 13, color: '#991b1b',
             }}>
               <AlertCircle size={15} style={{ flexShrink: 0 }} />
-              {greska}
+              {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handlePrijava}>
-            {/* Email polje */}
+          <form onSubmit={handleSubmit}>
+            {/* Email field */}
             <div style={{ marginBottom: 18 }}>
               <label style={{
                 display: 'block', fontSize: 13,
@@ -154,7 +154,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Lozinka polje */}
+            {/* Password field */}
             <div style={{ marginBottom: 24 }}>
               <label style={{
                 display: 'block', fontSize: 13,
@@ -169,8 +169,8 @@ export default function LoginPage() {
                 }} />
                 <input
                   type="password"
-                  value={lozinka}
-                  onChange={e => setLozinka(e.target.value)}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
                   style={inputStyle}
@@ -180,14 +180,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Dugme za prijavu */}
+            {/* Submit button */}
             <button
               type="submit"
-              disabled={slanje}
+              disabled={isSubmitting}
               className="btn-primary"
               style={btnStyle}
             >
-              {slanje ? 'Prijava u toku...' : 'Prijavi se'}
+              {isSubmitting ? 'Prijava u toku...' : 'Prijavi se'}
             </button>
           </form>
         </div>

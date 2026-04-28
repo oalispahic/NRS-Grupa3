@@ -1,91 +1,84 @@
 const bcrypt = require('bcrypt');
 const jwt    = require('jsonwebtoken');
-const korisnikRepo = require('../repositories/user.repository');
+const userRepo = require('../repositories/user.repository');
 
-// Broj rundi za hashiranje lozinke
 const BCRYPT_ROUNDS = 12;
 
 /**
- * Registracija novog korisnika u sistem.
- * Provjerava da li su sva polja prisutna i da li email vec postoji.
+ * Handles new user registration.
+ * Validates input, checks for duplicates, hashes password and creates user.
  */
-async function registrujKorisnika({ email, password, fullName }) {
-  // Validacija obaveznih polja
+async function registerUser({ email, password, fullName }) {
   if (!email || !password || !fullName) {
-    const greska = new Error('Sva polja su obavezna: email, password, fullName');
-    greska.status = 400;
-    throw greska;
+    const err = new Error('All fields are required: email, password, fullName');
+    err.status = 400;
+    throw err;
   }
 
-  // Provjera da li korisnik sa ovim emailom vec postoji
-  const postojeciKorisnik = await korisnikRepo.findByEmail(email);
-  if (postojeciKorisnik) {
-    const greska = new Error('Korisnik sa ovim emailom vec postoji');
-    greska.status = 409;
-    throw greska;
+  const existingUser = await userRepo.findByEmail(email);
+  if (existingUser) {
+    const err = new Error('User with this email already exists');
+    err.status = 409;
+    throw err;
   }
 
-  // Hashiranje lozinke i kreiranje korisnika
-  const hashiranaLozinka = await bcrypt.hash(password, BCRYPT_ROUNDS);
-  const noviKorisnik = await korisnikRepo.create({
+  const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+  const newUser = await userRepo.create({
     email,
-    passwordHash: hashiranaLozinka,
+    passwordHash: hashedPassword,
     fullName,
   });
 
-  return noviKorisnik;
+  return newUser;
 }
 
 /**
- * Prijava korisnika - provjerava kredencijale i vraca JWT token.
+ * Handles user login.
+ * Verifies credentials and returns a signed JWT token.
  */
-async function prijaviKorisnika({ email, password }) {
-  // Validacija inputa
+async function loginUser({ email, password }) {
   if (!email || !password) {
-    const greska = new Error('Email i lozinka su obavezni');
-    greska.status = 400;
-    throw greska;
+    const err = new Error('Email and password are required');
+    err.status = 400;
+    throw err;
   }
 
-  // Pronalazenje korisnika po emailu
-  const korisnik = await korisnikRepo.findByEmail(email);
-  if (!korisnik) {
-    const greska = new Error('Pogresni pristupni podaci');
-    greska.status = 401;
-    throw greska;
+  const foundUser = await userRepo.findByEmail(email);
+  if (!foundUser) {
+    const err = new Error('Invalid credentials');
+    err.status = 401;
+    throw err;
   }
 
-  // Poredjenje lozinke sa hashom iz baze
-  const lozinkaIspravna = await bcrypt.compare(password, korisnik.password_hash);
-  if (!lozinkaIspravna) {
-    const greska = new Error('Pogresni pristupni podaci');
-    greska.status = 401;
-    throw greska;
+  const passwordValid = await bcrypt.compare(password, foundUser.password_hash);
+  if (!passwordValid) {
+    const err = new Error('Invalid credentials');
+    err.status = 401;
+    throw err;
   }
 
-  // Generisanje JWT tokena sa korisnickim podacima
-  const payload = {
-    id:    korisnik.id,
-    email: korisnik.email,
-    role:  korisnik.role,
+  const tokenPayload = {
+    id:    foundUser.id,
+    email: foundUser.email,
+    role:  foundUser.role,
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '8h',
   });
 
   return {
     token,
     user: {
-      id:        korisnik.id,
-      email:     korisnik.email,
-      role:      korisnik.role,
-      full_name: korisnik.full_name,
+      id:        foundUser.id,
+      email:     foundUser.email,
+      role:      foundUser.role,
+      full_name: foundUser.full_name,
     },
   };
 }
 
 module.exports = {
-  register: registrujKorisnika,
-  login:    prijaviKorisnika,
+  register: registerUser,
+  login:    loginUser,
 };
