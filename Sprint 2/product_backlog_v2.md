@@ -365,7 +365,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 # Raspodjela po sprintovima 
 
 Sprint 5 (Osnovne funkcionalnosti):
-- PB1, PB2, PB3, PB4, PB5, PB23
+- PB1, PB2, PB3, PB4, PB5, PB23, PB27(osnovna funkcionalnost)
 
 Sprint 6 (Kontrola i validacija):
 - PB6, PB7, PB26, PB24
@@ -380,7 +380,7 @@ Sprint 9 (specifične laboratorijske funkcionalnosti):
 - PB21, PB22
 
 Sprint 10 (analitika i održavanje):
-- PB16, PB17, PB27
+- PB16, PB17, PB27 (full funkcionalnost)
 
 Sprint 11 (finalizacija i dodatne funkcionalnosti):
 - PB18, PB19, PB20
