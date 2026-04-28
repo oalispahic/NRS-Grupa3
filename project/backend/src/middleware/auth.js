@@ -1,24 +1,42 @@
 const jwt = require('jsonwebtoken');
 
+/**
+ * Middleware koji provjerava da li korisnik ima validan JWT token.
+ * Ako je token ispravan, postavlja req.user sa dekodiranim podacima.
+ */
 function authenticate(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'No token provided' });
+  const header = req.headers.authorization;
+
+  // Provjera da li Authorization header postoji i pocinje sa 'Bearer '
+  if (!header || !header.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Token nije proslijedjen' });
   }
-  const token = authHeader.split(' ')[1];
+
+  // Izdvajanje tokena iz headera
+  const token = header.split(' ')[1];
+
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    // Verifikacija tokena i postavljanje korisnickih podataka na request
+    const dekodiraniPodaci = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = dekodiraniPodaci;
     next();
-  } catch {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+  } catch (err) {
+    return res.status(401).json({ error: 'Token je nevazeci ili je istekao' });
   }
 }
 
-function requireRole(...roles) {
+/**
+ * Middleware za provjeru korisnicke uloge.
+ * Prima listu dozvoljenih uloga i propusta samo korisnike sa odgovarajucom ulogom.
+ */
+function requireRole(...dozvoljeneUloge) {
   return (req, res, next) => {
-    if (!roles.includes(req.user?.role)) {
-      return res.status(403).json({ error: 'Forbidden' });
+    const korisnickaUloga = req.user?.role;
+
+    if (!dozvoljeneUloge.includes(korisnickaUloga)) {
+      return res.status(403).json({ error: 'Nemate dozvolu za ovu akciju' });
     }
+
     next();
   };
 }

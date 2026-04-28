@@ -1,21 +1,32 @@
 const authService = require('../services/auth.service');
 
-async function register(req, res, next) {
+/**
+ * Kontroler za registraciju novog korisnika.
+ * Prima email, password i fullName iz request body-ja.
+ */
+async function handleRegister(req, res, next) {
   try {
-    const user = await authService.register(req.body);
-    res.status(201).json({ user });
+    const noviKorisnik = await authService.register(req.body);
+    return res.status(201).json({ user: noviKorisnik });
   } catch (err) {
     next(err);
   }
 }
 
-async function login(req, res, next) {
+/**
+ * Kontroler za prijavu korisnika.
+ * Vraca JWT token i korisnicke podatke ako su kredencijali ispravni.
+ */
+async function handleLogin(req, res, next) {
   try {
-    const result = await authService.login(req.body);
-    res.json(result);
+    const rezultat = await authService.login(req.body);
+    return res.json(rezultat);
   } catch (err) {
     next(err);
   }
 }
 
-module.exports = { register, login };
+module.exports = {
+  register: handleRegister,
+  login:    handleLogin,
+};
