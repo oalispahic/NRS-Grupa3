@@ -10,14 +10,14 @@ const BCRYPT_ROUNDS = 12;
  */
 async function registerUser({ email, password, fullName }) {
   if (!email || !password || !fullName) {
-    const err = new Error('All fields are required: email, password, fullName');
+    const err = new Error('Sva polja su obavezna: email, lozinka, ime i prezime');
     err.status = 400;
     throw err;
   }
 
   const existingUser = await userRepo.findByEmail(email);
   if (existingUser) {
-    const err = new Error('User with this email already exists');
+    const err = new Error('Korisnik sa ovim emailom vec postoji');
     err.status = 409;
     throw err;
   }
@@ -38,21 +38,21 @@ async function registerUser({ email, password, fullName }) {
  */
 async function loginUser({ email, password }) {
   if (!email || !password) {
-    const err = new Error('Email and password are required');
+    const err = new Error('Email i lozinka su obavezni');
     err.status = 400;
     throw err;
   }
 
   const foundUser = await userRepo.findByEmail(email);
   if (!foundUser) {
-    const err = new Error('Invalid credentials');
+    const err = new Error('Pogresni pristupni podaci');
     err.status = 401;
     throw err;
   }
 
   const passwordValid = await bcrypt.compare(password, foundUser.password_hash);
   if (!passwordValid) {
-    const err = new Error('Invalid credentials');
+    const err = new Error('Pogresni pristupni podaci');
     err.status = 401;
     throw err;
   }
