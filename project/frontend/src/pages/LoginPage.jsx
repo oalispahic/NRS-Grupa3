@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { ArrowLeft, FlaskConical, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, FONT, GLOBAL_CSS } from '../theme';
 
 export default function LoginPage() {
   const { user, login }               = useAuth();
+  const toast                         = useToast();
   const navigate                      = useNavigate();
   const [email, setEmail]             = useState('');
   const [password, setPassword]       = useState('');
@@ -22,9 +24,11 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      toast.success('Uspjesno ste se prijavili.');
       navigate('/dashboard');
     } catch (err) {
       setErrorMsg(err.message);
+      toast.error(err.message);
     } finally {
       setIsSubmitting(false);
     }

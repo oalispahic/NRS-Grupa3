@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
 
 export default function EquipmentDetailPage() {
   const { id }    = useParams();
   const { user, token } = useAuth();
+  const toast = useToast();
   const [equipment, setEquipment]     = useState(null);
   const [loading, setLoading]         = useState(true);
   const [showForm, setShowForm]       = useState(false);
@@ -32,10 +34,13 @@ export default function EquipmentDetailPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Greška pri rezervaciji');
-      setSuccessMsg('Rezervacija uspješno kreirana — status: na čekanju.');
+      const message = 'Rezervacija uspjesno kreirana - status: na cekanju.';
+      setSuccessMsg(message);
+      toast.success(message);
       setShowForm(false); setStartTime(''); setEndTime('');
     } catch (err) {
       setErrorMsg(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }
