@@ -41,7 +41,7 @@ export default function MyReservationsPage() {
         </div>
       ) : (
         <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table className="table-desktop" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: C.bgFaint }}>
                 {['Oprema', 'Početak', 'Kraj', 'Status'].map(h => (
@@ -65,6 +65,32 @@ export default function MyReservationsPage() {
               })}
             </tbody>
           </table>
+          <div className="responsive-table-card-list">
+            {reservations.map((r) => {
+              const sc = STATUS_RESERVATION[r.status] || { bg: '#f1f5f9', color: '#475569', label: r.status };
+              return (
+                <div key={r.id} style={{ border: `1px solid ${C.borderFaint}`, borderRadius: 10, padding: 14, background: '#fff' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{r.equipment_name || 'â€”'}</div>
+                      <div style={{ fontSize: 12, color: C.subtle, marginTop: 2 }}>Rezervacija #{r.id}</div>
+                    </div>
+                    <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
+                  </div>
+                  <div style={{ display: 'grid', gap: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13 }}>
+                      <span style={{ color: C.muted }}>Početak</span>
+                      <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.start_time)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13 }}>
+                      <span style={{ color: C.muted }}>Kraj</span>
+                      <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.end_time)}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

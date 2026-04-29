@@ -121,9 +121,11 @@ export default function ManageEquipmentPage() {
               <input value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} placeholder="Kratak opis..." style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
             </div>
           </div>
-          <button type="submit" className="btn-primary" style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <Plus size={14} /> Dodaj opremu
-          </button>
+          <div className="action-row">
+            <button type="submit" className="btn-primary" style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Plus size={14} /> Dodaj opremu
+            </button>
+          </div>
         </form>
       </div>
 
@@ -139,7 +141,8 @@ export default function ManageEquipmentPage() {
         ) : equipment.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: C.muted, fontSize: 14 }}>Nema opreme u inventaru.</div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <>
+          <table className="table-desktop" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: C.bgFaint }}>
                 {['Naziv', 'Opis', 'Lokacija', 'Status', 'Akcije'].map(h => (
@@ -203,6 +206,66 @@ export default function ManageEquipmentPage() {
               })}
             </tbody>
           </table>
+          <div className="responsive-table-card-list">
+            {equipment.map(item => {
+              const st = STATUS_EQUIPMENT[item.status] || STATUS_EQUIPMENT.out_of_service;
+              const editing = editingId === item.id;
+              return (
+                <div key={item.id} style={{ border: `1px solid ${C.borderFaint}`, borderRadius: 10, padding: 14, background: '#fff' }}>
+                  {editing ? (
+                    <div style={{ display: 'grid', gap: 12 }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Naziv</label>
+                        <input value={editData.name} onChange={e => setEditData({ ...editData, name: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Opis</label>
+                        <input value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} placeholder="â€”" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija</label>
+                        <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="â€”" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Status</label>
+                        <select value={editData.status} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ ...SELECT, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle}>
+                          {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                        </select>
+                      </div>
+                      <div className="action-row">
+                        <button className="btn-primary" onClick={() => handleSave(item.id)} style={{ ...BTN.primary, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Check size={13} /> Spremi
+                        </button>
+                        <button className="btn-outline" onClick={() => setEditingId(null)} style={{ ...BTN.outline, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <X size={13} /> Odustani
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{item.name}</div>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>{item.location || 'â€”'}</div>
+                        </div>
+                        <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{st.label}</span>
+                      </div>
+                      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 14 }}>{item.description || 'â€”'}</p>
+                      <div className="action-row">
+                        <button className="btn-outline" onClick={() => startEdit(item)} style={{ ...BTN.ghost, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Pencil size={13} /> Uredi
+                        </button>
+                        <button className="btn-danger" onClick={() => handleDelete(item.id, item.name)} style={{ ...BTN.danger, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Trash2 size={13} /> Obriši
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          </>
         )}
       </div>
     </div>

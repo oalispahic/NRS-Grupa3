@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FlaskConical, LayoutDashboard, Microscope, BookOpen, Settings, LogOut } from 'lucide-react';
+import { FlaskConical, LayoutDashboard, Microscope, BookOpen, Settings, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { PRIMARY, C, FONT } from '../theme';
 
@@ -20,6 +20,7 @@ export default function NavBar() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -27,9 +28,24 @@ export default function NavBar() {
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   if (!user) return null;
 
   const links = user.role === 'admin' ? NAV_ADMIN : NAV_LABORANT;
+  const isActive = (to) => location.pathname.startsWith(to) && (to !== '/dashboard' || location.pathname === '/dashboard');
+  const linkStyle = (active, mobile = false) => ({
+    display: 'flex', alignItems: 'center', gap: 6,
+    padding: mobile ? '11px 12px' : '6px 14px',
+    borderRadius: 7,
+    fontSize: 14,
+    fontWeight: active ? 600 : 400,
+    color: active ? PRIMARY : C.muted,
+    background: active ? C.iconBg : 'transparent',
+    textDecoration: 'none',
+  });
 
   return (
     <nav style={{
@@ -42,15 +58,7 @@ export default function NavBar() {
       transition: 'box-shadow 0.2s',
       fontFamily: FONT,
     }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 40px',
-        height: 60,
-        maxWidth: 1200,
-        margin: '0 auto',
-      }}>
+      <div className="auth-nav-inner">
 
         <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
@@ -64,20 +72,11 @@ export default function NavBar() {
           <span style={{ fontWeight: 700, fontSize: 15, color: C.heading }}>LabManager</span>
         </Link>
 
-        <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <div className="auth-nav-links">
           {links.map(({ to, label, Icon }) => {
-            const active = location.pathname.startsWith(to) && (to !== '/dashboard' || location.pathname === '/dashboard');
+            const active = isActive(to);
             return (
-              <Link key={to} to={to} style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px',
-                borderRadius: 7,
-                fontSize: 14,
-                fontWeight: active ? 600 : 400,
-                color: active ? PRIMARY : C.muted,
-                background: active ? C.iconBg : 'transparent',
-                textDecoration: 'none',
-              }}>
+              <Link key={to} to={to} style={linkStyle(active)}>
                 <Icon size={15} />
                 {label}
               </Link>
@@ -85,7 +84,25 @@ export default function NavBar() {
           })}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <button
+          className="auth-nav-menu-button"
+          onClick={() => setMenuOpen(open => !open)}
+          aria-label={menuOpen ? 'Zatvori meni' : 'Otvori meni'}
+          aria-expanded={menuOpen}
+          style={{
+            width: 38,
+            height: 38,
+            border: `1px solid ${C.border}`,
+            borderRadius: 8,
+            background: '#fff',
+            color: C.heading,
+            cursor: 'pointer',
+          }}
+        >
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
+
+        <div className="auth-nav-user">
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.heading, lineHeight: 1.3 }}>
               {user.full_name}
@@ -121,6 +138,38 @@ export default function NavBar() {
             Odjava
           </button>
         </div>
+      </div>
+
+      <div className={`auth-nav-mobile${menuOpen ? ' open' : ''}`}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '4px 2px 10px', borderBottom: `1px solid ${C.borderFaint}` }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.heading }}>{user.full_name}</div>
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 2, textTransform: 'capitalize' }}>{user.role}</div>
+          </div>
+          <button
+            onClick={logout}
+            style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              padding: '8px 12px',
+              border: `1px solid ${C.border}`,
+              borderRadius: 7,
+              background: '#fff',
+              fontSize: 13,
+              color: C.muted,
+              cursor: 'pointer',
+            }}
+          >
+            <LogOut size={14} />
+            Odjava
+          </button>
+        </div>
+
+        {links.map(({ to, label, Icon }) => (
+          <Link key={to} to={to} style={linkStyle(isActive(to), true)}>
+            <Icon size={16} />
+            {label}
+          </Link>
+        ))}
       </div>
     </nav>
   );

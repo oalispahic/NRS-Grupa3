@@ -17,8 +17,8 @@ function Layout({ children }) {
     <>
       <style>{GLOBAL_CSS}</style>
       <NavBar />
-      <main style={{ paddingTop: 60, minHeight: '100vh', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 40px' }}>
+      <main className="app-shell">
+        <div className="app-container">
           {children}
         </div>
       </main>
