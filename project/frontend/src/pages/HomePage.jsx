@@ -516,6 +516,27 @@ export default function HomePage() {
             >
               Počni koristiti <ChevronRight size={16} />
             </button>
+            {}
+  <Link to="/rezervacije" style={{ textDecoration: 'none' }}>
+    <button
+      className="btn-primary"
+      style={{
+        padding: "12px 28px",
+        background: PRIMARY, 
+        color: "#fff",
+        border: "none",
+        borderRadius: 8,
+        fontSize: 15,
+        fontWeight: 600,
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+      }}
+    >
+      Rezervacije <Calendar size={16} />
+    </button>
+  </Link>
             <button
               className="btn-outline"
               onClick={() => scrollTo("#funkcionalnosti")}
