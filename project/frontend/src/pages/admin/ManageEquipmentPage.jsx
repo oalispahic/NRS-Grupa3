@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, Check, X, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_EQUIPMENT } from '../../theme';
 
 const STATUSES = Object.entries(STATUS_EQUIPMENT).map(([value, { label }]) => ({ value, label }));
@@ -13,6 +14,7 @@ function blurStyle(e)   { e.target.style.borderColor = C.border; }
 
 export default function ManageEquipmentPage() {
   const { token } = useAuth();
+  const toast = useToast();
   const [equipment, setEquipment] = useState([]);
   const [loading, setLoading]     = useState(true);
   const [editingId, setEditingId] = useState(null);
@@ -34,21 +36,39 @@ export default function ManageEquipmentPage() {
     setAddMsg(null);
     const res = await fetch('/api/equipment', { method: 'POST', headers: authH(), body: JSON.stringify(newItem) });
     const data = await res.json();
-    if (!res.ok) { setAddMsg({ ok: false, text: data.error || 'Greška pri dodavanju' }); return; }
-    setAddMsg({ ok: true, text: `"${data.name}" dodana u inventar.` });
+    if (!res.ok) {
+      const message = data.error || 'Greska pri dodavanju';
+      setAddMsg({ ok: false, text: message });
+      toast.error(message);
+      return;
+    }
+    const message = `"${data.name}" dodana u inventar.`;
+    setAddMsg({ ok: true, text: message });
+    toast.success(message);
     setNewItem({ name: '', description: '', status: 'available', location: '' });
     load();
   }
 
   async function handleSave(id) {
     const res = await fetch(`/api/equipment/${id}`, { method: 'PUT', headers: authH(), body: JSON.stringify(editData) });
-    if (res.ok) { setEditingId(null); load(); }
+    if (res.ok) {
+      toast.success('Izmjene su spremljene.');
+      setEditingId(null);
+      load();
+    } else {
+      toast.error('Greska pri spremanju izmjena.');
+    }
   }
 
   async function handleDelete(id, name) {
     if (!confirm(`Obrisati "${name}"?`)) return;
-    await fetch(`/api/equipment/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-    load();
+    const res = await fetch(`/api/equipment/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    if (res.ok) {
+      toast.success(`"${name}" je obrisana iz inventara.`);
+      load();
+    } else {
+      toast.error('Greska pri brisanju opreme.');
+    }
   }
 
   function startEdit(item) {
