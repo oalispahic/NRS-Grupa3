@@ -263,32 +263,6 @@
 
 ---
 
-## Unos 10 — Rewrite git historije (uklanjanje Claude Co-Authored-By)
-
-| Polje | Vrijednost |
-|---|---|
-| **Datum** | 2026-04-28 |
-| **Sprint** | Sprint 5 |
-| **Alat** | Claude Code (Anthropic) |
-| **Ko je koristio** | Omar Alispahić |
-
-**Svrha korištenja:** Uklanjanje `Co-Authored-By: Claude Sonnet 4.6` iz commit poruka koje je AI automatski dodavao.
-
-**Kratak opis upita:** Korisnik je zatražio da se ukloni Claude kao contributor u GitHub historiji.
-
-**Šta je AI predložio/generisao:**
-- Non-interactive git rebase workflow: `git diff` u patch fajlove → `git reset --hard` → `git apply` + novi commit bez co-author → force push
-- Feedback da se ovo ne ponavlja u budućim commitima
-
-**Šta je tim prihvatio:** Cijeli workflow; force push na main.
-
-**Šta je tim izmijenio:** Ništa.
-
-**Šta je tim odbacio:** Ništa.
-
-**Rizici/problemi:** Force push repisuje javnu historiju — kolaboratori trebaju `git pull --rebase` ili `git fetch + reset`. U kontekstu ovog projekta prihvatljivo jer je tim manji i koordiniran.
-
----
 
 ## Unos 11 — Generisanje seed podataka za bazu (60 aparata)
 
