@@ -165,3 +165,31 @@ Visok
 - Povezano sa: upravljanjem opremom
 
 ---
+
+### ID storyja
+US-24 
+
+### Naziv storyja
+Dashboard pregled
+
+**Opis**
+Kao korisnik želim vidjeti pregled sistema na početnoj stranici
+
+**Poslovna vrijednost**
+Ovaj story je važan jer korisniku omogućava brz uvid u osnovne informacije o sistemu odmah nakon ulaska. Na taj način se štedi vrijeme i olakšava snalaženje u najvažnijim podacima i funkcijama.
+
+**Prioritet**
+Srednji
+
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Sistem raspolaže podacima koji se mogu prikazati na početnoj stranici.
+- Pretpostavka: Korisnik ima pristup dashboard prikazu nakon prijave u sistem.
+- Otvoreno pitanje: Koje informacije će biti prikazane na dashboardu?
+- Otvoreno pitanje: Da li će dashboard biti isti za sve korisnike ili prilagođen korisničkoj ulozi?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: autentifikacije korisnika
+- Povezano sa: izvještajima
+- Povezano sa: pregledom opreme
+
+---
