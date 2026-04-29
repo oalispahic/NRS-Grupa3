@@ -358,6 +358,18 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td></td>
 </tr>
 
+<tr>
+<td>PB28</td>
+<td>Registracija korisnika</td>
+<td align="left">Kao korisnik želim kreirati nalog u sistemu</td>
+<td>Kreiranje korisnickog naloga</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>3</td>
+<td>To Do</td>
+<td></td>
+</tr>
+
 
 </table>
 
@@ -368,7 +380,7 @@ Sprint 5 (Osnovne funkcionalnosti):
 - PB1, PB2, PB3, PB4, PB5, PB23, PB27(osnovna funkcionalnost)
 
 Sprint 6 (Kontrola i validacija):
-- PB6, PB7, PB26, PB24
+- PB6, PB7, PB26, PB24, PB28
 
 Sprint 7 (korisnički interfejs i upravljanje rezervacijama):
 - PB8, PB9, PB10, PB13, PB14
