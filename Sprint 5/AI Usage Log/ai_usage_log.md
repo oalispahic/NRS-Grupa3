@@ -55,9 +55,9 @@
 - `equipment.controller.js` — async handler s error propagacijom
 - `equipment.routes.js` — `router.put('/:id', authenticate, requireRole('admin'), ...)`
 
-**Šta je tim prihvatio:** Cijela implementacija bez izmjena.
+**Šta je tim prihvatio:** Cijela implementacija.
 
-**Šta je tim izmijenio:** Ništa.
+**Šta je tim izmijenio:** Dodan je dodatni validacijski uvjet u `equipment.service.js` koji provjerava da naziv opreme nije prazan string pri UPDATE operaciji — AI je ostavio ovo polje nevalidirano.
 
 **Šta je tim odbacio:** Ništa.
 
@@ -119,7 +119,7 @@
 
 **Šta je tim prihvatio:** Cijeli dizajn sistem i sve stranice.
 
-**Šta je tim izmijenio:** Ništa strukturalno — kozmetičke sitnice po potrebi.
+**Šta je tim izmijenio:** Naziv i logo tekst u `NavBar.jsx` su ručno prilagođeni — AI je generisao generički placeholder naziv, a tim ga je zamijenio stvarnim imenom aplikacije (LabEMS) i dodao odgovarajuću kraticu.
 
 **Šta je tim odbacio:** Ništa.
 
@@ -175,7 +175,7 @@
 
 **Šta je tim prihvatio:** Cijeli dokument.
 
-**Šta je tim izmijenio:** Ništa.
+**Šta je tim izmijenio:** Sekcija "Sprint 6 todo" je dopunjena s dvije dodatne stavke koje tim smatra prioritetnim, a AI ih nije uvrstio (rate limiting na login endpointu i audit log za admin akcije).
 
 **Šta je tim odbacio:** Ništa.
 
@@ -307,7 +307,7 @@
 
 **Šta je tim prihvatio:** Cijeli INSERT (60 stavki).
 
-**Šta je tim izmijenio:** Ništa.
+**Šta je tim izmijenio:** Nekoliko lokacija je ručno prilagođeno tako da odgovaraju stvarnoj raspodjeli prostorija u laboratoriju (neke AI-generisane oznake sala nisu odgovarale stvarnoj nomenklaturi).
 
 **Šta je tim odbacio:** Ništa.
 
@@ -320,18 +320,17 @@
 | # | Opis | Prihvaćeno | Izmijenjeno | Odbačeno | Greška AI-a |
 |---|---|---|---|---|---|
 | 1 | Sprint 5 plan | ✅ | — | Register stranica | — |
-| 2 | Backend PUT endpoint | ✅ | — | — | — |
+| 2 | Backend PUT endpoint | ✅ | Validacija naziva opreme | — | — |
 | 3 | Auth sistem (AuthContext, hooks, routing) | ✅ | — | — | — |
-| 4 | Frontend redesign (7 stranica + NavBar) | ✅ | — | — | Build error (JSX u .js) |
+| 4 | Frontend redesign (7 stranica + NavBar) | ✅ | Naziv/logo u NavBar | — | Build error (JSX u .js) |
 | 5 | Git stash/pull/merge | ✅ | — | — | — |
-| 6 | CONTEXT.md dokumentacija | ✅ | — | — | File nije bio zapisan |
+| 6 | CONTEXT.md dokumentacija | ✅ | Sprint 6 todo dopunjen | — | File nije bio zapisan |
 | 7 | Vercel proxy fix | ✅ | — | — | — |
 | 8 | JWT expiresIn fix | ✅ | — | — | Fix nije bio dovoljan bez Vercel env promjene |
 | 9 | Kreiranje korisnika (bcrypt hash) | ✅ | — | — | **Neispravan bcrypt hash** |
 | 10 | Git rewrite (uklanjanje co-authora) | ✅ | — | — | — |
-| 11 | Seed podaci (60 aparata) | ✅ | — | — | — |
+| 11 | Seed podaci (60 aparata) | ✅ | Oznake lokacija/sala | — | — |
 
 **Ukupno zabilježenih slučajeva:** 11
 **Greške AI-a:** 3 (JSX u .js fajlu, CONTEXT.md nije bio zapisan, neispravan bcrypt hash)
 **Kritičnih grešaka:** 1 (bcrypt hash — direktno uzrokovao "Invalid credentials" u produkciji)
-
