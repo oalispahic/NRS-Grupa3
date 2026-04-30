@@ -1,5 +1,6 @@
 # LabManager
 
+
 ##  Login Page
 
 ![Login page](./Sprint%205/pics/login_page.png)
@@ -29,3 +30,9 @@ https://www.nrs.marexdev.com/login
 ## Napomena
 
 Ovi podaci su namijenjeni isključivo za testiranje sistema.
+
+---
+
+This project is licensed under the [MIT License](LICENSE).
+
+Volimo open source, repository je javan kako bi svi imali koristi od open source koda ! 
