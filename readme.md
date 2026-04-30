@@ -1,20 +1,31 @@
+# LabManager
 
-# LabManager 
+##  Login Page
 
-![login page slika](./Sprint%205/pics/login_page.png)
+![Login page](./Sprint%205/pics/login_page.png)
 
+ **Pristup aplikaciji:**  
 
+https://www.nrs.marexdev.com/login
 
-## Login page: https://www.nrs.marexdev.com/login
+---
 
-# Login detalji za korisnike:
+##  Test korisnici
 
-## Admin test user:
+### Admin
 
- - username: admin2@lab.ba
- - password: admin123
+- **Username:** admin2@lab.ba  
 
-## Laborant test user:
+- **Password:** admin123  
 
- - username: korisnik1@lab.ba
- - username: korisnik123
+### Laborant
+
+- **Username:** korisnik1@lab.ba  
+
+- **Password:** korisnik123  
+
+---
+
+## Napomena
+
+Ovi podaci su namijenjeni isključivo za testiranje sistema.
