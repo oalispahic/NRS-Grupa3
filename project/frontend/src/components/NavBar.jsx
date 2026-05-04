@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FlaskConical, LayoutDashboard, Microscope, BookOpen, Settings, LogOut, Menu, X } from 'lucide-react';
+import { FlaskConical, LayoutDashboard, Microscope, BookOpen, Settings, LogOut, Menu, X, ClipboardList } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { PRIMARY, C, FONT } from '../theme';
 
@@ -11,9 +11,10 @@ const NAV_LABORANT = [
 ];
 
 const NAV_ADMIN = [
-  { to: '/dashboard',       label: 'Dashboard',  Icon: LayoutDashboard },
-  { to: '/equipment',       label: 'Oprema',      Icon: Microscope },
-  { to: '/admin/equipment', label: 'Upravljanje', Icon: Settings },
+  { to: '/dashboard',          label: 'Dashboard',    Icon: LayoutDashboard },
+  { to: '/equipment',          label: 'Oprema',        Icon: Microscope },
+  { to: '/admin/equipment',    label: 'Upravljanje',   Icon: Settings },
+  { to: '/admin/reservations', label: 'Rezervacije',   Icon: ClipboardList },
 ];
 
 export default function NavBar() {

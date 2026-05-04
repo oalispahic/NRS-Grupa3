@@ -34,4 +34,28 @@ async function getMyReservations(userId) {
   return reservationRepo.findByUserId(userId);
 }
 
-module.exports = { createReservation, getMyReservations };
+async function getAllReservations(status) {
+  return reservationRepo.findAll(status || null);
+}
+
+async function approveReservation(id) {
+  const reservation = await reservationRepo.updateStatus(id, 'approved');
+  if (!reservation) {
+    const err = new Error('Reservation not found');
+    err.status = 404;
+    throw err;
+  }
+  return reservation;
+}
+
+async function rejectReservation(id) {
+  const reservation = await reservationRepo.updateStatus(id, 'rejected');
+  if (!reservation) {
+    const err = new Error('Reservation not found');
+    err.status = 404;
+    throw err;
+  }
+  return reservation;
+}
+
+module.exports = { createReservation, getMyReservations, getAllReservations, approveReservation, rejectReservation };
