@@ -27,10 +27,15 @@ export default function ReservationsPage() {
 
   async function load(status) {
     setLoading(true);
-    const url = status ? `/api/reservations?status=${status}` : '/api/reservations';
-    const d = await fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json());
-    setReservations(Array.isArray(d) ? d : []);
-    setLoading(false);
+    try {
+      const url = status ? `/api/reservations?status=${status}` : '/api/reservations';
+      const d = await fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json());
+      setReservations(Array.isArray(d) ? d : []);
+    } catch {
+      setReservations([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { load(filter); }, [filter]);
