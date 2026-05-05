@@ -35,4 +35,27 @@ async function findByUserId(userId) {
   return rows;
 }
 
-module.exports = { findConflict, create, findByUserId };
+async function findAll(status) {
+  const params = [];
+  const where = status ? (params.push(status), `WHERE r.status = $1`) : '';
+  const { rows } = await pool.query(
+    `SELECT r.*, u.full_name, u.email, e.name AS equipment_name
+     FROM reservations r
+     JOIN users u ON u.id = r.user_id
+     JOIN equipment e ON e.id = r.equipment_id
+     ${where}
+     ORDER BY r.created_at DESC`,
+    params
+  );
+  return rows;
+}
+
+async function updateStatus(id, status) {
+  const { rows } = await pool.query(
+    `UPDATE reservations SET status = $1 WHERE id = $2 RETURNING *`,
+    [status, id]
+  );
+  return rows[0] || null;
+}
+
+module.exports = { findConflict, create, findByUserId, findAll, updateStatus };

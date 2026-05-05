@@ -10,6 +10,7 @@ import EquipmentListPage from './pages/EquipmentListPage';
 import EquipmentDetailPage from './pages/EquipmentDetailPage';
 import MyReservationsPage from './pages/MyReservationsPage';
 import ManageEquipmentPage from './pages/admin/ManageEquipmentPage';
+import ReservationsPage from './pages/admin/ReservationsPage';
 import { GLOBAL_CSS } from './theme';
 
 function Layout({ children }) {
@@ -57,6 +58,11 @@ export default function App() {
             <Route path="/admin/equipment" element={
               <AdminRoute>
                 <Layout><ManageEquipmentPage /></Layout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/reservations" element={
+              <AdminRoute>
+                <Layout><ReservationsPage /></Layout>
               </AdminRoute>
             } />
           </Routes>

@@ -3,3 +3,5 @@ project/backend/.env
 project/backend/node_modules/
 project/frontend/node_modules/
 project/frontend/dist/
+
+CONTEXT.md
