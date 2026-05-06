@@ -22,6 +22,24 @@ export const GLOBAL_CSS = `
   button { touch-action: manipulation; }
   a { font-family: inherit; }
   img, svg { max-width: 100%; }
+  input, select, textarea { transition: border-color 0.15s; }
+
+  @keyframes labFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes labShimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, ${C.borderFaint} 25%, #e8edf2 50%, ${C.borderFaint} 75%);
+    background-size: 800px 100%;
+    animation: labShimmer 1.4s infinite linear;
+    border-radius: 6px;
+  }
 
   .app-shell {
     padding-top: 60px;
@@ -34,6 +52,7 @@ export const GLOBAL_CSS = `
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px;
+    animation: labFadeIn 0.18s ease-out;
   }
 
   .app-link { color: ${PRIMARY}; text-decoration: none; font-size: 14px; }

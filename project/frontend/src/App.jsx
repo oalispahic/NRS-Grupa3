@@ -11,6 +11,7 @@ import EquipmentDetailPage from './pages/EquipmentDetailPage';
 import MyReservationsPage from './pages/MyReservationsPage';
 import ManageEquipmentPage from './pages/admin/ManageEquipmentPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
+import RegisterPage from './pages/RegisterPage';
 import { GLOBAL_CSS } from './theme';
 
 function Layout({ children }) {
@@ -35,6 +36,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Layout><DashboardPage /></Layout>

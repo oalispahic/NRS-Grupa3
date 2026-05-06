@@ -311,6 +311,7 @@ export default function HomePage() {
           <div className="nav-cta-desktop">
             <button
               className="btn-outline"
+              onClick={() => navigate('/register')}
               style={{
                 padding: "8px 18px",
                 border: "1px solid #d4d4d4",

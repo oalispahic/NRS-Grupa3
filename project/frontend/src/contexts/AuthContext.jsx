@@ -22,11 +22,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   // Send credentials to backend and store the session
-  const login = useCallback(async (email, password) => {
+  const login = useCallback(async (username, password) => {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
 
     const data = await response.json();

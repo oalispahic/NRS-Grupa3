@@ -3,26 +3,26 @@ const equipmentRepo = require('../repositories/equipment.repository');
 
 async function createReservation({ userId, equipmentId, startTime, endTime }) {
   if (!userId || !equipmentId || !startTime || !endTime) {
-    const err = new Error('userId, equipmentId, startTime and endTime are required');
+    const err = new Error('Sva polja su obavezna: oprema, pocetak i kraj termina');
     err.status = 400;
     throw err;
   }
   if (new Date(endTime) <= new Date(startTime)) {
-    const err = new Error('endTime must be after startTime');
+    const err = new Error('Kraj termina mora biti nakon pocetka');
     err.status = 400;
     throw err;
   }
 
   const equipment = await equipmentRepo.findById(equipmentId);
   if (!equipment) {
-    const err = new Error('Equipment not found');
+    const err = new Error('Oprema nije pronadjena');
     err.status = 404;
     throw err;
   }
 
   const conflict = await reservationRepo.findConflict(equipmentId, startTime, endTime);
   if (conflict) {
-    const err = new Error('Equipment is already reserved for this time slot');
+    const err = new Error('Oprema je vec rezervisana za odabrani termin');
     err.status = 409;
     throw err;
   }

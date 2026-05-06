@@ -7,7 +7,7 @@ async function listAll() {
 async function getById(id) {
   const equipment = await equipmentRepo.findById(id);
   if (!equipment) {
-    const err = new Error('Equipment not found');
+    const err = new Error('Oprema nije pronadjena');
     err.status = 404;
     throw err;
   }
@@ -16,7 +16,7 @@ async function getById(id) {
 
 async function create({ name, description, status, location }) {
   if (!name) {
-    const err = new Error('name is required');
+    const err = new Error('Naziv opreme je obavezan');
     err.status = 400;
     throw err;
   }
@@ -27,13 +27,13 @@ const VALID_STATUSES = ['available', 'reserved', 'in_use', 'maintenance', 'out_o
 
 async function update(id, data) {
   if (data.status && !VALID_STATUSES.includes(data.status)) {
-    const err = new Error(`Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`);
+    const err = new Error(`Nevalidan status. Dozvoljeni statusi: ${VALID_STATUSES.join(', ')}`);
     err.status = 400;
     throw err;
   }
   const updated = await equipmentRepo.update(id, data);
   if (!updated) {
-    const err = new Error('Equipment not found');
+    const err = new Error('Oprema nije pronadjena');
     err.status = 404;
     throw err;
   }
@@ -43,7 +43,7 @@ async function update(id, data) {
 async function remove(id) {
   const deleted = await equipmentRepo.remove(id);
   if (!deleted) {
-    const err = new Error('Equipment not found');
+    const err = new Error('Oprema nije pronadjena');
     err.status = 404;
     throw err;
   }
