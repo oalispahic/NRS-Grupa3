@@ -1,4 +1,4 @@
-# Sprint Review Summary — LabEMS (NRS-Grupa3)
+# Sprint Review Summary 
 
 **Sprint:** 6  
 **Datum:** 12.05.2026.  
