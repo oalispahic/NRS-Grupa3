@@ -7,6 +7,13 @@ import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
 
 const STATUSES = Object.entries(STATUS_EQUIPMENT).map(([value, { label }]) => ({ value, label }));
 
+function fmtDate(value) {
+  if (!value) return '-';
+  const dt = new Date(value);
+  if (Number.isNaN(dt.getTime())) return value;
+  return dt.toLocaleDateString('bs-BA');
+}
+
 export default function EquipmentDetailPage() {
   const { id }          = useParams();
   const { user, token } = useAuth();
@@ -244,16 +251,19 @@ export default function EquipmentDetailPage() {
         <div style={{ minWidth: 180 }}>
           <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 20px', fontSize: 13 }}>
             <div style={{ color: C.subtle, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Info</div>
-            <div style={{ marginBottom: 8 }}>
-              <span style={{ color: C.muted }}>ID: </span>
-              <span style={{ color: C.body, fontWeight: 500 }}>#{equipment.id}</span>
-            </div>
-            {equipment.location && (
-              <div>
-                <span style={{ color: C.muted }}>Lokacija: </span>
-                <span style={{ color: C.body, fontWeight: 500 }}>{equipment.location}</span>
+            {[
+              { label: 'ID', value: `#${equipment.id}` },
+              { label: 'Lokacija', value: equipment.location },
+              { label: 'Serijski broj', value: equipment.serial_number },
+              { label: 'Model', value: equipment.model },
+              { label: 'Proizvodjac', value: equipment.manufacturer },
+              { label: 'Datum nabavke', value: fmtDate(equipment.purchase_date) },
+            ].map(row => (
+              <div key={row.label} style={{ marginBottom: 8 }}>
+                <span style={{ color: C.muted }}>{row.label}: </span>
+                <span style={{ color: C.body, fontWeight: 500 }}>{row.value || '-'}</span>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>

@@ -50,6 +50,11 @@ export default function EquipmentListPage() {
         <div className="equipment-card-grid">
           {equipment.map(item => {
             const st = STATUS_EQUIPMENT[item.status] || STATUS_EQUIPMENT.out_of_service;
+            const details = [
+              item.model ? `Model: ${item.model}` : null,
+              item.manufacturer ? `Proizvodjac: ${item.manufacturer}` : null,
+              item.serial_number ? `Serijski: ${item.serial_number}` : null,
+            ].filter(Boolean).join(' | ');
             return (
               <Link key={item.id} to={`/equipment/${item.id}`} className="card-hover"
                 style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 14, transition: 'border-color 0.15s, box-shadow 0.15s' }}>
@@ -67,6 +72,11 @@ export default function EquipmentListPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.muted }}>
                       <MapPin size={12} />
                       {item.location}
+                    </div>
+                  )}
+                  {details && (
+                    <div style={{ marginTop: 6, fontSize: 12, color: C.subtle, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {details}
                     </div>
                   )}
                   {item.description && (
