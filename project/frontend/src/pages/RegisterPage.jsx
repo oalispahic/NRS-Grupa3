@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
-import { ArrowLeft, FlaskConical, User, Lock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, FlaskConical, User, Lock, UserCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, FONT, GLOBAL_CSS } from '../theme';
 
-export default function LoginPage() {
-  const { user, login }                   = useAuth();
+export default function RegisterPage() {
+  const { user }                          = useAuth();
   const toast                             = useToast();
   const navigate                          = useNavigate();
   const [username, setUsername]           = useState('');
   const [password, setPassword]           = useState('');
+  const [fullName, setFullName]           = useState('');
   const [errorMsg, setErrorMsg]           = useState('');
   const [isSubmitting, setIsSubmitting]   = useState(false);
 
@@ -22,12 +23,22 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login(username, password);
-      toast.success('Uspjesno ste se prijavili.');
-      navigate('/dashboard');
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, fullName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registracija neuspjesna');
+      }
+
+      toast.success('Nalog kreiran. Prijavite se.');
+      navigate('/login');
     } catch (err) {
       setErrorMsg(err.message);
-      toast.error(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -115,7 +126,7 @@ export default function LoginPage() {
             </span>
           </div>
           <p style={{ marginTop: 8, fontSize: 14, color: C.muted }}>
-            Prijavite se u sistem
+            Kreirajte novi nalog
           </p>
         </div>
 
@@ -138,6 +149,32 @@ export default function LoginPage() {
                 display: 'block', fontSize: 13,
                 fontWeight: 500, color: C.body, marginBottom: 6,
               }}>
+                Ime i prezime
+              </label>
+              <div style={{ position: 'relative' }}>
+                <UserCircle size={15} color={C.subtle} style={{
+                  position: 'absolute', left: 12, top: '50%',
+                  transform: 'translateY(-50%)', pointerEvents: 'none',
+                }} />
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
+                  required
+                  autoFocus
+                  placeholder="npr. Walter White"
+                  style={inputStyle}
+                  onFocus={e => (e.target.style.borderColor = PRIMARY)}
+                  onBlur={e => (e.target.style.borderColor = C.border)}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label style={{
+                display: 'block', fontSize: 13,
+                fontWeight: 500, color: C.body, marginBottom: 6,
+              }}>
                 Korisnicko ime
               </label>
               <div style={{ position: 'relative' }}>
@@ -150,8 +187,7 @@ export default function LoginPage() {
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   required
-                  autoFocus
-                  placeholder="npr. laborant01"
+                  placeholder="npr. megaribi"
                   style={inputStyle}
                   onFocus={e => (e.target.style.borderColor = PRIMARY)}
                   onBlur={e => (e.target.style.borderColor = C.border)}
@@ -190,15 +226,15 @@ export default function LoginPage() {
               className="btn-primary"
               style={btnStyle}
             >
-              {isSubmitting ? 'Prijava u toku...' : 'Prijavi se'}
+              {isSubmitting ? 'Kreiranje naloga...' : 'Kreiraj nalog'}
             </button>
           </form>
         </div>
 
         <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: C.muted }}>
-          Nemate nalog?{' '}
-          <Link to="/register" style={{ color: PRIMARY, textDecoration: 'none', fontWeight: 600 }}>
-            Registrujte se
+          Vec imate nalog?{' '}
+          <Link to="/login" style={{ color: PRIMARY, textDecoration: 'none', fontWeight: 600 }}>
+            Prijavite se
           </Link>
         </p>
       </div>

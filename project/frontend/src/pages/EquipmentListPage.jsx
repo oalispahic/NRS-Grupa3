@@ -22,7 +22,25 @@ export default function EquipmentListPage() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: C.muted, fontSize: 14 }}>Učitavanje...</div>
+        <div className="equipment-card-grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="skeleton" style={{ width: 40, height: 40, borderRadius: 10 }} />
+                <div className="skeleton" style={{ width: 72, height: 22, borderRadius: 99 }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div className="skeleton" style={{ width: '70%', height: 18 }} />
+                <div className="skeleton" style={{ width: '45%', height: 14 }} />
+                <div className="skeleton" style={{ width: '90%', height: 13 }} />
+                <div className="skeleton" style={{ width: '60%', height: 13 }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
+                <div className="skeleton" style={{ width: 60, height: 14 }} />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : equipment.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
           <SearchX size={40} color={C.subtle} style={{ margin: '0 auto 16px' }} />

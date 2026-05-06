@@ -30,7 +30,21 @@ export default function MyReservationsPage() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: C.muted, fontSize: 14 }}>Učitavanje...</div>
+        <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ background: C.bgFaint, padding: '12px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', gap: 16 }}>
+            {['40%', '20%', '20%', '12%'].map((w, i) => (
+              <div key={i} className="skeleton" style={{ width: w, height: 12, borderRadius: 4 }} />
+            ))}
+          </div>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 20px', borderBottom: i < 3 ? `1px solid ${C.borderFaint}` : 'none', alignItems: 'center' }}>
+              <div className="skeleton" style={{ width: '35%', height: 14, borderRadius: 4 }} />
+              <div className="skeleton" style={{ width: '22%', height: 13, borderRadius: 4 }} />
+              <div className="skeleton" style={{ width: '22%', height: 13, borderRadius: 4 }} />
+              <div className="skeleton" style={{ width: 68, height: 22, borderRadius: 99 }} />
+            </div>
+          ))}
+        </div>
       ) : reservations.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
           <SearchX size={40} color={C.subtle} style={{ margin: '0 auto 16px' }} />

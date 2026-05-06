@@ -4,27 +4,23 @@ const userRepo = require('../repositories/user.repository');
 
 const BCRYPT_ROUNDS = 12;
 
-/**
- * Handles new user registration.
- * Validates input, checks for duplicates, hashes password and creates user.
- */
-async function registerUser({ email, password, fullName }) {
-  if (!email || !password || !fullName) {
-    const err = new Error('Sva polja su obavezna: email, lozinka, ime i prezime');
+async function registerUser({ username, password, fullName }) {
+  if (!username || !password || !fullName) {
+    const err = new Error('Sva polja su obavezna: korisnicko ime, lozinka, ime i prezime');
     err.status = 400;
     throw err;
   }
 
-  const existingUser = await userRepo.findByEmail(email);
+  const existingUser = await userRepo.findByUsername(username);
   if (existingUser) {
-    const err = new Error('Korisnik sa ovim emailom vec postoji');
+    const err = new Error('Korisnik sa ovim korisnickim imenom vec postoji');
     err.status = 409;
     throw err;
   }
 
   const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
   const newUser = await userRepo.create({
-    email,
+    username,
     passwordHash: hashedPassword,
     fullName,
   });
@@ -32,18 +28,14 @@ async function registerUser({ email, password, fullName }) {
   return newUser;
 }
 
-/**
- * Handles user login.
- * Verifies credentials and returns a signed JWT token.
- */
-async function loginUser({ email, password }) {
-  if (!email || !password) {
-    const err = new Error('Email i lozinka su obavezni');
+async function loginUser({ username, password }) {
+  if (!username || !password) {
+    const err = new Error('Korisnicko ime i lozinka su obavezni');
     err.status = 400;
     throw err;
   }
 
-  const foundUser = await userRepo.findByEmail(email);
+  const foundUser = await userRepo.findByUsername(username);
   if (!foundUser) {
     const err = new Error('Pogresni pristupni podaci');
     err.status = 401;
@@ -58,9 +50,9 @@ async function loginUser({ email, password }) {
   }
 
   const tokenPayload = {
-    id:    foundUser.id,
-    email: foundUser.email,
-    role:  foundUser.role,
+    id:       foundUser.id,
+    username: foundUser.email,
+    role:     foundUser.role,
   };
 
   const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
@@ -71,7 +63,7 @@ async function loginUser({ email, password }) {
     token,
     user: {
       id:        foundUser.id,
-      email:     foundUser.email,
+      username:  foundUser.email,
       role:      foundUser.role,
       full_name: foundUser.full_name,
     },
