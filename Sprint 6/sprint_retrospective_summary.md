@@ -1,4 +1,4 @@
-# Sprint Retrospective Summary — LabEMS (NRS-Grupa3)
+# Sprint Retrospective Summary
 
 **Sprint:** 6  
 **Datum:** 06.05.2026.  
