@@ -38,7 +38,7 @@ export function AdminRoute({ children }) {
 
   if (loading)               return <LoadingScreen />;
   if (!user)                 return <Navigate to="/login" replace />;
-  if (user.role !== 'admin') return <Navigate to="/dashboard" replace />;
+  if (!['admin', 'test'].includes(user.role)) return <Navigate to="/dashboard" replace />;
 
   return children;
 }

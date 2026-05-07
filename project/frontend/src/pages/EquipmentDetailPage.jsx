@@ -102,8 +102,8 @@ export default function EquipmentDetailPage() {
   if (!equipment || equipment.error) return <div style={{ color: C.muted }}>Oprema nije pronađena.</div>;
 
   const st = STATUS_EQUIPMENT[equipment.status] || STATUS_EQUIPMENT.out_of_service;
-  const canReserve = user.role === 'laborant' && (equipment.status === 'available' || equipment.status === 'reserved');
-  const isAdmin = user.role === 'admin';
+  const canReserve = (user.role === 'laborant' || user.role === 'test') && (equipment.status === 'available' || equipment.status === 'reserved');
+  const isAdmin = user.role === 'admin' || user.role === 'test';
   const statusChanged = adminStatus !== equipment.status;
 
   return (
@@ -204,7 +204,7 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {!canReserve && user.role === 'laborant' && (
+          {!canReserve && (user.role === 'laborant' || user.role === 'test') && !isAdmin && (
             <div style={{ background: C.bgFaint, border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 20px', fontSize: 13, color: C.muted }}>
               Oprema trenutno nije dostupna za rezervaciju.
             </div>

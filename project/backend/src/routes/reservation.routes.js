@@ -7,8 +7,8 @@ router.use(authenticate);
 router.post('/', reservationController.create);
 router.get('/my', reservationController.myReservations);
 
-router.get('/', requireRole('admin'), reservationController.getAll);
-router.patch('/:id/approve', requireRole('admin'), reservationController.approve);
-router.patch('/:id/reject', requireRole('admin'), reservationController.reject);
+router.get('/', requireRole('admin', 'test'), reservationController.getAll);
+router.patch('/:id/approve', requireRole('admin', 'test'), reservationController.approve);
+router.patch('/:id/reject', requireRole('admin', 'test'), reservationController.reject);
 
 module.exports = router;

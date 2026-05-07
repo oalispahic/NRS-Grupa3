@@ -115,17 +115,17 @@ export default function DashboardPage() {
     <div>
       <div style={{ marginBottom: 32 }}>
         <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
-          {user.role === 'admin' ? 'Administrator' : 'Laborant'}
+          {user.role === 'admin' ? 'Administrator' : user.role === 'test' ? 'Test' : 'Laborant'}
         </div>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: C.heading, lineHeight: 1.2 }}>
           {greeting}, <span style={{ color: PRIMARY }}>{user.full_name.split(' ')[0]}</span>
         </h1>
         <p style={{ marginTop: 6, fontSize: 15, color: C.muted }}>
-          {user.role === 'admin' ? 'Upravljajte opremom i pratite stanje sistema.' : 'Pregledajte opremu i upravljajte rezervacijama.'}
+          {user.role === 'admin' || user.role === 'test' ? 'Upravljajte opremom i pratite stanje sistema.' : 'Pregledajte opremu i upravljajte rezervacijama.'}
         </p>
       </div>
 
-      {user.role === 'admin' ? <AdminDashboard /> : <LaborantDashboard token={token} />}
+      {(user.role === 'admin' || user.role === 'test') ? <AdminDashboard /> : <LaborantDashboard token={token} />}
     </div>
   );
 }

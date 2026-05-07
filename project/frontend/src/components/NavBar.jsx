@@ -35,7 +35,7 @@ export default function NavBar() {
 
   if (!user) return null;
 
-  const links = user.role === 'admin' ? NAV_ADMIN : NAV_LABORANT;
+  const links = (user.role === 'admin' || user.role === 'test') ? NAV_ADMIN : NAV_LABORANT;
   const isActive = (to) => location.pathname.startsWith(to) && (to !== '/dashboard' || location.pathname === '/dashboard');
   const linkStyle = (active, mobile = false) => ({
     display: 'flex', alignItems: 'center', gap: 6,
@@ -110,8 +110,8 @@ export default function NavBar() {
             </div>
             <div style={{
               display: 'inline-block',
-              background: user.role === 'admin' ? '#fef9c3' : C.iconBg,
-              color: user.role === 'admin' ? '#854d0e' : PRIMARY,
+              background: user.role === 'admin' ? '#fef9c3' : user.role === 'test' ? '#fce7f3' : C.iconBg,
+              color: user.role === 'admin' ? '#854d0e' : user.role === 'test' ? '#9d174d' : PRIMARY,
               fontSize: 11, fontWeight: 600,
               padding: '1px 8px', borderRadius: 99,
               textTransform: 'capitalize',
