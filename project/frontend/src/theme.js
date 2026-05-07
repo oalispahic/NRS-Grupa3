@@ -261,9 +261,9 @@ export const BTN = {
 };
 
 export const STATUS_EQUIPMENT = {
-  available:      { bg: '#dcfce7', color: '#166534', label: 'Dostupna' },
-  reserved:       { bg: '#fef9c3', color: '#854d0e', label: 'Rezervisana' },
-  in_use:         { bg: '#dbeafe', color: '#1e40af', label: 'U upotrebi' },
+  available:      { bg: '#dcfce7', color: '#166534', label: 'Trazi termin' },
+  reserved:       { bg: '#fef9c3', color: '#854d0e', label: 'Postoje termini' },
+ // in_use:         { bg: '#dbeafe', color: '#1e40af', label: 'U upotrebi' },
   maintenance:    { bg: '#fee2e2', color: '#991b1b', label: 'Održavanje' },
   out_of_service: { bg: '#f1f5f9', color: '#475569', label: 'Van upotrebe' },
 };
