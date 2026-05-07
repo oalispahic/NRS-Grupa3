@@ -17,6 +17,14 @@ const NAV_ADMIN = [
   { to: '/admin/reservations', label: 'Rezervacije',   Icon: ClipboardList },
 ];
 
+const NAV_TEST = [
+  { to: '/dashboard',          label: 'Dashboard',    Icon: LayoutDashboard },
+  { to: '/equipment',          label: 'Oprema',        Icon: Microscope },
+  { to: '/reservations/my',    label: 'Moje rezerv.',  Icon: BookOpen },
+  { to: '/admin/equipment',    label: 'Upravljanje',   Icon: Settings },
+  { to: '/admin/reservations', label: 'Sve rezerv.',   Icon: ClipboardList },
+];
+
 export default function NavBar() {
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -35,7 +43,7 @@ export default function NavBar() {
 
   if (!user) return null;
 
-  const links = (user.role === 'admin' || user.role === 'test') ? NAV_ADMIN : NAV_LABORANT;
+  const links = user.role === 'admin' ? NAV_ADMIN : user.role === 'test' ? NAV_TEST : NAV_LABORANT;
   const isActive = (to) => location.pathname.startsWith(to) && (to !== '/dashboard' || location.pathname === '/dashboard');
   const linkStyle = (active, mobile = false) => ({
     display: 'flex', alignItems: 'center', gap: 6,

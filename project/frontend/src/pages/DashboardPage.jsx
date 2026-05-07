@@ -125,7 +125,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {(user.role === 'admin' || user.role === 'test') ? <AdminDashboard /> : <LaborantDashboard token={token} />}
+      {user.role === 'admin' ? <AdminDashboard /> : user.role === 'test' ? <><AdminDashboard /><LaborantDashboard token={token} /></> : <LaborantDashboard token={token} />}
     </div>
   );
 }
