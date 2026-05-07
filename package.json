@@ -1,0 +1,9 @@
+{
+  "name": "nrs-grupa3",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix project/backend install && npm --prefix project/frontend install",
+    "build": "npm --prefix project/backend run build && npm --prefix project/frontend run build",
+    "test": "npm --prefix project/backend test && npm --prefix project/frontend test"
+  }
+}
