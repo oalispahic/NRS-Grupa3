@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2 } from 'lucide-react';
+import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Truck, Building2, Clock, Tag } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
@@ -247,24 +247,108 @@ export default function EquipmentDetailPage() {
           )}
         </div>
 
-        {/* Meta sidebar */}
-        <div style={{ minWidth: 180 }}>
-          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 20px', fontSize: 13 }}>
-            <div style={{ color: C.subtle, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Info</div>
-            {[
-              { label: 'ID', value: `#${equipment.id}` },
-              { label: 'Lokacija', value: equipment.location },
-              { label: 'Serijski broj', value: equipment.serial_number },
-              { label: 'Model', value: equipment.model },
-              { label: 'Proizvodjac', value: equipment.manufacturer },
-              { label: 'Datum nabavke', value: fmtDate(equipment.purchase_date) },
-            ].map(row => (
-              <div key={row.label} style={{ marginBottom: 8 }}>
-                <span style={{ color: C.muted }}>{row.label}: </span>
-                <span style={{ color: C.body, fontWeight: 500 }}>{row.value || '-'}</span>
-              </div>
-            ))}
+        {/* Info sidebar */}
+        <div style={{ minWidth: 260, maxWidth: 300 }}>
+
+          {/* Identifikacija */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden', marginBottom: 14 }}>
+            <div style={{ background: '#eff6ff', borderBottom: `1px solid #dbeafe`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Hash size={14} color="#2563eb" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: 0.6 }}>Identifikacija</span>
+            </div>
+            <div style={{ padding: '14px 18px', display: 'grid', gap: 12 }}>
+              {[
+                { label: 'ID', value: `#${equipment.id}` },
+                { label: 'Serijski broj', value: equipment.serial_number },
+                { label: 'Model', value: equipment.model },
+                { label: 'Proizvođač', value: equipment.manufacturer },
+              ].map(row => (
+                <div key={row.label}>
+                  <div style={{ fontSize: 10, fontWeight: 600, color: C.subtle, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>{row.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.heading }}>{row.value || <span style={{ color: C.subtle, fontWeight: 400 }}>—</span>}</div>
+                </div>
+              ))}
+              {equipment.location && (
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 600, color: C.subtle, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>Lokacija</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <MapPin size={13} color={C.muted} />{equipment.location}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Nabavka & Garancija */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden', marginBottom: 14 }}>
+            <div style={{ background: '#f0fdf4', borderBottom: `1px solid #bbf7d0`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Truck size={14} color="#16a34a" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#15803d', textTransform: 'uppercase', letterSpacing: 0.6 }}>Nabavka & Garancija</span>
+            </div>
+            <div style={{ padding: '14px 18px', display: 'grid', gap: 12 }}>
+              {(() => {
+                const now = new Date();
+                const warrantyDate = equipment.warranty_expiry ? new Date(equipment.warranty_expiry) : null;
+                const warrantyExpired = warrantyDate && warrantyDate < now;
+                const warrantySoon = warrantyDate && !warrantyExpired && (warrantyDate - now) < 90 * 24 * 60 * 60 * 1000;
+                return [
+                  { label: 'Datum nabavke', value: fmtDate(equipment.purchase_date), icon: <Calendar size={12} color={C.muted} />, accent: null },
+                  { label: 'Dobavljač', value: equipment.supplier, icon: <Building2 size={12} color={C.muted} />, accent: null },
+                  {
+                    label: 'Garantni rok',
+                    value: fmtDate(equipment.warranty_expiry),
+                    icon: <ShieldCheck size={12} color={warrantyExpired ? '#dc2626' : warrantySoon ? '#d97706' : '#16a34a'} />,
+                    accent: warrantyExpired ? { bg: '#fef2f2', color: '#dc2626', text: 'Istekla' } : warrantySoon ? { bg: '#fffbeb', color: '#d97706', text: 'Uskoro ističe' } : null,
+                  },
+                ].map(row => (
+                  <div key={row.label}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: C.subtle, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>{row.label}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, display: 'flex', alignItems: 'center', gap: 5 }}>
+                      {row.icon}
+                      {row.value || <span style={{ color: C.subtle, fontWeight: 400 }}>—</span>}
+                      {row.accent && <span style={{ fontSize: 10, fontWeight: 700, background: row.accent.bg, color: row.accent.color, padding: '1px 7px', borderRadius: 99, marginLeft: 4 }}>{row.accent.text}</span>}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          {/* Servisiranje */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#faf5ff', borderBottom: `1px solid #e9d5ff`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Wrench size={14} color="#9333ea" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#7e22ce', textTransform: 'uppercase', letterSpacing: 0.6 }}>Servisiranje</span>
+            </div>
+            <div style={{ padding: '14px 18px', display: 'grid', gap: 12 }}>
+              {(() => {
+                const now = new Date();
+                const plannedDate = equipment.planned_service ? new Date(equipment.planned_service) : null;
+                const serviceOverdue = plannedDate && plannedDate < now;
+                const serviceSoon = plannedDate && !serviceOverdue && (plannedDate - now) < 30 * 24 * 60 * 60 * 1000;
+                return [
+                  { label: 'Zadnji servis', value: fmtDate(equipment.last_service), icon: <Clock size={12} color={C.muted} />, accent: null },
+                  {
+                    label: 'Planirani servis',
+                    value: fmtDate(equipment.planned_service),
+                    icon: <Calendar size={12} color={serviceOverdue ? '#dc2626' : serviceSoon ? '#d97706' : '#9333ea'} />,
+                    accent: serviceOverdue ? { bg: '#fef2f2', color: '#dc2626', text: 'Kasni' } : serviceSoon ? { bg: '#fffbeb', color: '#d97706', text: 'Uskoro' } : null,
+                  },
+                  { label: 'Servisna firma', value: equipment.service_company, icon: <Tag size={12} color={C.muted} />, accent: null },
+                ].map(row => (
+                  <div key={row.label}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: C.subtle, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>{row.label}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, display: 'flex', alignItems: 'center', gap: 5 }}>
+                      {row.icon}
+                      {row.value || <span style={{ color: C.subtle, fontWeight: 400 }}>—</span>}
+                      {row.accent && <span style={{ fontSize: 10, fontWeight: 700, background: row.accent.bg, color: row.accent.color, padding: '1px 7px', borderRadius: 99, marginLeft: 4 }}>{row.accent.text}</span>}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

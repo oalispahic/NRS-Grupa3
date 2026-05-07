@@ -34,6 +34,11 @@ export default function ManageEquipmentPage() {
     description: '',
     status: 'available',
     location: '',
+    supplier: '',
+    last_service: '',
+    planned_service: '',
+    warranty_expiry: '',
+    service_company: '',
   });
   const [addMsg, setAddMsg]       = useState(null);
 
@@ -69,6 +74,11 @@ export default function ManageEquipmentPage() {
       description: '',
       status: 'available',
       location: '',
+      supplier: '',
+      last_service: '',
+      planned_service: '',
+      warranty_expiry: '',
+      service_company: '',
     });
     load();
   }
@@ -106,6 +116,11 @@ export default function ManageEquipmentPage() {
       description: item.description || '',
       status: item.status,
       location: item.location || '',
+      supplier: item.supplier || '',
+      last_service: item.last_service || '',
+      planned_service: item.planned_service || '',
+      warranty_expiry: item.warranty_expiry || '',
+      service_company: item.service_company || '',
     });
   }
 
@@ -169,6 +184,26 @@ export default function ManageEquipmentPage() {
               <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Opis</label>
               <input value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} placeholder="Kratak opis..." style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
             </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Dobavljač</label>
+              <input value={newItem.supplier} onChange={e => setNewItem({ ...newItem, supplier: e.target.value })} placeholder="Naziv dobavljača" style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Zadnji servis</label>
+              <input type="date" value={newItem.last_service} onChange={e => setNewItem({ ...newItem, last_service: e.target.value })} style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Planirani servis</label>
+              <input type="date" value={newItem.planned_service} onChange={e => setNewItem({ ...newItem, planned_service: e.target.value })} style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Garantni rok</label>
+              <input type="date" value={newItem.warranty_expiry} onChange={e => setNewItem({ ...newItem, warranty_expiry: e.target.value })} style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Servisna firma</label>
+              <input value={newItem.service_company} onChange={e => setNewItem({ ...newItem, service_company: e.target.value })} placeholder="Naziv servisne firme" style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
           </div>
           <div className="action-row">
             <button type="submit" className="btn-primary" style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -217,6 +252,11 @@ export default function ManageEquipmentPage() {
                           <input value={editData.model} onChange={e => setEditData({ ...editData, model: e.target.value })} placeholder="Model" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                           <input value={editData.manufacturer} onChange={e => setEditData({ ...editData, manufacturer: e.target.value })} placeholder="Proizvodjac" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                           <input type="date" value={editData.purchase_date} onChange={e => setEditData({ ...editData, purchase_date: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <input value={editData.supplier} onChange={e => setEditData({ ...editData, supplier: e.target.value })} placeholder="Dobavljač" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <input type="date" value={editData.last_service} onChange={e => setEditData({ ...editData, last_service: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <input type="date" value={editData.planned_service} onChange={e => setEditData({ ...editData, planned_service: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <input type="date" value={editData.warranty_expiry} onChange={e => setEditData({ ...editData, warranty_expiry: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <input value={editData.service_company} onChange={e => setEditData({ ...editData, service_company: e.target.value })} placeholder="Servisna firma" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                         </div>
                       ) : (
                         <div style={{ fontSize: 12, color: C.muted, display: 'grid', gap: 4 }}>
@@ -224,6 +264,11 @@ export default function ManageEquipmentPage() {
                           <span>Model: {item.model || '-'}</span>
                           <span>Proizvodjac: {item.manufacturer || '-'}</span>
                           <span>Nabavka: {item.purchase_date ? fmtDate(item.purchase_date) : '-'}</span>
+                          <span>Dobavljač: {item.supplier || '-'}</span>
+                          <span>Zadnji servis: {item.last_service ? fmtDate(item.last_service) : '-'}</span>
+                          <span>Planirani servis: {item.planned_service ? fmtDate(item.planned_service) : '-'}</span>
+                          <span>Garantni rok: {item.warranty_expiry ? fmtDate(item.warranty_expiry) : '-'}</span>
+                          <span>Servisna firma: {item.service_company || '-'}</span>
                         </div>
                       )}
                     </td>
@@ -302,17 +347,37 @@ export default function ManageEquipmentPage() {
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Opis</label>
-                        <input value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} placeholder="â€”" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                        <input value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija</label>
-                        <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="â€”" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                        <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Status</label>
                         <select value={editData.status} onChange={e => setEditData({ ...editData, status: e.target.value })} style={{ ...SELECT, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle}>
                           {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                         </select>
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Dobavljač</label>
+                        <input value={editData.supplier} onChange={e => setEditData({ ...editData, supplier: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Zadnji servis</label>
+                        <input type="date" value={editData.last_service} onChange={e => setEditData({ ...editData, last_service: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Planirani servis</label>
+                        <input type="date" value={editData.planned_service} onChange={e => setEditData({ ...editData, planned_service: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Garantni rok</label>
+                        <input type="date" value={editData.warranty_expiry} onChange={e => setEditData({ ...editData, warranty_expiry: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Servisna firma</label>
+                        <input value={editData.service_company} onChange={e => setEditData({ ...editData, service_company: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                       </div>
                       <div className="action-row">
                         <button className="btn-primary" onClick={() => handleSave(item.id)} style={{ ...BTN.primary, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -328,7 +393,7 @@ export default function ManageEquipmentPage() {
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{item.name}</div>
-                          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>{item.location || 'â€”'}</div>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>{item.location || '—'}</div>
                         </div>
                         <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{st.label}</span>
                       </div>
@@ -337,8 +402,13 @@ export default function ManageEquipmentPage() {
                         <span>Model: {item.model || '-'}</span>
                         <span>Proizvodjac: {item.manufacturer || '-'}</span>
                         <span>Nabavka: {item.purchase_date ? fmtDate(item.purchase_date) : '-'}</span>
+                        <span>Dobavljač: {item.supplier || '-'}</span>
+                        <span>Zadnji servis: {item.last_service ? fmtDate(item.last_service) : '-'}</span>
+                        <span>Planirani servis: {item.planned_service ? fmtDate(item.planned_service) : '-'}</span>
+                        <span>Garantni rok: {item.warranty_expiry ? fmtDate(item.warranty_expiry) : '-'}</span>
+                        <span>Servisna firma: {item.service_company || '-'}</span>
                       </div>
-                      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 14 }}>{item.description || 'â€”'}</p>
+                      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 14 }}>{item.description || '—'}</p>
                       <div className="action-row">
                         <button className="btn-outline" onClick={() => startEdit(item)} style={{ ...BTN.ghost, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <Pencil size={13} /> Uredi

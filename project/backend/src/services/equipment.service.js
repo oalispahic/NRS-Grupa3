@@ -44,7 +44,7 @@ async function getById(id) {
   return equipment;
 }
 
-async function create({ name, description, status, location, serial_number, model, manufacturer, purchase_date }) {
+async function create({ name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company }) {
   const normalizedName = normalizeString(name);
   const normalizedDescription = normalizeString(description);
   const normalizedLocation = normalizeString(location);
@@ -52,6 +52,11 @@ async function create({ name, description, status, location, serial_number, mode
   const normalizedModel = normalizeString(model);
   const normalizedManufacturer = normalizeString(manufacturer);
   const normalizedPurchaseDate = normalizeDate(purchase_date);
+  const normalizedSupplier = normalizeString(supplier);
+  const normalizedLastService = normalizeDate(last_service);
+  const normalizedPlannedService = normalizeDate(planned_service);
+  const normalizedWarrantyExpiry = normalizeDate(warranty_expiry);
+  const normalizedServiceCompany = normalizeString(service_company);
 
   if (!normalizedName) {
     const err = new Error('name is required');
@@ -87,6 +92,11 @@ async function create({ name, description, status, location, serial_number, mode
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
       purchase_date: normalizedPurchaseDate,
+      supplier: normalizedSupplier,
+      last_service: normalizedLastService,
+      planned_service: normalizedPlannedService,
+      warranty_expiry: normalizedWarrantyExpiry,
+      service_company: normalizedServiceCompany,
     });
   } catch (err) {
     handleUniqueError(err);
@@ -107,6 +117,11 @@ async function update(id, data) {
   const normalizedModel = normalizeString(data.model);
   const normalizedManufacturer = normalizeString(data.manufacturer);
   const normalizedPurchaseDate = normalizeDate(data.purchase_date);
+  const normalizedSupplier = normalizeString(data.supplier);
+  const normalizedLastService = normalizeDate(data.last_service);
+  const normalizedPlannedService = normalizeDate(data.planned_service);
+  const normalizedWarrantyExpiry = normalizeDate(data.warranty_expiry);
+  const normalizedServiceCompany = normalizeString(data.service_company);
 
   if (data.serial_number !== undefined && !normalizedSerial) {
     const err = new Error('serial_number is required');
@@ -131,6 +146,11 @@ async function update(id, data) {
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
       purchase_date: normalizedPurchaseDate,
+      supplier: normalizedSupplier,
+      last_service: normalizedLastService,
+      planned_service: normalizedPlannedService,
+      warranty_expiry: normalizedWarrantyExpiry,
+      service_company: normalizedServiceCompany,
     });
   } catch (err) {
     handleUniqueError(err);
