@@ -27,7 +27,13 @@ async function createReservation({ userId, equipmentId, startTime, endTime }) {
     throw err;
   }
 
-  return reservationRepo.create({ userId, equipmentId, startTime, endTime });
+  const reservation = await reservationRepo.create({ userId, equipmentId, startTime, endTime });
+
+  if (equipment.status === 'available') {
+    await equipmentRepo.update(equipmentId, { status: 'reserved' });
+  }
+
+  return reservation;
 }
 
 async function getMyReservations(userId) {
@@ -55,6 +61,15 @@ async function rejectReservation(id) {
     err.status = 404;
     throw err;
   }
+
+  const active = await reservationRepo.countActive(reservation.equipment_id);
+  if (active === 0) {
+    const equipment = await equipmentRepo.findById(reservation.equipment_id);
+    if (equipment?.status === 'reserved') {
+      await equipmentRepo.update(reservation.equipment_id, { status: 'available' });
+    }
+  }
+
   return reservation;
 }
 

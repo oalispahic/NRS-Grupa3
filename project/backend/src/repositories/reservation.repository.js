@@ -58,4 +58,13 @@ async function updateStatus(id, status) {
   return rows[0] || null;
 }
 
-module.exports = { findConflict, create, findByUserId, findAll, updateStatus };
+async function countActive(equipmentId) {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) FROM reservations
+     WHERE equipment_id = $1 AND status IN ('pending', 'approved')`,
+    [equipmentId]
+  );
+  return parseInt(rows[0].count, 10);
+}
+
+module.exports = { findConflict, create, findByUserId, findAll, updateStatus, countActive };
