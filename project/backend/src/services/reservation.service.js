@@ -73,4 +73,70 @@ async function rejectReservation(id) {
   return reservation;
 }
 
-module.exports = { createReservation, getMyReservations, getAllReservations, approveReservation, rejectReservation };
+async function cancelReservation(reservationId, userId) {
+  const reservation = await reservationRepo.findByIdAndUser(reservationId, userId);
+  if (!reservation) {
+    const err = new Error('Rezervacija nije pronadjena');
+    err.status = 404;
+    throw err;
+  }
+  if (reservation.status === 'rejected') {
+    const err = new Error('Rezervacija je vec otkazana');
+    err.status = 400;
+    throw err;
+  }
+
+  const updated = await reservationRepo.updateStatus(reservationId, 'rejected');
+
+  const active = await reservationRepo.countActive(updated.equipment_id);
+  if (active === 0) {
+    const equipment = await equipmentRepo.findById(updated.equipment_id);
+    if (equipment?.status === 'reserved') {
+      await equipmentRepo.update(updated.equipment_id, { status: 'available' });
+    }
+  }
+
+  return updated;
+}
+
+async function updateReservationDates(reservationId, userId, startTime, endTime) {
+  if (!startTime || !endTime) {
+    const err = new Error('Pocetak i kraj termina su obavezni');
+    err.status = 400;
+    throw err;
+  }
+  if (new Date(endTime) <= new Date(startTime)) {
+    const err = new Error('Kraj termina mora biti nakon pocetka');
+    err.status = 400;
+    throw err;
+  }
+
+  const reservation = await reservationRepo.findByIdAndUser(reservationId, userId);
+  if (!reservation) {
+    const err = new Error('Rezervacija nije pronadjena');
+    err.status = 404;
+    throw err;
+  }
+  if (reservation.status === 'rejected') {
+    const err = new Error('Nije moguce izmijeniti otkazanu rezervaciju');
+    err.status = 400;
+    throw err;
+  }
+
+  const conflict = await reservationRepo.findConflictExcluding(
+    reservation.equipment_id, startTime, endTime, reservationId
+  );
+  if (conflict) {
+    const err = new Error('Oprema je vec rezervisana za odabrani termin');
+    err.status = 409;
+    throw err;
+  }
+
+  return reservationRepo.updateDates(reservationId, startTime, endTime);
+}
+
+module.exports = {
+  createReservation, getMyReservations, getAllReservations,
+  approveReservation, rejectReservation,
+  cancelReservation, updateReservationDates,
+};

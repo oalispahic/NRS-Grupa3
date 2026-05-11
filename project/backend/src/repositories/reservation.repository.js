@@ -13,6 +13,20 @@ async function findConflict(equipmentId, startTime, endTime) {
   return rows[0] || null;
 }
 
+async function findConflictExcluding(equipmentId, startTime, endTime, excludeId) {
+  const { rows } = await pool.query(
+    `SELECT id FROM reservations
+     WHERE equipment_id = $1
+       AND id != $4
+       AND status IN ('pending', 'approved')
+       AND start_time < $3
+       AND end_time   > $2
+     LIMIT 1`,
+    [equipmentId, startTime, endTime, excludeId]
+  );
+  return rows[0] || null;
+}
+
 async function create({ userId, equipmentId, startTime, endTime }) {
   const { rows } = await pool.query(
     `INSERT INTO reservations (user_id, equipment_id, start_time, end_time)
@@ -33,6 +47,14 @@ async function findByUserId(userId) {
     [userId]
   );
   return rows;
+}
+
+async function findByIdAndUser(id, userId) {
+  const { rows } = await pool.query(
+    `SELECT * FROM reservations WHERE id = $1 AND user_id = $2`,
+    [id, userId]
+  );
+  return rows[0] || null;
 }
 
 async function findAll(status) {
@@ -58,6 +80,15 @@ async function updateStatus(id, status) {
   return rows[0] || null;
 }
 
+async function updateDates(id, startTime, endTime) {
+  const { rows } = await pool.query(
+    `UPDATE reservations SET start_time = $1, end_time = $2, status = 'pending'
+     WHERE id = $3 RETURNING *`,
+    [startTime, endTime, id]
+  );
+  return rows[0] || null;
+}
+
 async function countActive(equipmentId) {
   const { rows } = await pool.query(
     `SELECT COUNT(*) FROM reservations
@@ -69,7 +100,7 @@ async function countActive(equipmentId) {
 
 async function findActiveByEquipment(equipmentId) {
   const { rows } = await pool.query(
-    `SELECT start_time, end_time FROM reservations
+    `SELECT id, start_time, end_time FROM reservations
      WHERE equipment_id = $1 AND status IN ('pending', 'approved')
      ORDER BY start_time`,
     [equipmentId]
@@ -77,4 +108,9 @@ async function findActiveByEquipment(equipmentId) {
   return rows;
 }
 
-module.exports = { findConflict, create, findByUserId, findAll, updateStatus, countActive, findActiveByEquipment };
+module.exports = {
+  findConflict, findConflictExcluding,
+  create, findByUserId, findByIdAndUser, findAll,
+  updateStatus, updateDates,
+  countActive, findActiveByEquipment,
+};

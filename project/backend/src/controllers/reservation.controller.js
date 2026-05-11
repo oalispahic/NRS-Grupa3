@@ -48,4 +48,24 @@ async function reject(req, res, next) {
   }
 }
 
-module.exports = { create, myReservations, getAll, approve, reject };
+async function cancel(req, res, next) {
+  try {
+    const reservation = await reservationService.cancelReservation(req.params.id, req.user.id);
+    res.json(reservation);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateDates(req, res, next) {
+  try {
+    const reservation = await reservationService.updateReservationDates(
+      req.params.id, req.user.id, req.body.startTime, req.body.endTime
+    );
+    res.json(reservation);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { create, myReservations, getAll, approve, reject, cancel, updateDates };
