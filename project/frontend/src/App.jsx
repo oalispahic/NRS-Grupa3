@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
 import NavBar from './components/NavBar';
+import AdminLayout from './components/AdminLayout';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -59,12 +60,12 @@ export default function App() {
             } />
             <Route path="/admin/equipment" element={
               <AdminRoute>
-                <Layout><ManageEquipmentPage /></Layout>
+                <AdminLayout><ManageEquipmentPage /></AdminLayout>
               </AdminRoute>
             } />
             <Route path="/admin/reservations" element={
               <AdminRoute>
-                <Layout><ReservationsPage /></Layout>
+                <AdminLayout><ReservationsPage /></AdminLayout>
               </AdminRoute>
             } />
           </Routes>
