@@ -53,10 +53,7 @@ export default function EquipmentDetailPage() {
     e.preventDefault();
     setErrorMsg(''); setSuccessMsg('');
 
-    if (!calStart || !calEnd) {
-      setErrorMsg('Odaberite period u kalendaru.');
-      return;
-    }
+
 
     const startTime = new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate(), 0, 0, 0).toISOString();
     const endTime = new Date(calEnd.getFullYear(), calEnd.getMonth(), calEnd.getDate(), 23, 59, 59).toISOString();
