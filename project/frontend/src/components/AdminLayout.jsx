@@ -10,12 +10,23 @@ import { FONT, GLOBAL_CSS } from '../theme';
 const SIDEBAR_W = 240;
 const DARK = '#0d1b2e';
 
+const NAV_GROUPS_LABORANT = [
+  {
+    label: 'Navigacija',
+    items: [
+      { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
+      { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
+      { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
+    ],
+  },
+];
+
 const NAV_GROUPS_ADMIN = [
   {
     label: 'Navigacija',
     items: [
-      { to: '/dashboard',       label: 'Dashboard',           Icon: LayoutDashboard },
-      { to: '/equipment',       label: 'Oprema',              Icon: Microscope },
+      { to: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+      { to: '/equipment', label: 'Oprema',    Icon: Microscope },
     ],
   },
   {
@@ -31,9 +42,9 @@ const NAV_GROUPS_TEST = [
   {
     label: 'Navigacija',
     items: [
-      { to: '/dashboard',       label: 'Dashboard',           Icon: LayoutDashboard },
-      { to: '/equipment',       label: 'Oprema',              Icon: Microscope },
-      { to: '/reservations/my', label: 'Moje rezervacije',    Icon: BookOpen },
+      { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
+      { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
+      { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
     ],
   },
   {
@@ -46,8 +57,9 @@ const NAV_GROUPS_TEST = [
 ];
 
 const ROLE_META = {
-  admin: { label: 'Administrator', color: '#fbbf24', bg: 'rgba(251,191,36,0.15)' },
-  test:  { label: 'Test',          color: '#a78bfa', bg: 'rgba(167,139,250,0.15)' },
+  admin:    { label: 'Administrator', color: '#fbbf24', bg: 'rgba(251,191,36,0.15)' },
+  test:     { label: 'Test',          color: '#a78bfa', bg: 'rgba(167,139,250,0.15)' },
+  laborant: { label: 'Laborant',      color: '#34d399', bg: 'rgba(52,211,153,0.15)'  },
 };
 
 function NavItem({ to, label, Icon, active }) {
@@ -232,7 +244,10 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
-  const groups = user?.role === 'test' ? NAV_GROUPS_TEST : NAV_GROUPS_ADMIN;
+  const groups =
+    user?.role === 'test'     ? NAV_GROUPS_TEST :
+    user?.role === 'admin'    ? NAV_GROUPS_ADMIN :
+                                NAV_GROUPS_LABORANT;
   const isActive = (to) =>
     location.pathname.startsWith(to) && (to !== '/dashboard' || location.pathname === '/dashboard');
 

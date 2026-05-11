@@ -2,8 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
-import NavBar from './components/NavBar';
-import AdminLayout from './components/AdminLayout';
+import AppLayout from './components/AdminLayout';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -13,21 +12,6 @@ import MyReservationsPage from './pages/MyReservationsPage';
 import ManageEquipmentPage from './pages/admin/ManageEquipmentPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
 import RegisterPage from './pages/RegisterPage';
-import { GLOBAL_CSS } from './theme';
-
-function Layout({ children }) {
-  return (
-    <>
-      <style>{GLOBAL_CSS}</style>
-      <NavBar />
-      <main className="app-shell">
-        <div className="app-container">
-          {children}
-        </div>
-      </main>
-    </>
-  );
-}
 
 export default function App() {
   return (
@@ -40,32 +24,32 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Layout><DashboardPage /></Layout>
+                <AppLayout><DashboardPage /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/equipment" element={
               <ProtectedRoute>
-                <Layout><EquipmentListPage /></Layout>
+                <AppLayout><EquipmentListPage /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/equipment/:id" element={
               <ProtectedRoute>
-                <Layout><EquipmentDetailPage /></Layout>
+                <AppLayout><EquipmentDetailPage /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/reservations/my" element={
               <ProtectedRoute>
-                <Layout><MyReservationsPage /></Layout>
+                <AppLayout><MyReservationsPage /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/admin/equipment" element={
               <AdminRoute>
-                <AdminLayout><ManageEquipmentPage /></AdminLayout>
+                <AppLayout><ManageEquipmentPage /></AppLayout>
               </AdminRoute>
             } />
             <Route path="/admin/reservations" element={
               <AdminRoute>
-                <AdminLayout><ReservationsPage /></AdminLayout>
+                <AppLayout><ReservationsPage /></AppLayout>
               </AdminRoute>
             } />
           </Routes>
