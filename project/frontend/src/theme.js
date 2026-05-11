@@ -174,6 +174,17 @@ export const GLOBAL_CSS = `
     }
   }
 
+  .cal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    justify-items: center;
+  }
+
+  @media (max-width: 760px) {
+    .cal-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+
   @media (max-width: 640px) {
     .app-shell { padding-top: 56px; }
     .app-container { padding: 24px 16px; }

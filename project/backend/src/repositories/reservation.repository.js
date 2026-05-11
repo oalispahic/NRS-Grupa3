@@ -67,4 +67,14 @@ async function countActive(equipmentId) {
   return parseInt(rows[0].count, 10);
 }
 
-module.exports = { findConflict, create, findByUserId, findAll, updateStatus, countActive };
+async function findActiveByEquipment(equipmentId) {
+  const { rows } = await pool.query(
+    `SELECT start_time, end_time FROM reservations
+     WHERE equipment_id = $1 AND status IN ('pending', 'approved')
+     ORDER BY start_time`,
+    [equipmentId]
+  );
+  return rows;
+}
+
+module.exports = { findConflict, create, findByUserId, findAll, updateStatus, countActive, findActiveByEquipment };
