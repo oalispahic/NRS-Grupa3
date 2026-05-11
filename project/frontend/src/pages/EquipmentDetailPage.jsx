@@ -4,6 +4,7 @@ import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, S
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
+import ReservationCalendar from '../components/ReservationCalendar';
 
 const STATUSES = Object.entries(STATUS_EQUIPMENT).map(([value, { label }]) => ({ value, label }));
 
@@ -19,14 +20,15 @@ export default function EquipmentDetailPage() {
   const { user, token } = useAuth();
   const toast           = useToast();
 
-  const [equipment, setEquipment]   = useState(null);
-  const [loading, setLoading]       = useState(true);
-  const [showForm, setShowForm]     = useState(false);
-  const [startTime, setStartTime]   = useState('');
-  const [endTime, setEndTime]       = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg]     = useState('');
+  const [equipment, setEquipment]     = useState(null);
+  const [loading, setLoading]         = useState(true);
+  const [showForm, setShowForm]       = useState(false);
+  const [calStart, setCalStart]       = useState(null);
+  const [calEnd, setCalEnd]           = useState(null);
+  const [reservedDates, setReservedDates] = useState([]);
+  const [submitting, setSubmitting]   = useState(false);
+  const [successMsg, setSuccessMsg]   = useState('');
+  const [errorMsg, setErrorMsg]       = useState('');
 
   const [adminStatus, setAdminStatus]   = useState('');
   const [adminSaving, setAdminSaving]   = useState(false);
@@ -39,16 +41,25 @@ export default function EquipmentDetailPage() {
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => { loadEquipment(); }, [id]);
+  function loadReservedDates() {
+    fetch(`/api/equipment/${id}/reserved-dates`)
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setReservedDates(data); });
+  }
+
+  useEffect(() => { loadEquipment(); loadReservedDates(); }, [id]);
 
   async function handleReserve(e) {
     e.preventDefault();
     setErrorMsg(''); setSuccessMsg('');
 
-    if (new Date(endTime) <= new Date(startTime)) {
-      setErrorMsg('Kraj termina mora biti nakon pocetka.');
+    if (!calStart || !calEnd) {
+      setErrorMsg('Odaberite period u kalendaru.');
       return;
     }
+
+    const startTime = new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate(), 0, 0, 0).toISOString();
+    const endTime = new Date(calEnd.getFullYear(), calEnd.getMonth(), calEnd.getDate(), 23, 59, 59).toISOString();
 
     setSubmitting(true);
     try {
@@ -62,7 +73,8 @@ export default function EquipmentDetailPage() {
       const msg = 'Rezervacija uspjesno kreirana — status: na cekanju.';
       setSuccessMsg(msg);
       toast.success(msg);
-      setShowForm(false); setStartTime(''); setEndTime('');
+      setShowForm(false); setCalStart(null); setCalEnd(null);
+      loadReservedDates();
     } catch (err) {
       setErrorMsg(err.message);
       toast.error(err.message);
@@ -173,29 +185,22 @@ export default function EquipmentDetailPage() {
                       <AlertCircle size={14} style={{ flexShrink: 0 }} /> {errorMsg}
                     </div>
                   )}
-                  <div className="reservation-form-grid">
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: C.body, marginBottom: 6 }}>Početak</label>
-                      <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} required
-                        style={{ width: '100%', padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, outline: 'none' }}
-                        onFocus={e => e.target.style.borderColor = PRIMARY} onBlur={e => e.target.style.borderColor = C.border}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: C.body, marginBottom: 6 }}>Kraj</label>
-                      <input type="datetime-local" value={endTime} onChange={e => setEndTime(e.target.value)} required
-                        style={{ width: '100%', padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, outline: 'none' }}
-                        onFocus={e => e.target.style.borderColor = PRIMARY} onBlur={e => e.target.style.borderColor = C.border}
-                      />
-                    </div>
+                  <div style={{ marginBottom: 16 }}>
+                    <ReservationCalendar
+                      occupiedRanges={reservedDates}
+                      selectedStart={calStart}
+                      selectedEnd={calEnd}
+                      onSelect={(s, e) => { setCalStart(s); setCalEnd(e); setErrorMsg(''); }}
+                      onClear={() => { setCalStart(null); setCalEnd(null); }}
+                    />
                   </div>
                   <div className="action-row">
-                    <button type="submit" disabled={submitting} className="btn-primary"
-                      style={{ ...BTN.primary, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}>
+                    <button type="submit" disabled={submitting || !calStart || !calEnd} className="btn-primary"
+                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd) ? 'not-allowed' : 'pointer' }}>
                       {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}
                     </button>
                     <button type="button" className="btn-outline" style={BTN.outline}
-                      onClick={() => { setShowForm(false); setErrorMsg(''); }}>
+                      onClick={() => { setShowForm(false); setCalStart(null); setCalEnd(null); setErrorMsg(''); }}>
                       Odustani
                     </button>
                   </div>
