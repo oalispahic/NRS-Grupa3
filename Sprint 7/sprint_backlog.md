@@ -58,31 +58,31 @@ Omogućavanje korisniku da ažurira ili poništi svoj termin.
     <tr>
       <td>T 7.8.1</td>
       <td>Dizajn kalendara</td>
-      <td>[Ime]</td>
+      <td>Omar Alispahić</td>
       <td>Done</td>
     </tr>
     <tr>
       <td>T 7.9.3</td>
       <td>Integracija forme</td>
-      <td>[Ime]</td>
+      <td>Bilal Ozdić</td>
       <td>Done</td>
     </tr>
     <tr>
       <td>T 7.10.2</td>
       <td>Card view historije</td>
-      <td>[Ime]</td>
+      <td>Suljo Ruvić</td>
       <td>Done</td>
     </tr>
     <tr>
       <td>T 7.13.1</td>
       <td>Indikatori statusa</td>
-      <td>[Ime]</td>
+      <td>Amina Rovčanin</td>
       <td>Done</td>
     </tr>
     <tr>
       <td>T 7.14.1</td>
       <td>Modal za otkazivanje</td>
-      <td>[Ime]</td>
+      <td>Elma Dedić</td>
       <td>Done</td>
     </tr>
   </tbody>

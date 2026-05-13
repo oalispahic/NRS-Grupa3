@@ -63,10 +63,15 @@ Cilj je potvrditi da su sve komponente modula za rezervacije stabilne, da isprav
 </table>
 
 ## Opis testnog okruženja
-- Web preglednici: Google Chrome, Mozilla Firefox (responzivni mod).
-- Mobilni uređaji: Android Emulator (Pixel 5), iOS Simulator (iPhone 13).
-- Baza podataka: [Navedite vašu bazu, npr. PostgreSQL/MySQL].
-- Alat za API testiranje: Postman (provjera endpointa za rezervacije).
+- **Frontend**: Blazor WebAssembly (verifikacija UI komponenti i klijentske logike).
+- **Backend**: .NET 10 Web API (testiranje Minimal API endpointa i middleware-a).
+- **Baza podataka**: PostgreSQL (EF Core migracije i provjera perzistencije podataka).
+- **Autentifikacija**: Keycloak (provjera JWT tokena i OIDC protokola).
+- **Alati za testiranje**: 
+  - **Postman**: Detaljna provjera API endpointa za rezervacije.
+  - **xUnit**: Automatski unit testovi za backend logiku.
+  - **GitHub Copilot**: Korišten kao asistent za generisanje testnih scenarija.
+- **Infrastruktura**: Docker (kontejnerizovano okruženje), deployment na Hetzner Cloud.
 
 ## Zaključak testiranja
 Sve testne procedure su uspješno izvršene. Nisu pronađeni kritični bugovi koji bi ometali proces rezervacije. Manje vizuelne neusklađenosti na specifičnim rezolucijama ekrana su ispravljene tokom samog sprinta.

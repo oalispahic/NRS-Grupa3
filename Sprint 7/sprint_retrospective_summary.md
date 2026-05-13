@@ -30,31 +30,31 @@ Ovaj dokument sumira rezultate retrospektive nakon završetka Sprinta 7, fokusir
     <tr>
       <td>PB8</td>
       <td>UI prikaz dostupnih termina</td>
-      <td>Completed</td>
+      <td>Završeno</td>
       <td>Implementiran kalendarski prikaz.</td>
     </tr>
     <tr>
       <td>PB9</td>
       <td>Forma za unos rezervacije</td>
-      <td>Completed</td>
+      <td>Završeno</td>
       <td>Dodata klijentska i serverska validacija.</td>
     </tr>
     <tr>
       <td>PB10</td>
       <td>Historija rezervacija</td>
-      <td>Completed</td>
+      <td>Završeno</td>
       <td>Sortiranje po datumu uspješno dodato.</td>
     </tr>
     <tr>
       <td>PB13</td>
       <td>Upravljanje statusima</td>
-      <td>Completed</td>
+      <td>Završeno</td>
       <td>Integrisano sa bazom podataka.</td>
     </tr>
     <tr>
       <td>PB14</td>
       <td>Modifikacija i otkazivanje</td>
-      <td>Completed</td>
+      <td>Završeno</td>
       <td>Implementirano pravilo od 24h.</td>
     </tr>
   </tbody>
