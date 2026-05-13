@@ -4,8 +4,8 @@
 Ovaj dokument opisuje proceduru i rezultate testiranja funkcionalnosti implementiranih u okviru Sprinta 7. Fokus testiranja je na reimplementaciji modula za dostupnost opreme (kalendarski prikaz), validaciji unosa (FluentValidation), proširenju detalja opreme, te administrativnom upravljanju životnim ciklusom rezervacija (odobravanje i restrikcije otkazivanja).
 
 ## Automatizovani testovi
-- **Backend:** .NET xUnit testovi za servisni sloj i validacijsku logiku. Korišten je `Moq` za simulaciju repozitorija i `FluentValidation.TestHelper` za provjeru pravila unosa.
-- **Frontend:** Blazor `bUnit` testovi za renderovanje komponenti i `Playwright` za kriticne E2E (End-to-End) tokove korisničkog interfejsa.
+- Backend: Jest unit testovi za service i middleware sloj. Repozitoriji i vanjske zavisnosti su mock-ovani (nema potrebe za DB).
+- Frontend: Vitest + React Testing Library za UI tokove. Mrezni pozivi su mock-ovani.
 
 ## Testni pristup i okruženje
 - **Tip testova:** Unit (kalkulacija slotova, validacija), Component (kalendarski grid, dashboard) i Integration (komunikacija frontend-backend).
