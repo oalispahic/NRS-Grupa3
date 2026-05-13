@@ -1,32 +1,54 @@
-# Decision Log - Sprint 7
+# Decision Log
 
-Ovaj dokument bilježi ključne tehničke i dizajnerske odluke donesene tokom Sprinta 7, sa fokusom na korisnički interfejs i sistem upravljanja rezervacijama.
+Ovaj dokument bilježi ključne tehničke i arhitekturalne odluke donesene tokom razvoja projekta NRS - Grupa 3.
+
+---
+
+## Odluke iz Sprinta 5
+
+### [D5.1] Arhitektura sistema i izbor tehnologija
+- Odluka: Korištenje Clean Architecture principa sa podjelom na Domain, Application, Infrastructure i WebAPI slojeve. Implementacija frontenda u Blazor WebAssembly tehnologiji.
+- Obrazloženje: Osiguravanje skalabilnosti, testabilnosti i jasne separacije odgovornosti unutar tima.
+
+### [D5.2] Upravljanje bazom podataka
+- Odluka: Korištenje PostgreSQL relacione baze podataka uz Entity Framework Core kao ORM alat.
+- Obrazloženje: PostgreSQL nudi visoku pouzdanost i podršku za kompleksne upite potrebne za sistem rezervacija.
 
 ---
 
-## [D7.1] Izbor prikaza dostupnih termina (PB8)
-- **Odluka:** Umjesto obične tekstualne liste, odlučeno je da se koristi **kalendarski prikaz** (grid layout) za mobilne uređaje.
-- **Obrazloženje:** Testiranjem je utvrđeno da korisnici brže pronalaze slobodne slotove ako vide cijelu sedmicu odjednom.
-- **Status:** Implementirano.
+## Odluke iz Sprinta 6
 
-## [D7.2] Strategija validacije forme za rezervaciju (PB9)
-- **Odluka:** Implementirana je **dvostruka validacija** (Client-side i Server-side).
-- **Obrazloženje:** Client-side validacija omogućava trenutni feedback korisniku (npr. pogrešan format datuma), dok Server-side osigurava da ne dođe do preklapanja termina u bazi u slučaju istovremenih zahtjeva (Race conditions).
-- **Status:** Implementirano.
+### [D6.1] Implementacija autentifikacije i autorizacije
+- Odluka: Korištenje Keycloak-a kao Identity Provider-a uz implementaciju OIDC (OpenID Connect) protokola.
+- Obrazloženje: Keycloak omogućava sigurno upravljanje korisnicima i jednostavno mapiranje rola (Administrator, Korisnik) koje su ključne za pristup modulima.
 
-## [D7.3] Upravljanje statusima rezervacija (PB13)
-- **Odluka:** Uvedena je enumeracija statusa: `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`.
-- **Obrazloženje:** Ovakav pristup omogućava lakše filtriranje historije (PB10) i automatizaciju slanja notifikacija korisnicima nakon što administrator odobri termin.
-- **Status:** Implementirano.
-
-## [D7.4] Restrikcije za otkazivanje rezervacija (PB14)
-- **Odluka:** Korisnicima je omogućeno otkazivanje rezervacije najkasnije **24 sata** prije termina.
-- **Obrazloženje:** Kako bismo spriječili gubitke u rasporedu, sistem onemogućava dugme "Otkaži" unutar kritičnog perioda, osim ako korisnik direktno ne kontaktira podršku.
-- **Status:** Implementirano.
-
-## [D7.5] Arhitektura Frontenda za historiju (PB10)
-- **Odluka:** Korištenje "Lazy Loading" pristupa za učitavanje starih rezervacija.
-- **Obrazloženje:** Kako bi se poboljšale performanse aplikacije, inicijalno se učitavaju samo aktivne rezervacije, dok se historija povlači iz baze tek na zahtjev korisnika.
-- **Status:** Implementirano.
+### [D6.2] Dokumentacija i logging
+- Odluka: Usvajanje Swagger-a za dokumentaciju API endpointa i Serilog-a za strukturirano logiranje grešaka na serverskoj strani.
+- Obrazloženje: Poboljšanje saradnje između frontend i backend tima i lakše dijagnosticiranje problema u produkciji.
 
 ---
+
+## Odluke iz Sprinta 7
+
+### [D7.1] Dizajn korisničkog interfejsa za rezervacije (PB8)
+- Odluka: Implementacija kalendarskog (grid) prikaza dostupnosti umjesto linearne liste termina.
+- Obrazloženje: Korisničko testiranje je pokazalo da kalendarski pregled pruža bolju preglednost slobodnih slotova na sedmičnom nivou.
+
+### [D7.2] Validacija podataka kod kreiranja rezervacije (PB9)
+- Odluka: Uvođenje FluentValidation biblioteke na backendu uz paralelnu validaciju na Blazor formama.
+- Obrazloženje: Osiguravanje integriteta podataka i sprječavanje nekonzistentnih stanja u bazi podataka u slučaju direktnih API poziva.
+
+### [D7.3] Model statusa rezervacija (PB13)
+- Odluka: Implementacija fiksnog seta statusa (Pending, Approved, Rejected, Cancelled) kao Enum tipa u bazi.
+- Obrazloženje: Standardizacija statusa omogućava automatizaciju procesa odobravanja i lakše filtriranje historije za krajnjeg korisnika.
+
+### [D7.4] Pravila za otkazivanje i modifikaciju (PB14)
+- Odluka: Postavljanje striktnog vremenskog ograničenja od 24 sata za samostalno otkazivanje rezervacije putem aplikacije.
+- Obrazloženje: Optimizacija popunjenosti termina i sprječavanje gubitaka resursa zbog kasnih otkazivanja.
+
+### [D7.5] Strategija učitavanja historije rezervacija (PB10)
+- Odluka: Implementacija paginacije ili Lazy Loading-a za prikaz prošlih rezervacija na korisničkom dashboardu.
+- Obrazloženje: Smanjenje opterećenja na bazu podataka i ubrzanje inicijalnog učitavanja profila korisnika.
+
+---
+Zadnje ažuriranje: 13.05.2026.
