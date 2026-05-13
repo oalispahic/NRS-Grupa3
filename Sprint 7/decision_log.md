@@ -437,5 +437,3 @@ API vraća samo manji set podataka (npr. zadnjih 10 rezervacija) inicijalno, ost
 Smanjen mrežni saobraćaj; brži odziv aplikacije za krajnjeg korisnika na mobilnim i desktop uređajima.
 
 ---
-**Tim:** NRS-Grupa3  
-**Zadnje ažuriranje:** 14.05.2026.
