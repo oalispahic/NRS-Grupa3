@@ -1,76 +1,77 @@
-# Test funkcionalnost — Sprint 7
+# Test funkcionalnost - Sprint 7
 
 ## Opseg
-Ovaj dokument opisuje proceduru i rezultate testiranja funkcionalnosti implementiranih u okviru Sprinta 7. Fokus testiranja je na kritičnim ispravkama iz prethodnog sprinta: reimplementaciji modula za dostupnost opreme (kalendarski prikaz), naprednoj validaciji unosa (FluentValidation), proširenju tehničkih detalja opreme, te administrativnom upravljanju životnim ciklusom rezervacija sa restrikcijom otkazivanja.
+Ovaj dokument opisuje sta i kako je testirano za implementirane user story-je iz Sprint 7. Testovi su uskladjeni sa definisanom test strategijom (Sprint 3) i fokusirani na kalendarski prikaz dostupnosti, detalje opreme, obradu zahtjeva, historiju rezervacija i otkazivanje.
 
 ## Automatizovani testovi
-- **Backend:** .NET xUnit testovi za servisni sloj i validacijsku logiku. Korišten je `Moq` za simulaciju repozitorija i `FluentValidation.TestHelper` za provjeru pravila poslovne logike.
-- **Frontend:** Blazor `bUnit` testovi za renderovanje komponenti i `Playwright` za kriticne E2E (End-to-End) tokove korisničkog interfejsa.
+- Backend: Jest unit testovi za servisnu logiku. Repozitoriji i vanjske zavisnosti su mock-ovani (nema potrebe za DB).
+- Frontend: Vitest + React Testing Library za UI tokove. Mrezni pozivi su mock-ovani.
 
-## Testni pristup i okruženje
-- **Tip testova:** Unit (kalkulacija slotova, validacija), Component (kalendarski grid, dashboard) i Integration (komunikacija frontend-backend).
-- **Izolacija:** API pozivi su mock-ovani na klijentskoj strani kako bi se osigurala stabilnost UI testova nezavisno od baze.
-- **Fokus:** Tačnost prikaza slobodnih termina u gridu, detekcija konflikata (collision detection), provjera 24h restrikcije za otkazivanje i renderska tačnost proširenih detalja opreme.
-
-## Testni podaci (mock)
-- **Oprema:** Prošireni objekti sa serijskim brojevima, tehničkim specifikacijama i lokacijom laboratorije.
-- **Slotovi:** Setovi preklapajućih i uzastopnih termina za testiranje algoritma dostupnosti u realnom vremenu.
-- **Rezervacije:** Testni korisnici sa ulogama `Admin` i `Laborant` sa različitim statusima zahtjeva (Pending, Approved, Rejected).
-
-## Kriterij prolaza
-- Svi automatizovani testovi (unit i component) prolaze sa 100% uspjehom.
-- Funkcionalnost "Dostupnost" (US-11) ispravno blokira preklapanja u 100% testnih scenarija.
-- Restrikcija otkazivanja (24h lock) baca predviđenu `BusinessRuleException` pri pokušaju kršenja pravila.
+## Testni pristup i okruzenje
+- Tip testova: unit (backend) i UI/component (frontend).
+- Izolacija: nema pravih poziva bazi ni JWT-u; sve se mock-uje.
+- Frontend se izvrsava u jsdom okruzenju uz MemoryRouter.
+- Fokus: validacija konflikta termina, UI kalendar, detalji opreme, obrada zahtjeva i promjene statusa.
 
 ## Kako pokrenuti
-**Backend (.NET):**
-1) `cd src/Backend/NRS.Tests`
-2) `dotnet test`
+Backend:
+1) cd project/backend
+2) npm install
+3) npm run build
+4) npm test
 
-**Frontend (Blazor):**
-1) `cd src/Frontend/NRS.Frontend.Tests`
-2) `dotnet test`
+Frontend:
+1) cd project/frontend
+2) npm install
+3) npm run build
+4) npm test
+
+Jedna komanda (iz korijena repozitorija):
+1) npm run install:all
+2) npm run build
+3) npm test
 
 ## Testovi po user story-ju
-
 | User story | Opis | Automatski testovi |
 | --- | --- | --- |
-| **US-11** | Kalendarski pregled dostupnosti | `AvailabilityServiceTests.cs`, `CalendarGrid.razor.tests` |
-| **US-8** | Detalji opreme (Dopuna) | `EquipmentServiceTests.cs` (UpdateDetails), `EquipmentDetailView.razor.tests` |
-| **US-5** | Rezervacija (Validacija) | `ReservationValidatorTests.cs` (FluentValidation rules) |
-| **US-7** | Odobravanje rezervacija | `AdminServiceTests.cs` (StatusChange), `AdminDashboard.razor.tests` |
-| **US-13** | Historija rezervacija | `HistoryPage.razor.tests` (Filtering logic) |
-| **US-14** | Otkazivanje (Lock period) | `ReservationServiceTests.cs` (CheckLockPeriod) |
+| US-11 | Kalendar dostupnosti opreme | frontend/src/__tests__/ReservationCalendar.test.jsx, frontend/src/__tests__/EquipmentDetailPage.test.jsx |
+| US-8 (prosireno) | Detalji i status opreme | frontend/src/__tests__/EquipmentDetailPage.test.jsx, backend/tests/equipment.service.test.js |
+| US-7 | Odobravanje/odbijanje rezervacija | frontend/src/__tests__/ReservationsPage.test.jsx, backend/tests/reservation.service.test.js |
+| US-13 | Historija rezervacija korisnika | frontend/src/__tests__/MyReservationsPage.test.jsx, backend/tests/reservation.service.test.js |
+| US-14 | Otkazivanje rezervacije | frontend/src/__tests__/MyReservationsPage.test.jsx, backend/tests/reservation.service.test.js |
 
-## Detaljni test scenariji — Backend
+## Detaljni test scenariji - backend
 
-### AvailabilityServiceTests.cs (US-11)
-- **Collision Detection:** Pokušaj kreiranja rezervacije koja se preklapa sa postojećom (čak i za 1 minut) -> sistem vraća status 409 Conflict.
-- **Gap Calculation:** Ako postoji rupa od 30 minuta između dvije rezervacije, sistem je mora ispravno prikazati kao "Slobodno" u kalendaru.
-- **Status Sync:** Provjera da li 'Pending' zahtjev zauzima slot na kalendaru jednako kao i 'Approved' kako bi se spriječio "double-booking".
+### reservation.service.test.js
+- createReservation: validacija obaveznih polja, provjera konflikta termina.
+- createReservation: postavlja status opreme na reserved kada je dostupna.
+- approve/reject: mijenja status rezervacije i azurira status opreme kada nema aktivnih rezervacija.
+- cancelReservation: odbija otkazivanje ako rezervacija ne postoji ili je vec otkazana.
+- cancelReservation: mijenja status na rejected i azurira opremu kada nema aktivnih rezervacija.
+- updateReservationDates: validacija start/end vremena, provjera konflikta i azuriranje termina.
 
-### ReservationValidatorTests.cs (US-5)
-- **Past Date Validation:** Pokušaj rezervacije termina u prošlosti -> Validacijska greška (Status 400).
-- **Required Fields:** Slanje forme bez odabrane opreme ili opisa svrhe korištenja -> Blokada unosa na nivou modela.
-- **Minimum Duration:** Provjera da li sistem odbija rezervacije kraće od minimalno definisanog praga (npr. 15 min).
+### equipment.service.test.js
+- create/update: validacija i normalizacija detalja (model, serijski broj, lokacija, servisni podaci).
+- update: parcijalni update preko COALESCE.
 
-### Admin & Lifecycle (US-7, US-14)
-- **Status Transition:** Provjera da li status 'Pending' ispravno prelazi u 'Approved' ili 'Rejected' uz ispravan upis u bazu.
-- **24h Cancellation Lock:** Pokušaj otkazivanja rezervacije 12 sati prije početka -> Sistem odbija zahtjev uz poruku o restrikciji.
-- **Resource Release:** Otkazivanjem termina (više od 24h unaprijed), oprema automatski postaje dostupna u kalendaru.
+## Detaljni test scenariji - frontend
 
-## Detaljni test scenariji — Frontend
+### ReservationCalendar.test.jsx (US-11)
+- Odabir perioda koji sadrzi zauzete datume -> prikazuje gresku i ponistava selekciju.
 
-### CalendarGrid.razor.tests (US-11)
-- **Responsive Grid:** Provjera da li se grid ispravno renderuje na mobilnim uređajima (preslagivanje kolona).
-- **Color Logic:** Slotovi sa statusom 'Approved' se renderuju u crvenoj, 'Pending' u žutoj, a slobodni u zelenoj boji.
+### EquipmentDetailPage.test.jsx (US-11, US-8)
+- Prikaz detaljnih polja opreme (serijski broj, model, proizvodjac).
+- Rezervacija preko kalendara: potvrda je onemogucena dok nije odabran period.
+- Admin promjena statusa opreme -> PUT /api/equipment/:id.
 
-### EquipmentDetailView.razor.tests (US-8)
-- **Attribute Rendering:** Potvrda da su nova polja (Serijski broj, Lokacija, Specifikacije) vidljiva na UI-u nakon povlačenja podataka sa API-ja.
+### ReservationsPage.test.jsx (US-7)
+- Klik na odobravanje zahtjeva -> PATCH /api/reservations/:id/approve.
 
-### HistoryPage.razor.tests (US-13)
-- **Status Filtering:** Odabir filtera "Otkazano" mora prikazati isključivo one rezervacije koje su u statusu `Cancelled`.
+### MyReservationsPage.test.jsx (US-13, US-14)
+- Prikaz rezervacija i dostupnost opcije "Uredi" samo za pending/approved.
+- Otkazivanje rezervacije iz edit panela -> DELETE /api/reservations/:id.
 
 ## Napomene
-- Testiranje u Sprintu 7 je fokusirano na **robustan ispravak kritičnih propusta** iz prethodnih faza, s akcentom na preciznost kalendara.
-- Korišten je `MockAuthenticationStateProvider` kako bi se testirali različiti nivoi pristupa (Admin vs Korisnik) bez potrebe za Keycloak serverom.
+- Testovi su kreirani tako da se mogu pokrenuti nakon pull-a sa GitHub-a bez dodatnih servisa.
+- Ovi testovi su unit/component nivo; E2E tokovi sa realnom bazom nisu dio ovog opsega.
+- Filter po statusu u historiji rezervacija i pravilo 24h lock perioda nisu automatizovani u ovim testovima ako nisu implementirani u kodu.
