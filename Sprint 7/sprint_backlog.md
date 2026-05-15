@@ -1,117 +1,137 @@
-# Sprint Backlog - Sprint 7
-
-## Sprint Goal
+## Sprint 7 goal
 Omogućiti korisnicima lakše upravljanje rezervacijama i jednostavnije snalaženje u sistemu kroz pregled zauzeća, pretragu, filtriranje, otkazivanje i izmjenu rezervacija.
----
 
 ### ID storyja
-US-11 (Dopuna US-9)
+US-11 
 
 ### Naziv storyja
-Reimplementacija dostupnosti opreme (Kalendarski pregled)
+Kalendar zauzeća
 
 **Opis**
-Kao korisnik želim imati vizuelni (kalendarski) pregled slobodnih termina kako bih lakše planirao korištenje opreme.
+Kao korisnik želim vidjeti kalendar zauzeća opreme
 
 **Poslovna vrijednost**
-Trenutna izvedba dostupnosti ne ispunjava svrhu. Reimplementacija omogućava korisnicima intuitivan uvid u zauzetost laboratorije, smanjujući broj neuspješnih pokušaja rezervacije.
-
-**Zadaci (Tasks)**
-- T7.1: Dizajniranje UI komponente kalendara u Blazoru.
-- T7.2: Implementacija backend logike za kalkulaciju slobodnih slotova u realnom vremenu.
-- T7.3: Vizuelno razlikovanje potvrđenih rezervacija od zahtjeva na čekanju.
-
-**Prioritet**
-Najviši (Kritično)
-
----
-
-### ID storyja
-US-8 (Prošireno)
-
-### Naziv storyja
-Detaljna evidencija i status opreme
-
-**Opis**
-Kao administrator želim dodati više detalja za opremu (tehničke specifikacije, uputstva, lokacija) i upravljati njenim statusom.
-
-**Poslovna vrijednost**
-Korisnici trebaju više informacija od samog naziva opreme kako bi znali da li im odgovara za rad. Precizni detalji smanjuju rizik od pogrešnog korištenja.
-
-**Zadaci (Tasks)**
-- T7.4: Proširenje baze podataka poljima za serijski broj, tehničke specifikacije i lokaciju.
-- T7.5: Implementacija forme za upload/prikaz tehničke dokumentacije ili linkova.
-- T7.6: UI prikaz detaljnih informacija na stranici opreme.
+Ovaj story je važan jer korisnicima omogućava pregled zauzeća opreme po terminima na jednostavniji i pregledniji način. Na taj način lakše planiraju rezervacije i izbjegavaju preklapanja.
 
 **Prioritet**
 Visok
 
----
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Sistem sadrži podatke o postojećim rezervacijama opreme.
+- Pretpostavka: Korisnik može pristupiti prikazu zauzeća za odabranu opremu.
+- Otvoreno pitanje: Da li će kalendar prikazivati dnevni, sedmični ili mjesečni pregled?
+- Otvoreno pitanje: Da li korisnik može iz kalendara direktno preći na kreiranje rezervacije?
 
-### ID storyja
-US-7 
-
-### Naziv storyja
-Upravljanje zahtjevima (Odobravanje/Odbijanje)
-
-**Opis**
-Kao administrator želim obrađivati pristigle zahtjeve kako bih osigurao prioritetno korištenje opreme.
-
-**Poslovna vrijednost**
-Omogućava ljudski nadzor nad automatizovanim sistemom, sprečavajući zloupotrebe ili neadekvatno planiranje resursa.
-
-**Zadaci (Tasks)**
-- T7.7: Izrada administratorskog dashboarda sa listom "Pending" rezervacija.
-- T7.8: Implementacija logike za promjenu statusa rezervacije (Approved/Rejected) u bazi.
-- T7.9: Slanje klijentskih notifikacija (Toast/Email) o ishodu zahtjeva.
-
-**Prioritet**
-Visok
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: rezervacije opreme
+- Povezano sa: pregledom opreme
 
 ---
 
 ### ID storyja
-US-13
+US-12 
 
 ### Naziv storyja
-Moja historija rezervacija
+Pretraga opreme
 
 **Opis**
-Kao korisnik želim imati uvid u svoje prošle i buduće rezervacije na jednom mjestu.
+Kao korisnik želim pretraživati opremu po nazivu
 
 **Poslovna vrijednost**
-Pruža korisniku kontrolu nad vlastitim planovima i omogućava brz pristup informacijama o odobrenim terminima.
-
-**Zadaci (Tasks)**
-- T7.10: Izrada korisničkog profila/dashboarda sa tabelarnim prikazom rezervacija.
-- T7.11: Implementacija filtera po statusu (aktivne, odbijene, završene).
+Ovaj story je značajan jer korisnicima omogućava da brže pronađu opremu koja im je potrebna bez pregledanja cijele liste. Na taj način se štedi vrijeme i olakšava snalaženje u sistemu.
 
 **Prioritet**
 Srednji
 
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Oprema je evidentirana u sistemu sa osnovnim podacima.
+- Pretpostavka: Sistem omogućava unos naziva opreme u polje za pretragu.
+- Otvoreno pitanje: Da li pretraga treba podržavati djelimičan unos naziva opreme?
+- Otvoreno pitanje: Da li se rezultati pretrage prikazuju odmah tokom unosa ili tek nakon potvrde pretrage?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: pregleda opreme
+- Povezano sa: filtriranjem opreme
+
 ---
 
 ### ID storyja
-US-14
+US-13 
 
 ### Naziv storyja
-Otkazivanje rezervacije (Lock period)
+Filtriranje opreme
 
 **Opis**
-Kao korisnik želim otkazati rezervaciju najkasnije 24h prije termina kako bih oslobodio resurse drugima.
+Kao korisnik želim filtrirati opremu po kategoriji ili tipu
 
 **Poslovna vrijednost**
-Smanjuje broj "no-show" termina (rezervisano a neiskorišteno), optimizirajući rad laboratorije.
-
-**Zadaci (Tasks)**
-- T7.12: Implementacija dugmeta za otkazivanje sa logikom provjere preostalog vremena.
-- T7.13: Automatsko ažuriranje kalendara dostupnosti nakon otkazivanja.
+Ovaj story je važan jer korisnicima omogućava da lakše suze prikaz opreme i brže pronađu ono što im je potrebno. Na taj način se olakšava pregled većeg broja stavki i poboljšava korištenje sistema.
 
 **Prioritet**
 Srednji
 
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Oprema u sistemu ima definisanu kategoriju ili tip.
+- Pretpostavka: Sistem podržava izbor jednog ili više filtera.
+- Otvoreno pitanje: Da li korisnik može kombinovati više filtera istovremeno?
+- Otvoreno pitanje: Da li se filtriranje odnosi samo na listu opreme ili i na rezultate pretrage?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: pregleda opreme
+- Povezano sa: pretragom opreme
+
 ---
 
-### Napomena o tehničkom dugu i komentarima:
-- **Dostupnost:** Stara implementacija se u potpunosti mijenja novom (US-11).
-- **Detalji opreme:** Svi novi entiteti u bazi moraju podržavati `COALESCE` pattern za parcijalne update-ove (OD-005).
+### ID storyja
+US-14 
+
+### Naziv storyja
+Otkazivanje rezervacija
+
+**Opis**
+Kao korisnik želim otkazati rezervaciju
+
+**Poslovna vrijednost**
+Ovaj story je važan jer korisnicima omogućava da otkažu rezervaciju kada im oprema više nije potrebna. Na taj način se termin može osloboditi za druge korisnike i poboljšava se iskorištenost laboratorijske opreme.
+
+**Prioritet**
+Srednji
+
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Korisnik može pristupiti svojim aktivnim rezervacijama.
+- Pretpostavka: Sistem omogućava otkazivanje rezervacije prije početka termina.
+- Otvoreno pitanje: Da li korisnik može otkazati rezervaciju u bilo kojem trenutku ili samo do određenog roka?
+- Otvoreno pitanje: Da li sistem treba tražiti potvrdu prije konačnog otkazivanja rezervacije?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: mojih rezervacija
+- Povezano sa: izmjenom rezervacije
+
+---
+
+### ID storyja
+US-15 
+
+### Naziv storyja
+Izmjena rezervacije
+
+**Opis**
+Kao korisnik želim izmijeniti postojeću rezervaciju
+
+**Poslovna vrijednost**
+Ovaj story je važan jer korisnicima omogućava da prilagode postojeću rezervaciju kada dođe do promjene plana ili termina. Na taj način se smanjuje potreba za brisanjem i ponovnim kreiranjem rezervacije, što olakšava korištenje sistema.
+
+**Prioritet**
+Srednji
+
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Korisnik može pristupiti svojim postojećim rezervacijama.
+- Pretpostavka: Sistem omogućava izmjenu rezervacije prije početka termina.
+- Otvoreno pitanje: Koje podatke korisnik može mijenjati u rezervaciji?
+- Otvoreno pitanje: Da li se nakon izmjene rezervacije ponovo provjerava dostupnost termina?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: mojih rezervacija
+- Povezano sa: otkazivanjem rezervacija
+
+---
