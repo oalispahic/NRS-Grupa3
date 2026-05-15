@@ -44,13 +44,15 @@ async function getById(id) {
   return equipment;
 }
 
-async function create({ name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company }) {
+async function create({ name, description, status, location, serial_number, model, manufacturer, category, type, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company }) {
   const normalizedName = normalizeString(name);
   const normalizedDescription = normalizeString(description);
   const normalizedLocation = normalizeString(location);
   const normalizedSerial = normalizeString(serial_number);
   const normalizedModel = normalizeString(model);
   const normalizedManufacturer = normalizeString(manufacturer);
+  const normalizedCategory = normalizeString(category);
+  const normalizedType = normalizeString(type);
   const normalizedPurchaseDate = normalizeDate(purchase_date);
   const normalizedSupplier = normalizeString(supplier);
   const normalizedLastService = normalizeDate(last_service);
@@ -91,6 +93,8 @@ async function create({ name, description, status, location, serial_number, mode
       serial_number: normalizedSerial,
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
+      category: normalizedCategory,
+      type: normalizedType,
       purchase_date: normalizedPurchaseDate,
       supplier: normalizedSupplier,
       last_service: normalizedLastService,
@@ -116,6 +120,8 @@ async function update(id, data) {
   const normalizedSerial = normalizeString(data.serial_number);
   const normalizedModel = normalizeString(data.model);
   const normalizedManufacturer = normalizeString(data.manufacturer);
+  const normalizedCategory = normalizeString(data.category);
+  const normalizedType = normalizeString(data.type);
   const normalizedPurchaseDate = normalizeDate(data.purchase_date);
   const normalizedSupplier = normalizeString(data.supplier);
   const normalizedLastService = normalizeDate(data.last_service);
@@ -145,6 +151,8 @@ async function update(id, data) {
       serial_number: normalizedSerial,
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
+      category: normalizedCategory,
+      type: normalizedType,
       purchase_date: normalizedPurchaseDate,
       supplier: normalizedSupplier,
       last_service: normalizedLastService,

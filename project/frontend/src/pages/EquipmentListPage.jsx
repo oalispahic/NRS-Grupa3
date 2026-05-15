@@ -13,6 +13,8 @@ export default function EquipmentListPage() {
   const [loading, setLoading]     = useState(true);
   const [search, setSearch]       = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
 
   useEffect(() => {
     fetch('/api/equipment').then(r => r.json()).then(d => setEquipment(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
@@ -25,10 +27,17 @@ export default function EquipmentListPage() {
       item.model?.toLowerCase().includes(q) ||
       item.manufacturer?.toLowerCase().includes(q) ||
       item.serial_number?.toLowerCase().includes(q) ||
-      item.location?.toLowerCase().includes(q);
+      item.location?.toLowerCase().includes(q) ||
+      item.category?.toLowerCase().includes(q) ||
+      item.type?.toLowerCase().includes(q);
     const matchesStatus = !statusFilter || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesCategory = !categoryFilter || item.category === categoryFilter;
+    const matchesType = !typeFilter || item.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesCategory && matchesType;
   });
+
+  const categoryOptions = Array.from(new Set(equipment.map(item => item.category).filter(Boolean)));
+  const typeOptions = Array.from(new Set(equipment.map(item => item.type).filter(Boolean)));
 
   return (
     <div>
@@ -59,6 +68,41 @@ export default function EquipmentListPage() {
             </button>
           )}
         </div>
+
+        {(categoryOptions.length > 0 || typeOptions.length > 0) && (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {categoryOptions.length > 0 && (
+              <select
+                aria-label="Kategorija"
+                value={categoryFilter}
+                onChange={e => setCategoryFilter(e.target.value)}
+                style={{ padding: '8px 12px', border: `1px solid ${C.border}`, borderRadius: 10, fontSize: 13, background: '#fff', color: C.heading, minWidth: 180 }}
+                onFocus={e => e.target.style.borderColor = PRIMARY}
+                onBlur={e => e.target.style.borderColor = C.border}
+              >
+                <option value="">Sve kategorije</option>
+                {categoryOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            )}
+            {typeOptions.length > 0 && (
+              <select
+                aria-label="Tip"
+                value={typeFilter}
+                onChange={e => setTypeFilter(e.target.value)}
+                style={{ padding: '8px 12px', border: `1px solid ${C.border}`, borderRadius: 10, fontSize: 13, background: '#fff', color: C.heading, minWidth: 180 }}
+                onFocus={e => e.target.style.borderColor = PRIMARY}
+                onBlur={e => e.target.style.borderColor = C.border}
+              >
+                <option value="">Svi tipovi</option>
+                {typeOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {STATUS_FILTERS.map(f => (
@@ -109,15 +153,15 @@ export default function EquipmentListPage() {
           <p style={{ fontSize: 15, color: C.muted, marginBottom: 8 }}>
             {equipment.length === 0 ? 'Oprema trenutno nije dostupna.' : 'Nema opreme koja odgovara pretrazi.'}
           </p>
-          {(search || statusFilter) && (
-            <button onClick={() => { setSearch(''); setStatusFilter(''); }} style={{ fontSize: 13, color: PRIMARY, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+          {(search || statusFilter || categoryFilter || typeFilter) && (
+            <button onClick={() => { setSearch(''); setStatusFilter(''); setCategoryFilter(''); setTypeFilter(''); }} style={{ fontSize: 13, color: PRIMARY, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
               Poništi filtere
             </button>
           )}
         </div>
       ) : (
         <>
-          {(search || statusFilter) && (
+          {(search || statusFilter || categoryFilter || typeFilter) && (
             <div style={{ fontSize: 13, color: C.muted, marginBottom: 14 }}>
               Prikazano {filtered.length} od {equipment.length} stavki
             </div>
@@ -128,6 +172,8 @@ export default function EquipmentListPage() {
               const details = [
                 item.model ? `Model: ${item.model}` : null,
                 item.manufacturer ? `Proizvođač: ${item.manufacturer}` : null,
+                item.category ? `Kategorija: ${item.category}` : null,
+                item.type ? `Tip: ${item.type}` : null,
                 item.serial_number ? `Serijski: ${item.serial_number}` : null,
               ].filter(Boolean).join(' | ');
               return (

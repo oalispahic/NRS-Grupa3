@@ -23,6 +23,8 @@ async function create({
   serial_number,
   model,
   manufacturer,
+  category,
+  type,
   purchase_date,
   supplier,
   last_service,
@@ -31,10 +33,10 @@ async function create({
   service_company,
 }) {
   const { rows } = await pool.query(
-    `INSERT INTO equipment (name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+    `INSERT INTO equipment (name, description, status, location, serial_number, model, manufacturer, category, type, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
-    [name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company]
+    [name, description, status, location, serial_number, model, manufacturer, category, type, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company]
   );
   return rows[0];
 }
@@ -47,6 +49,8 @@ async function update(id, {
   serial_number,
   model,
   manufacturer,
+  category,
+  type,
   purchase_date,
   supplier,
   last_service,
@@ -63,12 +67,14 @@ async function update(id, {
          serial_number    = COALESCE($6, serial_number),
          model            = COALESCE($7, model),
          manufacturer     = COALESCE($8, manufacturer),
-         purchase_date    = COALESCE($9, purchase_date),
-         supplier         = COALESCE($10, supplier),
-         last_service     = COALESCE($11, last_service),
-         planned_service  = COALESCE($12, planned_service),
-         warranty_expiry  = COALESCE($13, warranty_expiry),
-         service_company  = COALESCE($14, service_company)
+         category         = COALESCE($9, category),
+         type             = COALESCE($10, type),
+         purchase_date    = COALESCE($11, purchase_date),
+         supplier         = COALESCE($12, supplier),
+         last_service     = COALESCE($13, last_service),
+         planned_service  = COALESCE($14, planned_service),
+         warranty_expiry  = COALESCE($15, warranty_expiry),
+         service_company  = COALESCE($16, service_company)
      WHERE id = $1
      RETURNING *`,
     [
@@ -80,6 +86,8 @@ async function update(id, {
       serial_number,
       model,
       manufacturer,
+      category,
+      type,
       purchase_date,
       supplier,
       last_service,
