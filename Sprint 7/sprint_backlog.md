@@ -1,8 +1,7 @@
 # Sprint Backlog - Sprint 7
 
 ## Sprint Goal
-Cilj sprinta 7 je reimplementacija modula za dostupnost opreme kroz kalendarski prikaz, proširenje baze podataka detaljnijim specifikacijama opreme, te finalizacija procesa odobravanja rezervacija i upravljanja korisničkim historijatom.
-
+Omogućiti korisnicima lakše upravljanje rezervacijama i jednostavnije snalaženje u sistemu kroz pregled zauzeća, pretragu, filtriranje, otkazivanje i izmjenu rezervacija.
 ---
 
 ### ID storyja
