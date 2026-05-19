@@ -1,5 +1,7 @@
 const reservationRepo = require('../repositories/reservation.repository');
 const equipmentRepo = require('../repositories/equipment.repository');
+const notificationService = require('./notification.service');
+const activityService = require('./activity.service');
 
 async function createReservation({ userId, equipmentId, startTime, endTime }) {
   if (!userId || !equipmentId || !startTime || !endTime) {
@@ -33,6 +35,8 @@ async function createReservation({ userId, equipmentId, startTime, endTime }) {
     await equipmentRepo.update(equipmentId, { status: 'reserved' });
   }
 
+  activityService.log({ userId, action: 'reservation_created', entityType: 'reservation', entityId: reservation.id, details: `Oprema: ${equipment.name}` });
+
   return reservation;
 }
 
@@ -44,17 +48,20 @@ async function getAllReservations(status) {
   return reservationRepo.findAll(status || null);
 }
 
-async function approveReservation(id) {
+async function approveReservation(id, adminUserId) {
   const reservation = await reservationRepo.updateStatus(id, 'approved');
   if (!reservation) {
     const err = new Error('Reservation not found');
     err.status = 404;
     throw err;
   }
+  const equipment = await equipmentRepo.findById(reservation.equipment_id);
+  notificationService.notifyReservationApproved(reservation.user_id, equipment?.name || '').catch(() => {});
+  activityService.log({ userId: adminUserId, action: 'reservation_approved', entityType: 'reservation', entityId: reservation.id, details: `Oprema: ${equipment?.name}` });
   return reservation;
 }
 
-async function rejectReservation(id) {
+async function rejectReservation(id, adminUserId) {
   const reservation = await reservationRepo.updateStatus(id, 'rejected');
   if (!reservation) {
     const err = new Error('Reservation not found');
@@ -69,6 +76,10 @@ async function rejectReservation(id) {
       await equipmentRepo.update(reservation.equipment_id, { status: 'available' });
     }
   }
+
+  const equipment2 = await equipmentRepo.findById(reservation.equipment_id);
+  notificationService.notifyReservationRejected(reservation.user_id, equipment2?.name || '').catch(() => {});
+  activityService.log({ userId: adminUserId, action: 'reservation_rejected', entityType: 'reservation', entityId: reservation.id, details: `Oprema: ${equipment2?.name}` });
 
   return reservation;
 }
@@ -95,6 +106,8 @@ async function cancelReservation(reservationId, userId) {
       await equipmentRepo.update(updated.equipment_id, { status: 'available' });
     }
   }
+
+  activityService.log({ userId, action: 'reservation_cancelled', entityType: 'reservation', entityId: reservationId });
 
   return updated;
 }
@@ -135,8 +148,13 @@ async function updateReservationDates(reservationId, userId, startTime, endTime)
   return reservationRepo.updateDates(reservationId, startTime, endTime);
 }
 
+async function getCurrentlyActive() {
+  return reservationRepo.findCurrentlyActive();
+}
+
 module.exports = {
   createReservation, getMyReservations, getAllReservations,
   approveReservation, rejectReservation,
   cancelReservation, updateReservationDates,
+  getCurrentlyActive,
 };

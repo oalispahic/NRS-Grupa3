@@ -10,6 +10,7 @@ router.get('/my', reservationController.myReservations);
 router.delete('/:id', reservationController.cancel);
 router.patch('/:id', reservationController.updateDates);
 
+router.get('/current', requireRole('admin', 'test'), reservationController.getCurrent);
 router.get('/', requireRole('admin', 'test'), reservationController.getAll);
 router.patch('/:id/approve', requireRole('admin', 'test'), reservationController.approve);
 router.patch('/:id/reject', requireRole('admin', 'test'), reservationController.reject);

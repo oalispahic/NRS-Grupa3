@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt    = require('jsonwebtoken');
 const userRepo = require('../repositories/user.repository');
+const activityService = require('./activity.service');
 
 const BCRYPT_ROUNDS = 12;
 
@@ -24,6 +25,8 @@ async function registerUser({ username, password, fullName }) {
     passwordHash: hashedPassword,
     fullName,
   });
+
+  activityService.log({ userId: newUser.id, action: 'register', entityType: 'user', entityId: newUser.id, details: `Registracija: ${username}` });
 
   return newUser;
 }
@@ -58,6 +61,8 @@ async function loginUser({ username, password }) {
   const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '8h',
   });
+
+  activityService.log({ userId: foundUser.id, action: 'login', entityType: 'user', entityId: foundUser.id, details: `Prijava: ${username}` });
 
   return {
     token,

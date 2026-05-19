@@ -140,9 +140,16 @@ export default function EquipmentDetailPage() {
             </div>
           </div>
 
-          <span style={{ background: st.bg, color: st.color, fontSize: 13, fontWeight: 600, padding: '5px 14px', borderRadius: 99, display: 'inline-block', marginBottom: 20, transition: 'background 0.2s, color 0.2s' }}>
-            {st.label}
-          </span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: 20 }}>
+            <span style={{ background: st.bg, color: st.color, fontSize: 13, fontWeight: 600, padding: '5px 14px', borderRadius: 99, transition: 'background 0.2s, color 0.2s' }}>
+              {st.label}
+            </span>
+            {(equipment.tags || []).map(tag => (
+              <span key={tag.id} style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99, background: tag.color + '22', color: tag.color, border: `1px solid ${tag.color}44` }}>
+                {tag.name}
+              </span>
+            ))}
+          </div>
 
           {equipment.description && (
             <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 24px', marginBottom: 24 }}>

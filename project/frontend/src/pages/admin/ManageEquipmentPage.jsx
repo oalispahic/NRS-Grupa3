@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Check, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, AlertCircle, CheckCircle2, Tag } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_EQUIPMENT } from '../../theme';
@@ -42,6 +42,11 @@ export default function ManageEquipmentPage() {
   });
   const [addMsg, setAddMsg]       = useState(null);
 
+  const [allTags, setAllTags] = useState([]);
+  const [newTagName, setNewTagName] = useState('');
+  const [newTagColor, setNewTagColor] = useState('#3b82f6');
+  const [tagEquipmentId, setTagEquipmentId] = useState(null);
+
   const authH = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${token}` });
 
   async function load() {
@@ -49,7 +54,42 @@ export default function ManageEquipmentPage() {
     setEquipment(Array.isArray(d) ? d : []);
   }
 
-  useEffect(() => { load().finally(() => setLoading(false)); }, []);
+  async function loadTags() {
+    const d = await fetch('/api/tags').then(r => r.json());
+    setAllTags(Array.isArray(d) ? d : []);
+  }
+
+  useEffect(() => { load().finally(() => setLoading(false)); loadTags(); }, []);
+
+  async function handleCreateTag(e) {
+    e.preventDefault();
+    if (!newTagName.trim()) return;
+    const res = await fetch('/api/tags', { method: 'POST', headers: authH(), body: JSON.stringify({ name: newTagName.trim(), color: newTagColor }) });
+    const data = await res.json();
+    if (res.ok) {
+      toast.success(`Tag "${data.name}" kreiran.`);
+      setNewTagName('');
+      loadTags();
+    } else {
+      toast.error(data.error || 'Greška pri kreiranju taga');
+    }
+  }
+
+  async function handleDeleteTag(id, name) {
+    if (!confirm(`Obrisati tag "${name}"?`)) return;
+    const res = await fetch(`/api/tags/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    if (res.ok) { toast.success(`Tag "${name}" obrisan.`); loadTags(); load(); }
+    else { toast.error('Greška pri brisanju taga'); }
+  }
+
+  async function handleSetTags(equipmentId, tagIds) {
+    await fetch(`/api/equipment/${equipmentId}/tags`, {
+      method: 'PUT',
+      headers: authH(),
+      body: JSON.stringify({ tagIds }),
+    });
+    load();
+  }
 
   async function handleAdd(e) {
     e.preventDefault();
@@ -213,6 +253,52 @@ export default function ManageEquipmentPage() {
         </form>
       </div>
 
+      {/* Tag management */}
+      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 24px', marginBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <Tag size={15} color={PRIMARY} />
+          <span style={{ fontSize: 14, fontWeight: 700, color: C.heading }}>Upravljanje tagovima</span>
+        </div>
+        <form onSubmit={handleCreateTag} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', marginBottom: 14 }}>
+          <div style={{ flex: '1 1 160px' }}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Naziv taga</label>
+            <input
+              value={newTagName}
+              onChange={e => setNewTagName(e.target.value)}
+              placeholder="npr. PCR, Mikroskopija..."
+              style={{ ...FIELD }}
+              onFocus={focusStyle} onBlur={blurStyle}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Boja</label>
+            <input
+              type="color"
+              value={newTagColor}
+              onChange={e => setNewTagColor(e.target.value)}
+              style={{ width: 40, height: 36, padding: 3, border: `1px solid ${C.border}`, borderRadius: 8, cursor: 'pointer' }}
+            />
+          </div>
+          <button type="submit" className="btn-primary" style={{ ...BTN.primary, padding: '9px 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Plus size={13} /> Dodaj tag
+          </button>
+        </form>
+        {allTags.length === 0 ? (
+          <p style={{ fontSize: 13, color: C.subtle }}>Nema kreiranih tagova.</p>
+        ) : (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {allTags.map(tag => (
+              <div key={tag.id} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 99, background: tag.color + '22', border: `1px solid ${tag.color}44` }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: tag.color }}>{tag.name}</span>
+                <button onClick={() => handleDeleteTag(tag.id, tag.name)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: tag.color, display: 'flex', padding: 0, opacity: 0.7 }}>
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Table */}
       <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
         <div style={{ padding: '16px 24px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -229,7 +315,7 @@ export default function ManageEquipmentPage() {
           <table className="table-desktop" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: C.bgFaint }}>
-                {['Naziv', 'Detalji', 'Opis', 'Lokacija', 'Status', 'Akcije'].map(h => (
+                {['Naziv', 'Detalji', 'Opis', 'Lokacija', 'Status', 'Tagovi', 'Akcije'].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '11px 20px', fontSize: 11, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>{h}</th>
                 ))}
               </tr>
@@ -288,6 +374,35 @@ export default function ManageEquipmentPage() {
                             {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                           </select>
                         : <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{st.label}</span>}
+                    </td>
+                    <td style={{ padding: '13px 20px', minWidth: 140 }}>
+                      {allTags.length > 0 ? (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                          {allTags.map(tag => {
+                            const assigned = (item.tags || []).some(t => t.id === tag.id);
+                            return (
+                              <button
+                                key={tag.id}
+                                onClick={() => {
+                                  const current = (item.tags || []).map(t => t.id);
+                                  const next = assigned ? current.filter(id => id !== tag.id) : [...current, tag.id];
+                                  handleSetTags(item.id, next);
+                                }}
+                                title={assigned ? `Ukloni tag "${tag.name}"` : `Dodaj tag "${tag.name}"`}
+                                style={{
+                                  fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
+                                  background: assigned ? tag.color + '22' : '#f1f5f9',
+                                  color: assigned ? tag.color : C.subtle,
+                                  border: `1px solid ${assigned ? tag.color + '44' : C.border}`,
+                                  cursor: 'pointer', transition: 'all 0.1s',
+                                }}
+                              >
+                                {tag.name}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : <span style={{ fontSize: 12, color: C.subtle }}>—</span>}
                     </td>
                     <td style={{ padding: '13px 20px' }}>
                       <div style={{ display: 'flex', gap: 6 }}>

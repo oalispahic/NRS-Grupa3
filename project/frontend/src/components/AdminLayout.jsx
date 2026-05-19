@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FlaskConical, LayoutDashboard, Microscope, BookOpen,
-  Settings, LogOut, ClipboardList, Menu, X,
+  Settings, LogOut, ClipboardList, Menu, X, Bell, User,
+  Activity, MonitorCheck,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { FONT, GLOBAL_CSS } from '../theme';
+import { FONT, GLOBAL_CSS, C, PRIMARY } from '../theme';
 
 const SIDEBAR_W = 240;
 const DARK = '#0d1b2e';
@@ -17,6 +18,7 @@ const NAV_GROUPS_LABORANT = [
       { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
       { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
+      { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
 ];
@@ -27,6 +29,7 @@ const NAV_GROUPS_ADMIN = [
     items: [
       { to: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
       { to: '/equipment', label: 'Oprema',    Icon: Microscope },
+      { to: '/profile',   label: 'Moj profil', Icon: User },
     ],
   },
   {
@@ -34,6 +37,8 @@ const NAV_GROUPS_ADMIN = [
     items: [
       { to: '/admin/equipment',    label: 'Upravljanje opremom', Icon: Settings },
       { to: '/admin/reservations', label: 'Sve rezervacije',     Icon: ClipboardList },
+      { to: '/admin/active-usage', label: 'Trenutno korištenje', Icon: MonitorCheck },
+      { to: '/admin/activity-log', label: 'Log aktivnosti',      Icon: Activity },
     ],
   },
 ];
@@ -45,6 +50,7 @@ const NAV_GROUPS_TEST = [
       { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
       { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
+      { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
   {
@@ -52,6 +58,8 @@ const NAV_GROUPS_TEST = [
     items: [
       { to: '/admin/equipment',    label: 'Upravljanje opremom', Icon: Settings },
       { to: '/admin/reservations', label: 'Sve rezervacije',     Icon: ClipboardList },
+      { to: '/admin/active-usage', label: 'Trenutno korištenje', Icon: MonitorCheck },
+      { to: '/admin/activity-log', label: 'Log aktivnosti',      Icon: Activity },
     ],
   },
 ];
@@ -116,7 +124,7 @@ function NavItem({ to, label, Icon, active }) {
   );
 }
 
-function Sidebar({ user, groups, isActive, logout }) {
+function Sidebar({ user, groups, isActive, logout, token }) {
   const role = ROLE_META[user?.role] || { label: user?.role, color: '#94a3b8', bg: 'rgba(148,163,184,0.15)' };
   const initial = user?.full_name?.[0]?.toUpperCase() || '?';
 
@@ -212,6 +220,9 @@ function Sidebar({ user, groups, isActive, logout }) {
             </div>
           </div>
         </div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+          <NotificationBell token={token} />
+        </div>
         <button
           onClick={logout}
           style={{
@@ -237,8 +248,119 @@ function Sidebar({ user, groups, isActive, logout }) {
   );
 }
 
+function fmt(dt) {
+  if (!dt) return '';
+  return new Date(dt).toLocaleString('bs-BA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+function NotificationBell({ token }) {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState({ notifications: [], unread: 0 });
+  const ref = useRef(null);
+
+  const load = useCallback(() => {
+    if (!token) return;
+    fetch('/api/notifications', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json()).then(d => { if (d && Array.isArray(d.notifications)) setData(d); }).catch(() => {});
+  }, [token]);
+
+  useEffect(() => { load(); const t = setInterval(load, 30000); return () => clearInterval(t); }, [load]);
+
+  useEffect(() => {
+    function onClick(e) { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
+
+  async function markAll() {
+    await fetch('/api/notifications/read-all', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` } });
+    setData(d => ({ ...d, unread: 0, notifications: d.notifications.map(n => ({ ...n, is_read: true })) }));
+  }
+
+  const TYPE_COLORS = {
+    reservation_approved: { bg: '#dcfce7', color: '#166534', dot: '#16a34a' },
+    reservation_rejected: { bg: '#fee2e2', color: '#991b1b', dot: '#dc2626' },
+  };
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => { setOpen(o => !o); if (!open) load(); }}
+        style={{
+          width: '100%',
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '8px 10px',
+          background: open ? 'rgba(59,130,246,0.18)' : 'rgba(255,255,255,0.07)',
+          border: open ? '1px solid rgba(59,130,246,0.4)' : '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 7,
+          cursor: 'pointer',
+          color: open ? '#93c5fd' : 'rgba(255,255,255,0.65)',
+          fontSize: 13, fontWeight: open ? 600 : 400,
+          transition: 'background 0.13s, color 0.13s, border-color 0.13s',
+        }}
+        onMouseEnter={e => { if (!open) { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.9)'; } }}
+        onMouseLeave={e => { if (!open) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; } }}
+        aria-label="Notifikacije"
+      >
+        <Bell size={14} style={{ flexShrink: 0 }} />
+        <span style={{ flex: 1, textAlign: 'left' }}>Notifikacije</span>
+        {data.unread > 0 ? (
+          <span style={{
+            background: '#ef4444', color: '#fff',
+            fontSize: 10, fontWeight: 700,
+            minWidth: 18, height: 18, borderRadius: 99,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '0 5px',
+          }}>
+            {data.unread > 99 ? '99+' : data.unread}
+          </span>
+        ) : (
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)' }}>—</span>
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute', bottom: 46, left: 0,
+          width: 300, background: '#fff', border: `1px solid ${C.border}`,
+          borderRadius: 12, boxShadow: '0 -4px 32px rgba(15,23,42,0.22)',
+          zIndex: 200, overflow: 'hidden',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: `1px solid ${C.borderFaint}` }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.heading }}>Notifikacije</span>
+            {data.unread > 0 && (
+              <button onClick={markAll} style={{ fontSize: 11, color: PRIMARY, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                Označi sve kao pročitano
+              </button>
+            )}
+          </div>
+          <div style={{ maxHeight: 340, overflowY: 'auto' }}>
+            {data.notifications.length === 0 ? (
+              <div style={{ padding: '28px 16px', textAlign: 'center', fontSize: 13, color: C.subtle }}>
+                Nema notifikacija
+              </div>
+            ) : data.notifications.map(n => {
+              const s = TYPE_COLORS[n.type] || { bg: '#eff6ff', color: PRIMARY, dot: PRIMARY };
+              return (
+                <div key={n.id} style={{ padding: '12px 16px', borderBottom: `1px solid ${C.borderFaint}`, background: n.is_read ? '#fff' : '#f8fafc', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: n.is_read ? C.border : s.dot, marginTop: 5, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: n.is_read ? 400 : 600, color: C.heading }}>{n.title}</div>
+                    <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{n.message}</div>
+                    <div style={{ fontSize: 11, color: C.subtle, marginTop: 4 }}>{fmt(n.created_at)}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminLayout({ children }) {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -272,7 +394,7 @@ export default function AdminLayout({ children }) {
         position: 'fixed', top: 0, left: 0, bottom: 0,
         zIndex: 50,
       }}>
-        <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} />
+        <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} />
       </div>
 
       {/* Mobile overlay */}
@@ -283,7 +405,7 @@ export default function AdminLayout({ children }) {
             style={{ position: 'fixed', inset: 0, zIndex: 98, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
           />
           <div style={{ position: 'fixed', top: 0, left: 0, bottom: 0, width: SIDEBAR_W, zIndex: 99 }}>
-            <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} />
+            <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} />
           </div>
         </>
       )}
@@ -302,12 +424,15 @@ export default function AdminLayout({ children }) {
           </div>
           <span style={{ fontWeight: 700, fontSize: 14, color: '#fff' }}>LabManager</span>
         </div>
-        <button
-          onClick={() => setMobileOpen(o => !o)}
-          style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 7, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
-        >
-          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <NotificationBell token={token} />
+          <button
+            onClick={() => setMobileOpen(o => !o)}
+            style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 7, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
+          >
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </div>
 
       {/* Content */}

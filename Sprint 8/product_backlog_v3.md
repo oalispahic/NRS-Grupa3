@@ -174,8 +174,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Medium</td>
 <td>3</td>
-<td>To Do</td>
-<td></td>
+<td>Done</td>
+<td>Implementirano prije Sprinta 8</td>
 </tr>
 
 <tr>
@@ -382,17 +382,6 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td></td>
 </tr>
 
-<tr>
-<td>PB30</td>
-<td>Toast notifikacije</td>
-<td align="left">Kao korisnik želim dobiti vizualni feedback za svaku akciju u sistemu</td>
-<td>Snackbar/toast komponenta koja prikazuje poruke o uspjehu, grešci i informativne poruke</td>
-<td>Feature</td>
-<td>Medium</td>
-<td>2</td>
-<td>To Do</td>
-<td></td>
-</tr>
 
 <tr>
 <td>PB31</td>
@@ -515,6 +504,31 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 </tr>
 
 
+
+<tr>
+<td>PB41</td>
+<td>Status mozaik opreme</td>
+<td align="left">Kao korisnik želim vizualno vidjeti status sve opreme odjednom na dashboardu</td>
+<td>Interaktivni mozaik obojenih kvadratića koji prikazuju status svake stavke opreme; hover efekt i tooltip s imenom i lokacijom</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>2</td>
+<td>To Do</td>
+<td></td>
+</tr>
+
+<tr>
+<td>PB42</td>
+<td>Timeline nadolazećih rezervacija</td>
+<td align="left">Kao korisnik želim vidjeti kalendarski pregled rezervacija za narednih 7 dana</td>
+<td>7-dnevni timeline na dashboardu s rezervacijama raspoređenim po danima, obojenim prema statusu; "Danas" i "Sutra" oznake</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>3</td>
+<td>To Do</td>
+<td></td>
+</tr>
+
 </table>
 
 
@@ -529,8 +543,8 @@ Sprint 6 (Kontrola i validacija):
 Sprint 7 (Korisnički interfejs i upravljanje rezervacijama):
 - PB8, PB9, PB10, PB13, PB14
 
-Sprint 8 (Administracija, notifikacije i UI feedback):
-- PB11, PB12, PB15, PB25, PB19, PB29, PB30, PB36
+Sprint 8 (Administracija, notifikacije i vizualni dashboard):
+- PB11, PB15, PB25, PB19, PB29, PB36, PB41, PB42
 
 Sprint 9 (Specifične laboratorijske funkcionalnosti, pretrage i UX):
 - PB21, PB22, PB20, PB32, PB33, PB34, PB37, PB39

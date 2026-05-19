@@ -2,14 +2,28 @@ const pool = require('../config/db');
 
 async function findAll() {
   const { rows } = await pool.query(
-    'SELECT * FROM equipment ORDER BY created_at DESC'
+    `SELECT e.*,
+       COALESCE(json_agg(json_build_object('id', t.id, 'name', t.name, 'color', t.color))
+         FILTER (WHERE t.id IS NOT NULL), '[]') AS tags
+     FROM equipment e
+     LEFT JOIN equipment_tags et ON et.equipment_id = e.id
+     LEFT JOIN tags t ON t.id = et.tag_id
+     GROUP BY e.id
+     ORDER BY e.created_at DESC`
   );
   return rows;
 }
 
 async function findById(id) {
   const { rows } = await pool.query(
-    'SELECT * FROM equipment WHERE id = $1',
+    `SELECT e.*,
+       COALESCE(json_agg(json_build_object('id', t.id, 'name', t.name, 'color', t.color))
+         FILTER (WHERE t.id IS NOT NULL), '[]') AS tags
+     FROM equipment e
+     LEFT JOIN equipment_tags et ON et.equipment_id = e.id
+     LEFT JOIN tags t ON t.id = et.tag_id
+     WHERE e.id = $1
+     GROUP BY e.id`,
     [id]
   );
   return rows[0] || null;

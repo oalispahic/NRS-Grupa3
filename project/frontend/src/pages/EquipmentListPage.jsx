@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Microscope, MapPin, ChevronRight, SearchX, Search, X } from 'lucide-react';
+import { Microscope, MapPin, ChevronRight, SearchX, Search, X, Tag } from 'lucide-react';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT } from '../theme';
 
 const STATUS_FILTERS = [
@@ -13,9 +13,12 @@ export default function EquipmentListPage() {
   const [loading, setLoading]     = useState(true);
   const [search, setSearch]       = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [tagFilter, setTagFilter] = useState('');
+  const [allTags, setAllTags] = useState([]);
 
   useEffect(() => {
     fetch('/api/equipment').then(r => r.json()).then(d => setEquipment(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
+    fetch('/api/tags').then(r => r.json()).then(d => setAllTags(Array.isArray(d) ? d : []));
   }, []);
 
   const filtered = equipment.filter(item => {
@@ -27,7 +30,8 @@ export default function EquipmentListPage() {
       item.serial_number?.toLowerCase().includes(q) ||
       item.location?.toLowerCase().includes(q);
     const matchesStatus = !statusFilter || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesTag = !tagFilter || (item.tags || []).some(t => t.id === parseInt(tagFilter));
+    return matchesSearch && matchesStatus && matchesTag;
   });
 
   return (
@@ -81,6 +85,41 @@ export default function EquipmentListPage() {
             </button>
           ))}
         </div>
+
+        {allTags.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: C.subtle, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tag size={11} /> Tagovi:
+            </span>
+            {tagFilter && (
+              <button
+                onClick={() => setTagFilter('')}
+                style={{ padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.muted, display: 'flex', alignItems: 'center', gap: 4 }}
+              >
+                <X size={10} /> Poništi
+              </button>
+            )}
+            {allTags.map(tag => (
+              <button
+                key={tag.id}
+                onClick={() => setTagFilter(tagFilter === String(tag.id) ? '' : String(tag.id))}
+                style={{
+                  padding: '4px 10px',
+                  borderRadius: 99,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: tagFilter === String(tag.id) ? `1.5px solid ${tag.color}` : `1px solid ${C.border}`,
+                  background: tagFilter === String(tag.id) ? tag.color + '22' : '#fff',
+                  color: tagFilter === String(tag.id) ? tag.color : C.muted,
+                  transition: 'all 0.12s',
+                }}
+              >
+                {tag.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -160,6 +199,15 @@ export default function EquipmentListPage() {
                       </div>
                     )}
                   </div>
+                  {item.tags?.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      {item.tags.map(tag => (
+                        <span key={tag.id} style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: tag.color + '22', color: tag.color, border: `1px solid ${tag.color}44` }}>
+                          {tag.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: 'auto' }}>
                     <span style={{ fontSize: 13, color: PRIMARY, display: 'flex', alignItems: 'center', gap: 3, fontWeight: 500 }}>
                       Detalji <ChevronRight size={14} />

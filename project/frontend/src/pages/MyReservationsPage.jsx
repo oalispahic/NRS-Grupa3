@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, SearchX, Pencil, X, AlertTriangle, CheckCircle2, CalendarDays } from 'lucide-react';
+import { BookOpen, SearchX, Pencil, X, AlertTriangle, CheckCircle2, CalendarDays, Star } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_RESERVATION } from '../theme';
@@ -17,6 +17,108 @@ function fmtDay(d) {
 }
 
 const EDITABLE_STATUSES = ['pending', 'approved'];
+
+function RatingPanel({ reservation, token, onRated }) {
+  const toast = useToast();
+  const [hover, setHover] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [comment, setComment] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [existingRating, setExistingRating] = useState(null);
+  const [loadingRating, setLoadingRating] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/equipment/${reservation.equipment_id}/ratings`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(r => r.json()).then(d => {
+      if (d?.ratings) {
+        const mine = d.ratings.find(r => r.reservation_id === reservation.id);
+        if (mine) setExistingRating(mine);
+      }
+    }).finally(() => setLoadingRating(false));
+  }, [reservation.id, reservation.equipment_id, token]);
+
+  async function handleSubmit() {
+    if (!selected) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/equipment/${reservation.equipment_id}/ratings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ reservationId: reservation.id, rating: selected, comment: comment.trim() || undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Greška pri slanju ocjene');
+      toast.success('Hvala! Vaša ocjena je sačuvana.');
+      setExistingRating(data);
+      onRated?.();
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loadingRating) return <div style={{ padding: '12px 0', fontSize: 13, color: C.subtle }}>Provjera ocjene...</div>;
+
+  if (existingRating) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0' }}>
+        <div style={{ display: 'flex', gap: 2 }}>
+          {[1,2,3,4,5].map(s => (
+            <Star key={s} size={16} fill={s <= existingRating.rating ? '#f59e0b' : 'none'} color={s <= existingRating.rating ? '#f59e0b' : C.border} />
+          ))}
+        </div>
+        <span style={{ fontSize: 13, color: C.muted }}>Ocijenili ste ovu opremu</span>
+        {existingRating.comment && <span style={{ fontSize: 12, color: C.subtle, fontStyle: 'italic' }}>"{existingRating.comment}"</span>}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: C.heading, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Star size={13} color='#f59e0b' fill='#f59e0b' />
+        Ocijenite opremu
+      </div>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
+        {[1,2,3,4,5].map(s => (
+          <button
+            key={s}
+            type="button"
+            onMouseEnter={() => setHover(s)}
+            onMouseLeave={() => setHover(0)}
+            onClick={() => setSelected(s)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}
+          >
+            <Star size={24} fill={(hover || selected) >= s ? '#f59e0b' : 'none'} color={(hover || selected) >= s ? '#f59e0b' : C.border} style={{ transition: 'all 0.1s' }} />
+          </button>
+        ))}
+      </div>
+      {selected > 0 && (
+        <>
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Dodajte komentar (opcionalno)..."
+            rows={2}
+            style={{ width: '100%', padding: '8px 10px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, resize: 'vertical', fontFamily: 'inherit', color: C.heading, outline: 'none', marginBottom: 10 }}
+            onFocus={e => e.target.style.borderColor = PRIMARY}
+            onBlur={e => e.target.style.borderColor = C.border}
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={saving}
+            className="btn-primary"
+            style={{ ...BTN.primary, padding: '8px 18px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
+          >
+            {saving ? 'Slanje...' : 'Pošalji ocjenu'}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function MyReservationsPage() {
   const { token } = useAuth();
@@ -118,11 +220,20 @@ export default function MyReservationsPage() {
     }
   }
 
+  function isCompleted(r) {
+    return r.status === 'approved' && new Date(r.end_time) < new Date();
+  }
+
   const renderEditPanel = useCallback((reservation) => {
     if (editingId !== reservation.id) return null;
 
     return (
       <div style={{ background: '#f8fafc', border: `1px solid ${C.border}`, borderTop: 'none', borderRadius: '0 0 12px 12px', padding: 20, animation: 'labFadeIn 0.15s ease-out' }}>
+        {isCompleted(reservation) && editMode === null && (
+          <div style={{ borderBottom: `1px solid ${C.border}`, marginBottom: 16, paddingBottom: 16 }}>
+            <RatingPanel reservation={reservation} token={token} onRated={loadReservations} />
+          </div>
+        )}
         {editMode === null && (
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{ fontSize: 13, color: C.muted, marginRight: 4 }}>Šta želite uraditi?</span>
@@ -250,7 +361,7 @@ export default function MyReservationsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {reservations.map((r) => {
             const sc = STATUS_RESERVATION[r.status] || { bg: '#f1f5f9', color: '#475569', label: r.status };
-            const canEdit = EDITABLE_STATUSES.includes(r.status);
+            const canEdit = EDITABLE_STATUSES.includes(r.status) || isCompleted(r);
             const isExpanded = editingId === r.id;
 
             return (

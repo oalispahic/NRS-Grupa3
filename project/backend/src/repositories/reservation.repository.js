@@ -108,9 +108,24 @@ async function findActiveByEquipment(equipmentId) {
   return rows;
 }
 
+async function findCurrentlyActive() {
+  const { rows } = await pool.query(
+    `SELECT r.*, u.full_name, u.email, e.name AS equipment_name, e.location
+     FROM reservations r
+     JOIN users u ON u.id = r.user_id
+     JOIN equipment e ON e.id = r.equipment_id
+     WHERE r.status = 'approved'
+       AND r.start_time <= NOW()
+       AND r.end_time >= NOW()
+     ORDER BY r.end_time ASC`
+  );
+  return rows;
+}
+
 module.exports = {
   findConflict, findConflictExcluding,
   create, findByUserId, findByIdAndUser, findAll,
   updateStatus, updateDates,
   countActive, findActiveByEquipment,
+  findCurrentlyActive,
 };

@@ -106,7 +106,7 @@ export default function ReservationsPage() {
             <table className="table-desktop" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: C.bgFaint }}>
-                  {['Oprema', 'Korisnik', 'Početak', 'Kraj', 'Status', 'Akcije'].map(h => (
+                  {['Oprema', 'Korisnik', 'Početak', 'Kraj', 'Status'].map(h => (
                     <th key={h} style={{ textAlign: 'left', padding: '11px 20px', fontSize: 11, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.5 }}>{h}</th>
                   ))}
                 </tr>
@@ -124,28 +124,24 @@ export default function ReservationsPage() {
                       <td style={{ padding: '13px 20px', fontSize: 13, color: C.muted }}>{fmt(r.start_time)}</td>
                       <td style={{ padding: '13px 20px', fontSize: 13, color: C.muted }}>{fmt(r.end_time)}</td>
                       <td style={{ padding: '13px 20px' }}>
-                        <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
-                      </td>
-                      <td style={{ padding: '13px 20px' }}>
                         {r.status === 'pending' ? (
-                          <div style={{ display: 'flex', gap: 6 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                            <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
                             <button
-                              className="btn-primary"
                               onClick={() => handleApprove(r.id)}
-                              style={{ ...BTN.primary, padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
+                              style={{ ...BTN.primary, padding: '5px 11px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
                             >
-                              <Check size={13} /> Odobri
+                              <Check size={12} /> Odobri
                             </button>
                             <button
-                              className="btn-danger"
                               onClick={() => handleReject(r.id)}
-                              style={{ ...BTN.danger, padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
+                              style={{ ...BTN.danger, padding: '5px 11px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
                             >
-                              <X size={13} /> Odbij
+                              <X size={12} /> Odbij
                             </button>
                           </div>
                         ) : (
-                          <span style={{ fontSize: 12, color: C.subtle }}>—</span>
+                          <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
                         )}
                       </td>
                     </tr>
@@ -159,15 +155,27 @@ export default function ReservationsPage() {
                 const sc = STATUS_RESERVATION[r.status] || { bg: '#f1f5f9', color: '#475569', label: r.status };
                 return (
                   <div key={r.id} style={{ border: `1px solid ${C.borderFaint}`, borderRadius: 10, padding: 14, background: '#fff' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{r.equipment_name || '—'}</div>
-                        <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{r.full_name || '—'}</div>
-                        <div style={{ fontSize: 11, color: C.subtle }}>{r.email || ''}</div>
+                    <div style={{ marginBottom: 10 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 4 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{r.equipment_name || '—'}</div>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{r.full_name || '—'}</div>
+                          <div style={{ fontSize: 11, color: C.subtle }}>{r.email || ''}</div>
+                        </div>
+                        <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap', flexShrink: 0 }}>{sc.label}</span>
                       </div>
-                      <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
+                      {r.status === 'pending' && (
+                        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                          <button onClick={() => handleApprove(r.id)} style={{ ...BTN.primary, flex: 1, padding: '7px 10px', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <Check size={13} /> Odobri
+                          </button>
+                          <button onClick={() => handleReject(r.id)} style={{ ...BTN.danger, flex: 1, padding: '7px 10px', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <X size={13} /> Odbij
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <div style={{ display: 'grid', gap: 8, marginBottom: 14 }}>
+                    <div style={{ display: 'grid', gap: 6 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13 }}>
                         <span style={{ color: C.muted }}>Početak</span>
                         <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.start_time)}</span>
@@ -177,24 +185,6 @@ export default function ReservationsPage() {
                         <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.end_time)}</span>
                       </div>
                     </div>
-                    {r.status === 'pending' && (
-                      <div className="action-row">
-                        <button
-                          className="btn-primary"
-                          onClick={() => handleApprove(r.id)}
-                          style={{ ...BTN.primary, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
-                        >
-                          <Check size={13} /> Odobri
-                        </button>
-                        <button
-                          className="btn-danger"
-                          onClick={() => handleReject(r.id)}
-                          style={{ ...BTN.danger, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
-                        >
-                          <X size={13} /> Odbij
-                        </button>
-                      </div>
-                    )}
                   </div>
                 );
               })}

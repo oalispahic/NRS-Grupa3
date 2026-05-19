@@ -32,7 +32,7 @@ async function getAll(req, res, next) {
 
 async function approve(req, res, next) {
   try {
-    const reservation = await reservationService.approveReservation(req.params.id);
+    const reservation = await reservationService.approveReservation(req.params.id, req.user.id);
     res.json(reservation);
   } catch (err) {
     next(err);
@@ -41,7 +41,7 @@ async function approve(req, res, next) {
 
 async function reject(req, res, next) {
   try {
-    const reservation = await reservationService.rejectReservation(req.params.id);
+    const reservation = await reservationService.rejectReservation(req.params.id, req.user.id);
     res.json(reservation);
   } catch (err) {
     next(err);
@@ -68,4 +68,13 @@ async function updateDates(req, res, next) {
   }
 }
 
-module.exports = { create, myReservations, getAll, approve, reject, cancel, updateDates };
+async function getCurrent(req, res, next) {
+  try {
+    const reservations = await reservationService.getCurrentlyActive();
+    res.json(reservations);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { create, myReservations, getAll, getCurrent, approve, reject, cancel, updateDates };
