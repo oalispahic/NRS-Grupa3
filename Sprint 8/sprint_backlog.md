@@ -172,7 +172,7 @@ US-22
 Status mozaik opreme
 
 **Opis**
-Kao korisnik želim vizualno vidjeti status sve opreme odjednom na dashboardu
+Kao administrator želim vizualno vidjeti status sve opreme odjednom na dashboardu
 
 **Poslovna vrijednost**
 Ovaj story je važan jer administratoru daje brzi vizualni pregled stanja cijelog inventara bez scrollanja kroz listu, što pomaže u brzom uočavanju problema (puno opreme van upotrebe, mnogo rezervacija).
@@ -199,7 +199,7 @@ US-23
 Timeline nadolazećih rezervacija
 
 **Opis**
-Kao korisnik želim vidjeti horizontalni kalendarski pregled odobrenih rezervacija za narednih 7 dana na dashboardu
+Kao administrator želim vidjeti horizontalni kalendarski pregled odobrenih rezervacija za narednih 7 dana na dashboardu
 
 **Poslovna vrijednost**
 Ovaj story je važan jer pruža brzi uvid u zauzetu opremu u narednoj sedmici, što pomaže korisnicima i administratorima u planiranju rada laboratorije bez otvaranja zasebnih stranica.
