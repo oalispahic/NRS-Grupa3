@@ -12,11 +12,22 @@ jest.mock('../src/repositories/reservation.repository', () => ({
   updateStatus: jest.fn(),
   updateDates: jest.fn(),
   countActive: jest.fn(),
+  returnEarly: jest.fn(),
+  findCurrentlyActive: jest.fn(),
 }));
 
 jest.mock('../src/repositories/equipment.repository', () => ({
   findById: jest.fn(),
   update: jest.fn(),
+}));
+
+jest.mock('../src/services/notification.service', () => ({
+  notifyReservationApproved: jest.fn().mockResolvedValue(),
+  notifyReservationRejected: jest.fn().mockResolvedValue(),
+}));
+
+jest.mock('../src/services/activity.service', () => ({
+  log: jest.fn().mockResolvedValue(),
 }));
 
 describe('reservation.service', () => {
@@ -220,5 +231,34 @@ describe('reservation.service', () => {
       1, '2025-01-02T10:00:00Z', '2025-01-02T11:00:00Z'
     );
     expect(result).toEqual({ id: 1, status: 'pending' });
+  });
+
+  test('returnReservation rejects missing active reservation', async () => {
+    reservationRepo.returnEarly.mockResolvedValue(null);
+
+    await expect(reservationService.returnReservation(3, 2))
+      .rejects
+      .toMatchObject({ status: 400 });
+  });
+
+  test('returnReservation updates equipment when no active reservations remain', async () => {
+    reservationRepo.returnEarly.mockResolvedValue({ id: 3, equipment_id: 7 });
+    equipmentRepo.findById.mockResolvedValue({ id: 7, status: 'reserved' });
+    reservationRepo.countActive.mockResolvedValue(0);
+    equipmentRepo.update.mockResolvedValue({ id: 7, status: 'available' });
+
+    const result = await reservationService.returnReservation(3, 2);
+
+    expect(equipmentRepo.update).toHaveBeenCalledWith(7, { status: 'available' });
+    expect(result).toEqual({ id: 3, equipment_id: 7 });
+  });
+
+  test('getCurrentlyActive returns active reservations', async () => {
+    reservationRepo.findCurrentlyActive.mockResolvedValue([{ id: 1 }]);
+
+    const result = await reservationService.getCurrentlyActive();
+
+    expect(reservationRepo.findCurrentlyActive).toHaveBeenCalled();
+    expect(result).toEqual([{ id: 1 }]);
   });
 });

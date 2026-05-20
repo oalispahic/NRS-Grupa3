@@ -17,20 +17,23 @@ vi.mock('../hooks/useToast', () => ({
 describe('ManageEquipmentPage', () => {
   beforeEach(() => {
     useAuthMock.mockReturnValue({ token: 'token' });
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        json: () => Promise.resolve([]),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ name: 'Microscope A' }),
-      })
-      .mockResolvedValueOnce({
-        json: () => Promise.resolve([]),
-      });
+    vi.clearAllMocks();
   });
 
   test('submits new equipment', async () => {
+    global.fetch = vi.fn((url, options) => {
+      if (url === '/api/equipment' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/tags' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/equipment' && options?.method === 'POST') {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'Microscope A' }) });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+    });
+
     render(
       <MemoryRouter>
         <ManageEquipmentPage />
@@ -50,9 +53,44 @@ describe('ManageEquipmentPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /dodaj opremu/i }));
 
     await waitFor(() => {
-      const postCall = global.fetch.mock.calls[1];
-      expect(postCall[0]).toBe('/api/equipment');
-      expect(postCall[1].method).toBe('POST');
+      const postCall = global.fetch.mock.calls.find(([url, options]) =>
+        url === '/api/equipment' && options?.method === 'POST'
+      );
+      expect(postCall).toBeTruthy();
+    });
+  });
+
+  test('creates new tag', async () => {
+    global.fetch = vi.fn((url, options) => {
+      if (url === '/api/equipment' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/tags' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/tags' && options?.method === 'POST') {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'PCR' }) });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+    });
+
+    render(
+      <MemoryRouter>
+        <ManageEquipmentPage />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByPlaceholderText('npr. PCR, Mikroskopija...'), {
+      target: { value: 'PCR' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /dodaj tag/i }));
+
+    await waitFor(() => {
+      const postCall = global.fetch.mock.calls.find(([url, options]) =>
+        url === '/api/tags' && options?.method === 'POST'
+      );
+      expect(postCall).toBeTruthy();
     });
   });
 });
