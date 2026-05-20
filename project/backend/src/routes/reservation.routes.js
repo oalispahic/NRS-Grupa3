@@ -8,6 +8,7 @@ router.post('/', reservationController.create);
 router.get('/my', reservationController.myReservations);
 
 router.delete('/:id', reservationController.cancel);
+router.patch('/:id/return', reservationController.returnEarly);
 router.patch('/:id', reservationController.updateDates);
 
 router.get('/current', requireRole('admin', 'test'), reservationController.getCurrent);

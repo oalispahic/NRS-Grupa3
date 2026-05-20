@@ -15,6 +15,8 @@ const ACTION_META = {
   reservation_approved:  { label: 'Rezervacija odobrena', bg: '#dcfce7', color: '#166534' },
   reservation_rejected:  { label: 'Rezervacija odbijena', bg: '#fee2e2', color: '#991b1b' },
   reservation_cancelled: { label: 'Rezervacija otkazana', bg: '#f1f5f9', color: '#475569' },
+  'Oprema vracena':      { label: 'Oprema vraćena',      bg: '#eff6ff', color: '#1e40af' },
+  ocjena_opreme:         { label: 'Ocjena opreme',        bg: '#fef3c7', color: '#92400e' },
 };
 
 export default function ActivityLogPage() {

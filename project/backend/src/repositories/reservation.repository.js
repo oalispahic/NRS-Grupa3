@@ -89,6 +89,20 @@ async function updateDates(id, startTime, endTime) {
   return rows[0] || null;
 }
 
+async function returnEarly(id, userId) {
+  const { rows } = await pool.query(
+    `UPDATE reservations
+     SET end_time = NOW()
+     WHERE id = $1 AND user_id = $2
+       AND status = 'approved'
+       AND start_time <= NOW()
+       AND end_time > NOW()
+     RETURNING *`,
+    [id, userId]
+  );
+  return rows[0] || null;
+}
+
 async function countActive(equipmentId) {
   const { rows } = await pool.query(
     `SELECT COUNT(*) FROM reservations
@@ -125,7 +139,7 @@ async function findCurrentlyActive() {
 module.exports = {
   findConflict, findConflictExcluding,
   create, findByUserId, findByIdAndUser, findAll,
-  updateStatus, updateDates,
+  updateStatus, updateDates, returnEarly,
   countActive, findActiveByEquipment,
   findCurrentlyActive,
 };

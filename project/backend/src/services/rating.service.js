@@ -1,5 +1,7 @@
 const ratingRepo = require('../repositories/rating.repository');
 const reservationRepo = require('../repositories/reservation.repository');
+const equipmentRepo = require('../repositories/equipment.repository');
+const activityService = require('./activity.service');
 
 async function addRating({ userId, equipmentId, reservationId, rating, comment }) {
   if (!rating || rating < 1 || rating > 5) {
@@ -32,7 +34,25 @@ async function addRating({ userId, equipmentId, reservationId, rating, comment }
     throw err;
   }
 
-  return ratingRepo.create({ userId, equipmentId, reservationId, rating, comment });
+  const created = await ratingRepo.create({ userId, equipmentId, reservationId, rating, comment });
+
+  const equipment = await equipmentRepo.findById(equipmentId);
+  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  const details = [
+    `Oprema: ${equipment?.name || equipmentId}`,
+    `${stars} (${rating}/5)`,
+    comment ? `"${comment}"` : null,
+  ].filter(Boolean).join(' — ');
+
+  activityService.log({
+    userId,
+    action: 'ocjena_opreme',
+    entityType: 'equipment',
+    entityId: equipmentId,
+    details,
+  }).catch(() => {});
+
+  return created;
 }
 
 async function getEquipmentRatings(equipmentId) {

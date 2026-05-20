@@ -148,6 +148,34 @@ async function updateReservationDates(reservationId, userId, startTime, endTime)
   return reservationRepo.updateDates(reservationId, startTime, endTime);
 }
 
+async function returnReservation(reservationId, userId) {
+  const updated = await reservationRepo.returnEarly(reservationId, userId);
+  if (!updated) {
+    const err = new Error('Rezervacija nije pronađena ili nije trenutno u toku');
+    err.status = 400;
+    throw err;
+  }
+
+  const equipment = await equipmentRepo.findById(updated.equipment_id);
+
+  if (equipment?.status === 'reserved') {
+    const active = await reservationRepo.countActive(updated.equipment_id);
+    if (active === 0) {
+      await equipmentRepo.update(updated.equipment_id, { status: 'available' });
+    }
+  }
+
+  activityService.log({
+    userId,
+    action: 'Oprema vracena',
+    entityType: 'reservation',
+    entityId: reservationId,
+    details: equipment?.name ? `Oprema: ${equipment.name}` : undefined,
+  }).catch(() => {});
+
+  return updated;
+}
+
 async function getCurrentlyActive() {
   return reservationRepo.findCurrentlyActive();
 }
@@ -156,5 +184,5 @@ module.exports = {
   createReservation, getMyReservations, getAllReservations,
   approveReservation, rejectReservation,
   cancelReservation, updateReservationDates,
-  getCurrentlyActive,
+  returnReservation, getCurrentlyActive,
 };

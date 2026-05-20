@@ -68,6 +68,15 @@ async function updateDates(req, res, next) {
   }
 }
 
+async function returnEarly(req, res, next) {
+  try {
+    const reservation = await reservationService.returnReservation(req.params.id, req.user.id);
+    res.json(reservation);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getCurrent(req, res, next) {
   try {
     const reservations = await reservationService.getCurrentlyActive();
@@ -77,4 +86,4 @@ async function getCurrent(req, res, next) {
   }
 }
 
-module.exports = { create, myReservations, getAll, getCurrent, approve, reject, cancel, updateDates };
+module.exports = { create, myReservations, getAll, getCurrent, approve, reject, cancel, updateDates, returnEarly };

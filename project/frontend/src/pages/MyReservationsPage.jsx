@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, SearchX, Pencil, X, AlertTriangle, CheckCircle2, CalendarDays, Star } from 'lucide-react';
+import {
+  BookOpen, SearchX, CalendarDays, Star,
+  AlertTriangle, CheckCircle2, X, Undo2, Clock,
+} from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_RESERVATION } from '../theme';
@@ -8,15 +11,16 @@ import ReservationCalendar from '../components/ReservationCalendar';
 
 function fmt(dt) {
   if (!dt) return '—';
-  return new Date(dt).toLocaleString('bs-BA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return new Date(dt).toLocaleString('bs-BA', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
 }
 
 function fmtDay(d) {
   if (!d) return '';
   return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
 }
-
-const EDITABLE_STATUSES = ['pending', 'approved'];
 
 function RatingPanel({ reservation, token, onRated }) {
   const toast = useToast();
@@ -59,30 +63,32 @@ function RatingPanel({ reservation, token, onRated }) {
     }
   }
 
-  if (loadingRating) return <div style={{ padding: '12px 0', fontSize: 13, color: C.subtle }}>Provjera ocjene...</div>;
+  if (loadingRating) return <div style={{ fontSize: 13, color: C.subtle }}>Provjera ocjene...</div>;
 
   if (existingRating) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ display: 'flex', gap: 2 }}>
-          {[1,2,3,4,5].map(s => (
-            <Star key={s} size={16} fill={s <= existingRating.rating ? '#f59e0b' : 'none'} color={s <= existingRating.rating ? '#f59e0b' : C.border} />
+          {[1, 2, 3, 4, 5].map(s => (
+            <Star key={s} size={15} fill={s <= existingRating.rating ? '#f59e0b' : 'none'} color={s <= existingRating.rating ? '#f59e0b' : C.border} />
           ))}
         </div>
         <span style={{ fontSize: 13, color: C.muted }}>Ocijenili ste ovu opremu</span>
-        {existingRating.comment && <span style={{ fontSize: 12, color: C.subtle, fontStyle: 'italic' }}>"{existingRating.comment}"</span>}
+        {existingRating.comment && (
+          <span style={{ fontSize: 12, color: C.subtle, fontStyle: 'italic' }}>"{existingRating.comment}"</span>
+        )}
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '12px 0' }}>
+    <div>
       <div style={{ fontSize: 13, fontWeight: 600, color: C.heading, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-        <Star size={13} color='#f59e0b' fill='#f59e0b' />
+        <Star size={13} color="#f59e0b" fill="#f59e0b" />
         Ocijenite opremu
       </div>
       <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
-        {[1,2,3,4,5].map(s => (
+        {[1, 2, 3, 4, 5].map(s => (
           <button
             key={s}
             type="button"
@@ -91,7 +97,12 @@ function RatingPanel({ reservation, token, onRated }) {
             onClick={() => setSelected(s)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}
           >
-            <Star size={24} fill={(hover || selected) >= s ? '#f59e0b' : 'none'} color={(hover || selected) >= s ? '#f59e0b' : C.border} style={{ transition: 'all 0.1s' }} />
+            <Star
+              size={22}
+              fill={(hover || selected) >= s ? '#f59e0b' : 'none'}
+              color={(hover || selected) >= s ? '#f59e0b' : C.border}
+              style={{ transition: 'all 0.1s' }}
+            />
           </button>
         ))}
       </div>
@@ -102,14 +113,18 @@ function RatingPanel({ reservation, token, onRated }) {
             onChange={e => setComment(e.target.value)}
             placeholder="Dodajte komentar (opcionalno)..."
             rows={2}
-            style={{ width: '100%', padding: '8px 10px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, resize: 'vertical', fontFamily: 'inherit', color: C.heading, outline: 'none', marginBottom: 10 }}
+            style={{
+              width: '100%', padding: '8px 10px',
+              border: `1px solid ${C.border}`, borderRadius: 8,
+              fontSize: 13, resize: 'vertical', fontFamily: 'inherit',
+              color: C.heading, outline: 'none', marginBottom: 10,
+            }}
             onFocus={e => e.target.style.borderColor = PRIMARY}
             onBlur={e => e.target.style.borderColor = C.border}
           />
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="btn-primary"
             style={{ ...BTN.primary, padding: '8px 18px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
           >
             {saving ? 'Slanje...' : 'Pošalji ocjenu'}
@@ -124,57 +139,65 @@ export default function MyReservationsPage() {
   const { token } = useAuth();
   const toast = useToast();
   const [reservations, setReservations] = useState([]);
-  const [loading, setLoading]           = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // Edit state
-  const [editingId, setEditingId]       = useState(null);
-  const [editMode, setEditMode]         = useState(null); // 'cancel' | 'dates'
-  const [confirming, setConfirming]     = useState(false);
-  const [saving, setSaving]             = useState(false);
-  const [occupied, setOccupied]         = useState([]);
-  const [calStart, setCalStart]         = useState(null);
-  const [calEnd, setCalEnd]             = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editMode, setEditMode] = useState(null); // null | 'cancel' | 'dates' | 'return'
+  const [confirming, setConfirming] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [occupied, setOccupied] = useState([]);
+  const [calStart, setCalStart] = useState(null);
+  const [calEnd, setCalEnd] = useState(null);
 
   function loadReservations() {
     return fetch('/api/reservations/my', { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(d => setReservations(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
+      .then(r => r.json())
+      .then(d => setReservations(Array.isArray(d) ? d : []))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => { loadReservations(); }, [token]);
 
-  function openEdit(id) {
-    if (editingId === id) {
-      closeEdit();
-      return;
-    }
+  function isCompleted(r) {
+    return r.status === 'approved' && new Date(r.end_time) < new Date();
+  }
+
+  function isActive(r) {
+    const now = new Date();
+    return r.status === 'approved' && new Date(r.start_time) <= now && new Date(r.end_time) > now;
+  }
+
+  function canManage(r) {
+    return (r.status === 'pending' || r.status === 'approved') && new Date(r.start_time) > new Date();
+  }
+
+  function openPanel(id, mode) {
+    if (editingId === id && editMode === mode) { closePanel(); return; }
     setEditingId(id);
-    setEditMode(null);
+    setEditMode(mode);
     setConfirming(false);
     setCalStart(null);
     setCalEnd(null);
     setOccupied([]);
   }
 
-  function closeEdit() {
+  function openDatesPanel(reservation) {
+    openPanel(reservation.id, 'dates');
+    fetch(`/api/equipment/${reservation.equipment_id}/reserved-dates`)
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setOccupied(data.filter(d => d.id !== reservation.id));
+        }
+      });
+  }
+
+  function closePanel() {
     setEditingId(null);
     setEditMode(null);
     setConfirming(false);
     setCalStart(null);
     setCalEnd(null);
-  }
-
-  function openDatesMode(reservation) {
-    setEditMode('dates');
-    setCalStart(null);
-    setCalEnd(null);
-    fetch(`/api/equipment/${reservation.equipment_id}/reserved-dates`)
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          // exclude own reservation so user can keep/extend/shrink their current dates
-          setOccupied(data.filter(d => d.id !== reservation.id));
-        }
-      });
   }
 
   async function handleCancel(reservation) {
@@ -187,11 +210,30 @@ export default function MyReservationsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Greška pri otkazivanju');
       toast.success('Rezervacija je otkazana.');
-      closeEdit();
+      closePanel();
       loadReservations();
     } catch (err) {
       toast.error(err.message);
       setConfirming(false);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleReturn(reservation) {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/reservations/${reservation.id}/return`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Greška pri vraćanju opreme');
+      toast.success('Oprema je uspješno vraćena.');
+      closePanel();
+      loadReservations();
+    } catch (err) {
+      toast.error(err.message);
     } finally {
       setSaving(false);
     }
@@ -211,7 +253,7 @@ export default function MyReservationsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Greška pri izmjeni');
       toast.success('Datumi rezervacije su promijenjeni — status: na čekanju.');
-      closeEdit();
+      closePanel();
       loadReservations();
     } catch (err) {
       toast.error(err.message);
@@ -220,38 +262,46 @@ export default function MyReservationsPage() {
     }
   }
 
-  function isCompleted(r) {
-    return r.status === 'approved' && new Date(r.end_time) < new Date();
-  }
-
-  const renderEditPanel = useCallback((reservation) => {
-    if (editingId !== reservation.id) return null;
+  const renderExpandPanel = useCallback((r) => {
+    if (editingId !== r.id) return null;
 
     return (
-      <div style={{ background: '#f8fafc', border: `1px solid ${C.border}`, borderTop: 'none', borderRadius: '0 0 12px 12px', padding: 20, animation: 'labFadeIn 0.15s ease-out' }}>
-        {isCompleted(reservation) && editMode === null && (
-          <div style={{ borderBottom: `1px solid ${C.border}`, marginBottom: 16, paddingBottom: 16 }}>
-            <RatingPanel reservation={reservation} token={token} onRated={loadReservations} />
-          </div>
-        )}
-        {editMode === null && (
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: 13, color: C.muted, marginRight: 4 }}>Šta želite uraditi?</span>
-            <button
-              onClick={() => { setEditMode('cancel'); setConfirming(false); }}
-              style={{ ...BTN.danger, padding: '8px 16px', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-            >
-              <AlertTriangle size={13} /> Otkaži rezervaciju
-            </button>
-            <button
-              onClick={() => openDatesMode(reservation)}
-              style={{ ...BTN.outline, padding: '8px 16px', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-            >
-              <CalendarDays size={13} /> Promijeni datume
-            </button>
-            <button onClick={closeEdit} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, display: 'flex', padding: 4 }}>
-              <X size={16} />
-            </button>
+      <div style={{
+        borderTop: `1px solid ${C.border}`,
+        padding: '18px 20px',
+        background: C.bgFaint,
+        borderRadius: '0 0 14px 14px',
+        animation: 'labFadeIn 0.15s ease-out',
+      }}>
+        {editMode === 'return' && (
+          <div>
+            {!confirming ? (
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 8, fontSize: 13,
+                  color: '#1e40af', background: '#eff6ff',
+                  border: '1px solid #bfdbfe', borderRadius: 8, padding: '8px 14px',
+                }}>
+                  <Undo2 size={14} />
+                  Potvrdi povrat opreme prije isteka termina?
+                </div>
+                <button
+                  onClick={() => { setConfirming(true); handleReturn(r); }}
+                  disabled={saving}
+                  style={{ ...BTN.primary, padding: '8px 18px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
+                >
+                  {saving ? 'Vraćanje...' : 'Da, vrati opremu'}
+                </button>
+                <button onClick={closePanel} style={{ ...BTN.ghost, padding: '8px 14px', fontSize: 13 }}>
+                  Odustani
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.muted }}>
+                <div style={{ width: 14, height: 14, border: `2px solid ${C.border}`, borderTopColor: PRIMARY, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+                Vraćanje opreme...
+              </div>
+            )}
           </div>
         )}
 
@@ -259,18 +309,22 @@ export default function MyReservationsPage() {
           <div>
             {!confirming ? (
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#92400e', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '8px 14px' }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 8, fontSize: 13,
+                  color: '#92400e', background: '#fffbeb',
+                  border: '1px solid #fde68a', borderRadius: 8, padding: '8px 14px',
+                }}>
                   <AlertTriangle size={14} />
                   Jeste li sigurni da želite otkazati ovu rezervaciju?
                 </div>
                 <button
-                  onClick={() => { setConfirming(true); handleCancel(reservation); }}
+                  onClick={() => { setConfirming(true); handleCancel(r); }}
                   disabled={saving}
-                  style={{ ...BTN.danger, padding: '8px 16px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
+                  style={{ ...BTN.danger, padding: '8px 18px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
                 >
                   {saving ? 'Otkazivanje...' : 'Da, otkaži'}
                 </button>
-                <button onClick={() => setEditMode(null)} style={{ ...BTN.ghost, padding: '8px 14px', fontSize: 13 }}>
+                <button onClick={closePanel} style={{ ...BTN.ghost, padding: '8px 14px', fontSize: 13 }}>
                   Nazad
                 </button>
               </div>
@@ -290,7 +344,7 @@ export default function MyReservationsPage() {
                 <CalendarDays size={14} color={PRIMARY} />
                 Odaberite novi period
               </div>
-              <button onClick={() => setEditMode(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, display: 'flex', padding: 4 }}>
+              <button onClick={closePanel} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, display: 'flex', padding: 4 }}>
                 <X size={15} />
               </button>
             </div>
@@ -308,7 +362,7 @@ export default function MyReservationsPage() {
                   {fmtDay(calStart)} — {fmtDay(calEnd)}
                 </div>
                 <button
-                  onClick={() => handleUpdateDates(reservation)}
+                  onClick={() => handleUpdateDates(r)}
                   disabled={saving}
                   style={{ ...BTN.primary, padding: '8px 18px', fontSize: 13, opacity: saving ? 0.7 : 1 }}
                 >
@@ -318,34 +372,68 @@ export default function MyReservationsPage() {
             )}
           </div>
         )}
+
+        {editMode === null && isCompleted(r) && (
+          <RatingPanel reservation={r} token={token} onRated={loadReservations} />
+        )}
       </div>
     );
-  }, [editingId, editMode, confirming, saving, occupied, calStart, calEnd]);
+  }, [editingId, editMode, confirming, saving, occupied, calStart, calEnd, token]);
+
+  const statusAccent = {
+    pending:  '#f59e0b',
+    approved: '#22c55e',
+    rejected: '#ef4444',
+  };
 
   return (
     <div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      <div style={{ marginBottom: 28 }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .res-card { background:#fff; border:1px solid ${C.border}; border-radius:14px; overflow:hidden; transition:box-shadow 0.15s, border-color 0.15s; }
+        .res-card:hover { box-shadow:0 4px 18px rgba(15,23,42,0.07); border-color:#d1d5db; }
+        .res-card.active { border-color:#bfdbfe; }
+        .res-card.expanded { border-color:${PRIMARY}; box-shadow:0 0 0 3px rgba(37,99,235,0.08); }
+        .res-action-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 13px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.12s; border:1px solid ${C.border}; background:#fff; color:${C.body}; }
+        .res-action-btn:hover { border-color:${PRIMARY}; color:${PRIMARY}; background:#eff6ff; }
+        .res-action-btn.return { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }
+        .res-action-btn.return:hover { background:#dbeafe; border-color:${PRIMARY}; }
+        .res-action-btn.cancel { border-color:#fecaca; color:#dc2626; background:#fff5f5; }
+        .res-action-btn.cancel:hover { background:#fee2e2; border-color:#ef4444; }
+        .res-action-btn.rate { border-color:#fde68a; color:#92400e; background:#fffbeb; }
+        .res-action-btn.rate:hover { background:#fef3c7; border-color:#f59e0b; }
+        .res-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:16px; }
+        @media(max-width:600px){ .res-grid { grid-template-columns:1fr; } }
+      `}</style>
+
+      <div style={{ marginBottom: 32 }}>
         <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
           Moje rezervacije
         </div>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: C.heading }}>Rezervacije</h1>
-        <p style={{ marginTop: 6, fontSize: 15, color: C.muted }}>Pregled svih vaših zahtjeva za opremu.</p>
+        <p style={{ marginTop: 6, fontSize: 15, color: C.muted }}>Pregled svih vaših zahtjeva za laboratorijsku opremu.</p>
       </div>
 
       {loading ? (
-        <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
-          <div style={{ background: C.bgFaint, padding: '12px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', gap: 16 }}>
-            {['40%', '20%', '20%', '12%'].map((w, i) => (
-              <div key={i} className="skeleton" style={{ width: w, height: 12, borderRadius: 4 }} />
-            ))}
-          </div>
+        <div className="res-grid">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 20px', borderBottom: i < 3 ? `1px solid ${C.borderFaint}` : 'none', alignItems: 'center' }}>
-              <div className="skeleton" style={{ width: '35%', height: 14, borderRadius: 4 }} />
-              <div className="skeleton" style={{ width: '22%', height: 13, borderRadius: 4 }} />
-              <div className="skeleton" style={{ width: '22%', height: 13, borderRadius: 4 }} />
-              <div className="skeleton" style={{ width: 68, height: 22, borderRadius: 99 }} />
+            <div key={i} style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
+              <div style={{ height: 4 }} className="skeleton" />
+              <div style={{ padding: '16px 20px 20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div className="skeleton" style={{ width: 80, height: 20, borderRadius: 99 }} />
+                  <div className="skeleton" style={{ width: 36, height: 16, borderRadius: 4 }} />
+                </div>
+                <div className="skeleton" style={{ width: '70%', height: 18, borderRadius: 4, marginBottom: 16 }} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
+                  <div className="skeleton" style={{ height: 40, borderRadius: 8 }} />
+                  <div className="skeleton" style={{ height: 40, borderRadius: 8 }} />
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <div className="skeleton" style={{ width: 100, height: 30, borderRadius: 8 }} />
+                  <div className="skeleton" style={{ width: 80, height: 30, borderRadius: 8 }} />
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -353,109 +441,126 @@ export default function MyReservationsPage() {
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
           <SearchX size={40} color={C.subtle} style={{ margin: '0 auto 16px' }} />
           <p style={{ fontSize: 15, color: C.muted, marginBottom: 16 }}>Nemate evidentiranih rezervacija.</p>
-          <Link to="/equipment" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: PRIMARY, color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+          <Link
+            to="/equipment"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: PRIMARY, color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}
+          >
             <BookOpen size={14} /> Pregledaj opremu
           </Link>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="res-grid">
           {reservations.map((r) => {
             const sc = STATUS_RESERVATION[r.status] || { bg: '#f1f5f9', color: '#475569', label: r.status };
-            const canEdit = EDITABLE_STATUSES.includes(r.status) || isCompleted(r);
+            const accent = statusAccent[r.status] || '#94a3b8';
+            const active = isActive(r);
+            const completed = isCompleted(r);
+            const manage = canManage(r);
             const isExpanded = editingId === r.id;
 
             return (
-              <div key={r.id}>
-                <div style={{
-                  background: '#fff',
-                  border: `1px solid ${isExpanded ? PRIMARY : C.border}`,
-                  borderRadius: isExpanded ? '12px 12px 0 0' : 12,
-                  transition: 'border-color 0.15s',
-                }}>
-                  {/* Desktop row */}
-                  <div className="table-desktop" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.8fr) 1fr 1fr auto auto', gap: 0, alignItems: 'center' }}>
-                    <div style={{ padding: '14px 20px', fontSize: 14, fontWeight: 500, color: C.heading }}>
-                      {r.equipment_name || '—'}
-                      <div style={{ fontSize: 11, color: C.subtle, fontWeight: 400, marginTop: 2 }}>#{r.id}</div>
+              <div key={r.id} className={`res-card${active ? ' active' : ''}${isExpanded ? ' expanded' : ''}`}>
+                {/* status accent strip */}
+                <div style={{ height: 4, background: active ? PRIMARY : accent }} />
+
+                <div style={{ padding: '16px 20px 20px' }}>
+                  {/* header */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <span style={{
+                      background: sc.bg, color: sc.color,
+                      fontSize: 11, fontWeight: 700, padding: '3px 10px',
+                      borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.4px',
+                    }}>
+                      {sc.label}
+                    </span>
+                    <span style={{ fontSize: 12, color: C.subtle, fontWeight: 500 }}>#{r.id}</span>
+                  </div>
+
+                  {/* equipment name */}
+                  <div style={{ fontSize: 15, fontWeight: 700, color: C.heading, marginBottom: 14, lineHeight: 1.35 }}>
+                    {r.equipment_name || '—'}
+                  </div>
+
+                  {/* dates */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+                    <div style={{ background: C.bgFaint, borderRadius: 8, padding: '9px 12px' }}>
+                      <div style={{ fontSize: 10, color: C.subtle, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
+                        Početak
+                      </div>
+                      <div style={{ fontSize: 12, color: C.body, fontWeight: 500 }}>{fmt(r.start_time)}</div>
                     </div>
-                    <div style={{ padding: '14px 12px', fontSize: 13, color: C.muted }}>{fmt(r.start_time)}</div>
-                    <div style={{ padding: '14px 12px', fontSize: 13, color: C.muted }}>{fmt(r.end_time)}</div>
-                    <div style={{ padding: '14px 12px' }}>
-                      <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
-                    </div>
-                    <div style={{ padding: '14px 16px 14px 4px' }}>
-                      {canEdit && (
-                        <button
-                          onClick={() => openEdit(r.id)}
-                          title="Uredi rezervaciju"
-                          style={{
-                            background: isExpanded ? '#eff6ff' : 'none',
-                            border: `1px solid ${isExpanded ? PRIMARY : C.border}`,
-                            borderRadius: 7,
-                            cursor: 'pointer',
-                            padding: '6px 10px',
-                            color: isExpanded ? PRIMARY : C.muted,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 4,
-                            fontSize: 12,
-                            fontWeight: 600,
-                            transition: 'all 0.12s',
-                          }}
-                          onMouseEnter={e => { if (!isExpanded) { e.currentTarget.style.borderColor = PRIMARY; e.currentTarget.style.color = PRIMARY; e.currentTarget.style.background = '#eff6ff'; }}}
-                          onMouseLeave={e => { if (!isExpanded) { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; e.currentTarget.style.background = 'none'; }}}
-                        >
-                          <Pencil size={12} /> Uredi
-                        </button>
-                      )}
+                    <div style={{ background: C.bgFaint, borderRadius: 8, padding: '9px 12px' }}>
+                      <div style={{ fontSize: 10, color: C.subtle, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
+                        Kraj
+                      </div>
+                      <div style={{ fontSize: 12, color: C.body, fontWeight: 500 }}>{fmt(r.end_time)}</div>
                     </div>
                   </div>
 
-                  {/* Mobile card */}
-                  <div className="responsive-table-card-list" style={{ padding: 14 }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: C.heading, overflowWrap: 'anywhere' }}>{r.equipment_name || '—'}</div>
-                        <div style={{ fontSize: 12, color: C.subtle, marginTop: 2 }}>Rezervacija #{r.id}</div>
-                      </div>
-                      <span style={{ background: sc.bg, color: sc.color, fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 99, whiteSpace: 'nowrap' }}>{sc.label}</span>
+                  {/* active badge */}
+                  {active && (
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      fontSize: 12, color: '#1e40af', background: '#eff6ff',
+                      border: '1px solid #bfdbfe', borderRadius: 7,
+                      padding: '5px 10px', marginBottom: 14, width: 'fit-content',
+                    }}>
+                      <Clock size={12} />
+                      Oprema je trenutno u upotrebi
                     </div>
-                    <div style={{ display: 'grid', gap: 6, marginBottom: canEdit ? 12 : 0 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13 }}>
-                        <span style={{ color: C.muted }}>Početak</span>
-                        <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.start_time)}</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13 }}>
-                        <span style={{ color: C.muted }}>Kraj</span>
-                        <span style={{ color: C.body, textAlign: 'right' }}>{fmt(r.end_time)}</span>
-                      </div>
+                  )}
+
+                  {/* completed badge */}
+                  {completed && (
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      fontSize: 12, color: '#374151', background: '#f9fafb',
+                      border: `1px solid ${C.border}`, borderRadius: 7,
+                      padding: '5px 10px', marginBottom: 14, width: 'fit-content',
+                    }}>
+                      <CheckCircle2 size={12} color="#22c55e" />
+                      Rezervacija završena
                     </div>
-                    {canEdit && (
+                  )}
+
+                  {/* action buttons */}
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {active && (
                       <button
-                        onClick={() => openEdit(r.id)}
-                        style={{
-                          width: '100%',
-                          padding: '8px',
-                          border: `1px solid ${isExpanded ? PRIMARY : C.border}`,
-                          background: isExpanded ? '#eff6ff' : '#fff',
-                          color: isExpanded ? PRIMARY : C.muted,
-                          borderRadius: 8,
-                          fontSize: 13,
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: 6,
-                        }}
+                        className="res-action-btn return"
+                        onClick={() => openPanel(r.id, 'return')}
                       >
-                        <Pencil size={13} /> {isExpanded ? 'Zatvori' : 'Uredi'}
+                        <Undo2 size={12} /> Vrati opremu
+                      </button>
+                    )}
+                    {manage && (
+                      <>
+                        <button
+                          className="res-action-btn"
+                          onClick={() => openDatesPanel(r)}
+                        >
+                          <CalendarDays size={12} /> Promijeni datume
+                        </button>
+                        <button
+                          className="res-action-btn cancel"
+                          onClick={() => openPanel(r.id, 'cancel')}
+                        >
+                          <AlertTriangle size={12} /> Otkaži
+                        </button>
+                      </>
+                    )}
+                    {completed && (
+                      <button
+                        className="res-action-btn rate"
+                        onClick={() => openPanel(r.id, null)}
+                      >
+                        <Star size={12} /> Ocijeni opremu
                       </button>
                     )}
                   </div>
                 </div>
 
-                {isExpanded && renderEditPanel(r)}
+                {isExpanded && renderExpandPanel(r)}
               </div>
             );
           })}
