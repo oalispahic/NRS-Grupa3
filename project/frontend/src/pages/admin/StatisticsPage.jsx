@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend, LineChart, Line, CartesianGrid,
+  PieChart, Pie, Cell, Legend, LineChart, Line, CartesianGrid, LabelList,
 } from 'recharts';
 import { BarChart2, TrendingUp, CheckCircle2, Clock, Users, Microscope } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
@@ -150,22 +150,29 @@ export default function StatisticsPage() {
           {pieData.length === 0 ? (
             <div style={{ fontSize: 13, color: C.subtle, textAlign: 'center', padding: 30 }}>Nema podataka</div>
           ) : (
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
-                  cy="45%"
-                  outerRadius={90}
+                  cy="42%"
+                  outerRadius={85}
+                  innerRadius={42}
                   dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
                 >
                   {pieData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip formatter={(value, name) => [value, name]} />
+                <Legend
+                  formatter={(value, entry) => (
+                    <span style={{ fontSize: 12, color: '#374151' }}>
+                      {value} — {entry.payload.value} ({((entry.payload.value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(0)}%)
+                    </span>
+                  )}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}

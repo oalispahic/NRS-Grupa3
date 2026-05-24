@@ -163,11 +163,13 @@ export default function ManageEquipmentPage() {
       description: item.description || '',
       status: item.status,
       location: item.location || '',
+      location_id: item.location_id || '',
       supplier: item.supplier || '',
       last_service: item.last_service || '',
       planned_service: item.planned_service || '',
       warranty_expiry: item.warranty_expiry || '',
       service_company: item.service_company || '',
+      safety_notes: item.safety_notes || '',
     });
   }
 
@@ -583,7 +585,51 @@ export default function ManageEquipmentPage() {
                         <span>Garantni rok: {item.warranty_expiry ? fmtDate(item.warranty_expiry) : '-'}</span>
                         <span>Servisna firma: {item.service_company || '-'}</span>
                       </div>
-                      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 14 }}>{item.description || '—'}</p>
+                      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 10 }}>{item.description || '—'}</p>
+                      {item.location_name && (
+                        <div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>📍 {item.location_name}</div>
+                      )}
+                      {item.safety_notes && (
+                        <div style={{ fontSize: 12, color: '#b45309', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 6, padding: '4px 8px', marginBottom: 8 }}>
+                          ⚠ {item.safety_notes}
+                        </div>
+                      )}
+                      {(item.tags || []).length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+                          {(item.tags || []).map(tag => (
+                            <span key={tag.id} style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: tag.color + '22', color: tag.color, border: `1px solid ${tag.color}44` }}>
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {allTags.length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+                          {allTags.map(tag => {
+                            const assigned = (item.tags || []).some(t => t.id === tag.id);
+                            return (
+                              <button
+                                key={tag.id}
+                                onClick={() => {
+                                  const current = (item.tags || []).map(t => t.id);
+                                  const next = assigned ? current.filter(id => id !== tag.id) : [...current, tag.id];
+                                  handleSetTags(item.id, next);
+                                }}
+                                title={assigned ? `Ukloni tag "${tag.name}"` : `Dodaj tag "${tag.name}"`}
+                                style={{
+                                  fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
+                                  background: assigned ? tag.color + '22' : '#f1f5f9',
+                                  color: assigned ? tag.color : C.subtle,
+                                  border: `1px solid ${assigned ? tag.color + '44' : C.border}`,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {tag.name}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                       <div className="action-row">
                         <button className="btn-outline" onClick={() => startEdit(item)} style={{ ...BTN.ghost, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <Pencil size={13} /> Uredi
