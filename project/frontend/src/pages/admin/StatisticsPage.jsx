@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend, LineChart, Line, CartesianGrid, LabelList,
+  PieChart, Pie, Cell, LineChart, Line, CartesianGrid,
 } from 'recharts';
 import { BarChart2, TrendingUp, CheckCircle2, Clock, Users, Microscope } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
@@ -56,16 +56,32 @@ export default function StatisticsPage() {
   const { token } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch('/api/statistics', { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(d => setData(d))
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(d => {
+        if (d && d.kpi) setData(d);
+        else setError('Neočekivani format odgovora od servera.');
+      })
+      .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return (
     <div style={{ padding: 60, textAlign: 'center', color: C.muted }}>Učitavanje statistika...</div>
+  );
+
+  if (error) return (
+    <div style={{ padding: 60, textAlign: 'center' }}>
+      <div style={{ fontSize: 14, color: '#991b1b', background: '#fee2e2', border: '1px solid #fecaca', borderRadius: 10, padding: '16px 24px', display: 'inline-block' }}>
+        Greška pri učitavanju statistika: {error}
+      </div>
+    </div>
   );
 
   const kpi = data?.kpi || {};
@@ -149,33 +165,41 @@ export default function StatisticsPage() {
         <ChartCard title="Distribucija statusa rezervacija">
           {pieData.length === 0 ? (
             <div style={{ fontSize: 13, color: C.subtle, textAlign: 'center', padding: 30 }}>Nema podataka</div>
-          ) : (
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="42%"
-                  outerRadius={85}
-                  innerRadius={42}
-                  dataKey="value"
-                  labelLine={false}
-                >
+          ) : (() => {
+            const total = pieData.reduce((s, d) => s + d.value, 0);
+            return (
+              <>
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={85}
+                      innerRadius={44}
+                      dataKey="value"
+                      labelLine={false}
+                    >
+                      {pieData.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value, name) => [`${value} (${total ? ((value / total) * 100).toFixed(0) : 0}%)`, name]} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: 12 }}>
                   {pieData.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: C.body }}>
+                      <span style={{ width: 10, height: 10, borderRadius: '50%', background: entry.color, flexShrink: 0, display: 'inline-block' }} />
+                      <span>{entry.name}</span>
+                      <span style={{ fontWeight: 700, color: C.heading }}>{entry.value}</span>
+                      <span style={{ color: C.muted }}>({total ? ((entry.value / total) * 100).toFixed(0) : 0}%)</span>
+                    </div>
                   ))}
-                </Pie>
-                <Tooltip formatter={(value, name) => [value, name]} />
-                <Legend
-                  formatter={(value, entry) => (
-                    <span style={{ fontSize: 12, color: '#374151' }}>
-                      {value} — {entry.payload.value} ({((entry.payload.value / pieData.reduce((s, d) => s + d.value, 0)) * 100).toFixed(0)}%)
-                    </span>
-                  )}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          )}
+                </div>
+              </>
+            );
+          })()}
         </ChartCard>
       </div>
 
