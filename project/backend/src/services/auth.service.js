@@ -52,6 +52,12 @@ async function loginUser({ username, password }) {
     throw err;
   }
 
+  if (foundUser.is_active === false) {
+    const err = new Error('Vaš nalog je deaktiviran. Kontaktirajte administratora.');
+    err.status = 403;
+    throw err;
+  }
+
   const tokenPayload = {
     id:       foundUser.id,
     username: foundUser.email,

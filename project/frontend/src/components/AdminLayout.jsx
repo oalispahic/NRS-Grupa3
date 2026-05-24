@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   FlaskConical, LayoutDashboard, Microscope, BookOpen,
   Settings, LogOut, ClipboardList, Menu, X, Bell, User,
-  Activity, MonitorCheck,
+  Activity, MonitorCheck, MapPin, Users, BarChart2, Package, SlidersHorizontal,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { FONT, GLOBAL_CSS, C, PRIMARY } from '../theme';
@@ -39,6 +39,11 @@ const NAV_GROUPS_ADMIN = [
       { to: '/admin/reservations', label: 'Sve rezervacije',     Icon: ClipboardList },
       { to: '/admin/active-usage', label: 'Trenutno korištenje', Icon: MonitorCheck },
       { to: '/admin/activity-log', label: 'Log aktivnosti',      Icon: Activity },
+      { to: '/admin/users',        label: 'Korisnici',           Icon: Users },
+      { to: '/admin/locations',    label: 'Lokacije',            Icon: MapPin },
+      { to: '/admin/consumables',  label: 'Repromaterijali',     Icon: Package },
+      { to: '/admin/statistics',   label: 'Statistike',          Icon: BarChart2 },
+      { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
     ],
   },
 ];
@@ -60,6 +65,11 @@ const NAV_GROUPS_TEST = [
       { to: '/admin/reservations', label: 'Sve rezervacije',     Icon: ClipboardList },
       { to: '/admin/active-usage', label: 'Trenutno korištenje', Icon: MonitorCheck },
       { to: '/admin/activity-log', label: 'Log aktivnosti',      Icon: Activity },
+      { to: '/admin/users',        label: 'Korisnici',           Icon: Users },
+      { to: '/admin/locations',    label: 'Lokacije',            Icon: MapPin },
+      { to: '/admin/consumables',  label: 'Repromaterijali',     Icon: Package },
+      { to: '/admin/statistics',   label: 'Statistike',          Icon: BarChart2 },
+      { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
     ],
   },
 ];

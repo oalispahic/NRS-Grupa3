@@ -3,12 +3,14 @@ const pool = require('../config/db');
 async function findAll() {
   const { rows } = await pool.query(
     `SELECT e.*,
+       l.name AS location_name,
        COALESCE(json_agg(json_build_object('id', t.id, 'name', t.name, 'color', t.color))
          FILTER (WHERE t.id IS NOT NULL), '[]') AS tags
      FROM equipment e
+     LEFT JOIN locations l ON l.id = e.location_id
      LEFT JOIN equipment_tags et ON et.equipment_id = e.id
      LEFT JOIN tags t ON t.id = et.tag_id
-     GROUP BY e.id
+     GROUP BY e.id, l.name
      ORDER BY e.created_at DESC`
   );
   return rows;
@@ -17,13 +19,15 @@ async function findAll() {
 async function findById(id) {
   const { rows } = await pool.query(
     `SELECT e.*,
+       l.name AS location_name,
        COALESCE(json_agg(json_build_object('id', t.id, 'name', t.name, 'color', t.color))
          FILTER (WHERE t.id IS NOT NULL), '[]') AS tags
      FROM equipment e
+     LEFT JOIN locations l ON l.id = e.location_id
      LEFT JOIN equipment_tags et ON et.equipment_id = e.id
      LEFT JOIN tags t ON t.id = et.tag_id
      WHERE e.id = $1
-     GROUP BY e.id`,
+     GROUP BY e.id, l.name`,
     [id]
   );
   return rows[0] || null;
@@ -34,6 +38,7 @@ async function create({
   description,
   status = 'available',
   location,
+  location_id,
   serial_number,
   model,
   manufacturer,
@@ -43,12 +48,13 @@ async function create({
   planned_service,
   warranty_expiry,
   service_company,
+  safety_notes,
 }) {
   const { rows } = await pool.query(
-    `INSERT INTO equipment (name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+    `INSERT INTO equipment (name, description, status, location, location_id, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company, safety_notes)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
-    [name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company]
+    [name, description, status, location, location_id || null, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company, safety_notes]
   );
   return rows[0];
 }
@@ -58,6 +64,7 @@ async function update(id, {
   description,
   status,
   location,
+  location_id,
   serial_number,
   model,
   manufacturer,
@@ -67,6 +74,7 @@ async function update(id, {
   planned_service,
   warranty_expiry,
   service_company,
+  safety_notes,
 }) {
   const { rows } = await pool.query(
     `UPDATE equipment
@@ -74,6 +82,7 @@ async function update(id, {
          description      = COALESCE($3, description),
          status           = COALESCE($4, status),
          location         = COALESCE($5, location),
+         location_id      = $16,
          serial_number    = COALESCE($6, serial_number),
          model            = COALESCE($7, model),
          manufacturer     = COALESCE($8, manufacturer),
@@ -82,7 +91,8 @@ async function update(id, {
          last_service     = COALESCE($11, last_service),
          planned_service  = COALESCE($12, planned_service),
          warranty_expiry  = COALESCE($13, warranty_expiry),
-         service_company  = COALESCE($14, service_company)
+         service_company  = COALESCE($14, service_company),
+         safety_notes     = $15
      WHERE id = $1
      RETURNING *`,
     [
@@ -100,6 +110,8 @@ async function update(id, {
       planned_service,
       warranty_expiry,
       service_company,
+      safety_notes ?? null,
+      location_id || null,
     ]
   );
   return rows[0] || null;

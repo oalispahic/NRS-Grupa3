@@ -510,6 +510,17 @@ export default function MyReservationsPage() {
                     </div>
                   )}
 
+                  {/* rejection reason */}
+                  {r.status === 'rejected' && r.rejection_reason && (
+                    <div style={{
+                      fontSize: 12, color: '#991b1b', background: '#fef2f2',
+                      border: '1px solid #fecaca', borderRadius: 7,
+                      padding: '8px 12px', marginBottom: 14,
+                    }}>
+                      <span style={{ fontWeight: 600 }}>Razlog odbijanja: </span>{r.rejection_reason}
+                    </div>
+                  )}
+
                   {/* completed badge */}
                   {completed && (
                     <div style={{

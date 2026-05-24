@@ -9,6 +9,11 @@ const notificationRoutes = require('./routes/notification.routes');
 const activityRoutes = require('./routes/activity.routes');
 const userRoutes = require('./routes/user.routes');
 const tagRoutes = require('./routes/tag.routes');
+const locationRoutes = require('./routes/location.routes');
+const settingsRoutes = require('./routes/settings.routes');
+const exportRoutes = require('./routes/export.routes');
+const consumableRoutes = require('./routes/consumable.routes');
+const statisticsRoutes = require('./routes/statistics.routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -25,6 +30,11 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/activity-logs', activityRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tags', tagRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/export', exportRoutes);
+app.use('/api/consumables', consumableRoutes);
+app.use('/api/statistics', statisticsRoutes);
 
 app.use(errorHandler);
 

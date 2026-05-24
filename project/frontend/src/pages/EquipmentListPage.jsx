@@ -14,11 +14,14 @@ export default function EquipmentListPage() {
   const [search, setSearch]       = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
   const [allTags, setAllTags] = useState([]);
+  const [allLocations, setAllLocations] = useState([]);
 
   useEffect(() => {
     fetch('/api/equipment').then(r => r.json()).then(d => setEquipment(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
     fetch('/api/tags').then(r => r.json()).then(d => setAllTags(Array.isArray(d) ? d : []));
+    fetch('/api/locations').then(r => r.json()).then(d => setAllLocations(Array.isArray(d) ? d : []));
   }, []);
 
   const filtered = equipment.filter(item => {
@@ -31,7 +34,8 @@ export default function EquipmentListPage() {
       item.location?.toLowerCase().includes(q);
     const matchesStatus = !statusFilter || item.status === statusFilter;
     const matchesTag = !tagFilter || (item.tags || []).some(t => t.id === parseInt(tagFilter));
-    return matchesSearch && matchesStatus && matchesTag;
+    const matchesLocation = !locationFilter || String(item.location_id) === locationFilter;
+    return matchesSearch && matchesStatus && matchesTag && matchesLocation;
   });
 
   return (
@@ -120,6 +124,34 @@ export default function EquipmentListPage() {
             ))}
           </div>
         )}
+
+        {allLocations.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: C.subtle, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <MapPin size={11} /> Prostorija:
+            </span>
+            {locationFilter && (
+              <button onClick={() => setLocationFilter('')} style={{ padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.muted, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <X size={10} /> Poništi
+              </button>
+            )}
+            {allLocations.map(loc => (
+              <button
+                key={loc.id}
+                onClick={() => setLocationFilter(locationFilter === String(loc.id) ? '' : String(loc.id))}
+                style={{
+                  padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                  border: locationFilter === String(loc.id) ? '1.5px solid #6366f1' : `1px solid ${C.border}`,
+                  background: locationFilter === String(loc.id) ? '#eef2ff' : '#fff',
+                  color: locationFilter === String(loc.id) ? '#4f46e5' : C.muted,
+                  transition: 'all 0.12s',
+                }}
+              >
+                {loc.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -182,10 +214,10 @@ export default function EquipmentListPage() {
                   </div>
                   <div>
                     <div style={{ fontSize: 15, fontWeight: 600, color: C.heading, marginBottom: 4 }}>{item.name}</div>
-                    {item.location && (
+                    {(item.location_name || item.location) && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.muted }}>
                         <MapPin size={12} />
-                        {item.location}
+                        {item.location_name || item.location}
                       </div>
                     )}
                     {details && (

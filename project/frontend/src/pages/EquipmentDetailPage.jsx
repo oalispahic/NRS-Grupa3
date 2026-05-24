@@ -33,6 +33,7 @@ export default function EquipmentDetailPage() {
   const [adminStatus, setAdminStatus]   = useState('');
   const [adminSaving, setAdminSaving]   = useState(false);
   const [adminSuccess, setAdminSuccess] = useState('');
+  const [safetyConfirmed, setSafetyConfirmed] = useState(false);
 
   function loadEquipment() {
     return fetch(`/api/equipment/${id}`)
@@ -189,6 +190,21 @@ export default function EquipmentDetailPage() {
                       <AlertCircle size={14} style={{ flexShrink: 0 }} /> {errorMsg}
                     </div>
                   )}
+                  {equipment?.safety_notes && (
+                    <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Sigurnosne napomene</div>
+                      <p style={{ fontSize: 13, color: '#78350f', margin: '0 0 10px', lineHeight: 1.5 }}>{equipment.safety_notes}</p>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: '#92400e', fontWeight: 500 }}>
+                        <input
+                          type="checkbox"
+                          checked={safetyConfirmed}
+                          onChange={e => setSafetyConfirmed(e.target.checked)}
+                          style={{ width: 16, height: 16, accentColor: '#d97706' }}
+                        />
+                        Pročitao/la sam i razumijem sigurnosne napomene
+                      </label>
+                    </div>
+                  )}
                   <div style={{ marginBottom: 16 }}>
                     <ReservationCalendar
                       occupiedRanges={reservedDates}
@@ -199,12 +215,14 @@ export default function EquipmentDetailPage() {
                     />
                   </div>
                   <div className="action-row">
-                    <button type="submit" disabled={submitting || !calStart || !calEnd} className="btn-primary"
-                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd) ? 'not-allowed' : 'pointer' }}>
+                    <button type="submit"
+                      disabled={submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)}
+                      className="btn-primary"
+                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)) ? 'not-allowed' : 'pointer' }}>
                       {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}
                     </button>
                     <button type="button" className="btn-outline" style={BTN.outline}
-                      onClick={() => { setShowForm(false); setCalStart(null); setCalEnd(null); setErrorMsg(''); }}>
+                      onClick={() => { setShowForm(false); setCalStart(null); setCalEnd(null); setErrorMsg(''); setSafetyConfirmed(false); }}>
                       Odustani
                     </button>
                   </div>
@@ -357,6 +375,13 @@ export default function EquipmentDetailPage() {
               })()}
             </div>
           </div>
+
+          {equipment.safety_notes && (
+            <div style={{ background: '#fff', border: `1px solid #fcd34d`, borderRadius: 12, padding: '20px 24px' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Sigurnosne napomene</div>
+              <p style={{ fontSize: 14, color: '#78350f', margin: 0, lineHeight: 1.6 }}>{equipment.safety_notes}</p>
+            </div>
+          )}
 
         </div>
       </div>

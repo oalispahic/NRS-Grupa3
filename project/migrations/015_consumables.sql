@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS consumables (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  unit VARCHAR(50) NOT NULL DEFAULT 'kom',
+  quantity NUMERIC(10,2) NOT NULL DEFAULT 0,
+  low_stock_threshold NUMERIC(10,2) NOT NULL DEFAULT 5,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS consumable_logs (
+  id SERIAL PRIMARY KEY,
+  consumable_id INTEGER NOT NULL REFERENCES consumables(id) ON DELETE CASCADE,
+  change NUMERIC(10,2) NOT NULL,
+  note TEXT,
+  created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);

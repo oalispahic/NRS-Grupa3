@@ -9,12 +9,15 @@ async function notifyReservationApproved(userId, equipmentName) {
   });
 }
 
-async function notifyReservationRejected(userId, equipmentName) {
+async function notifyReservationRejected(userId, equipmentName, reason) {
+  const message = reason
+    ? `Vaša rezervacija za "${equipmentName}" je odbijena. Razlog: ${reason}`
+    : `Vaša rezervacija za "${equipmentName}" je odbijena.`;
   return notificationRepo.create({
     userId,
     type: 'reservation_rejected',
     title: 'Rezervacija odbijena',
-    message: `Vaša rezervacija za "${equipmentName}" je odbijena.`,
+    message,
   });
 }
 

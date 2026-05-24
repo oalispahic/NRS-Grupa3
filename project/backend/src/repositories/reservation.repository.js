@@ -72,10 +72,10 @@ async function findAll(status) {
   return rows;
 }
 
-async function updateStatus(id, status) {
+async function updateStatus(id, status, rejectionReason = null) {
   const { rows } = await pool.query(
-    `UPDATE reservations SET status = $1 WHERE id = $2 RETURNING *`,
-    [status, id]
+    `UPDATE reservations SET status = $1, rejection_reason = COALESCE($3, rejection_reason) WHERE id = $2 RETURNING *`,
+    [status, id, rejectionReason]
   );
   return rows[0] || null;
 }
@@ -112,6 +112,15 @@ async function countActive(equipmentId) {
   return parseInt(rows[0].count, 10);
 }
 
+async function countActiveByUser(userId) {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) FROM reservations
+     WHERE user_id = $1 AND status IN ('pending', 'approved') AND end_time > NOW()`,
+    [userId]
+  );
+  return parseInt(rows[0].count, 10);
+}
+
 async function findActiveByEquipment(equipmentId) {
   const { rows } = await pool.query(
     `SELECT id, start_time, end_time FROM reservations
@@ -140,6 +149,6 @@ module.exports = {
   findConflict, findConflictExcluding,
   create, findByUserId, findByIdAndUser, findAll,
   updateStatus, updateDates, returnEarly,
-  countActive, findActiveByEquipment,
+  countActive, countActiveByUser, findActiveByEquipment,
   findCurrentlyActive,
 };

@@ -14,6 +14,11 @@ import ManageEquipmentPage from './pages/admin/ManageEquipmentPage';
 import ReservationsPage from './pages/admin/ReservationsPage';
 import ActivityLogPage from './pages/admin/ActivityLogPage';
 import CurrentUsagePage from './pages/admin/CurrentUsagePage';
+import LocationsPage from './pages/admin/LocationsPage';
+import UsersAdminPage from './pages/admin/UsersAdminPage';
+import StatisticsPage from './pages/admin/StatisticsPage';
+import ConsumablesPage from './pages/admin/ConsumablesPage';
+import SettingsPage from './pages/admin/SettingsPage';
 import RegisterPage from './pages/RegisterPage';
 
 export default function App() {
@@ -68,6 +73,31 @@ export default function App() {
             <Route path="/admin/active-usage" element={
               <AdminRoute>
                 <AppLayout><CurrentUsagePage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/locations" element={
+              <AdminRoute>
+                <AppLayout><LocationsPage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/users" element={
+              <AdminRoute>
+                <AppLayout><UsersAdminPage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/statistics" element={
+              <AdminRoute>
+                <AppLayout><StatisticsPage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/consumables" element={
+              <AdminRoute>
+                <AppLayout><ConsumablesPage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/settings" element={
+              <AdminRoute>
+                <AppLayout><SettingsPage /></AppLayout>
               </AdminRoute>
             } />
           </Routes>

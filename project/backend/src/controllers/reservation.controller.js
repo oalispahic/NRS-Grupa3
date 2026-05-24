@@ -41,7 +41,7 @@ async function approve(req, res, next) {
 
 async function reject(req, res, next) {
   try {
-    const reservation = await reservationService.rejectReservation(req.params.id, req.user.id);
+    const reservation = await reservationService.rejectReservation(req.params.id, req.user.id, req.body.reason);
     res.json(reservation);
   } catch (err) {
     next(err);

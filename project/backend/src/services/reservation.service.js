@@ -2,6 +2,7 @@ const reservationRepo = require('../repositories/reservation.repository');
 const equipmentRepo = require('../repositories/equipment.repository');
 const notificationService = require('./notification.service');
 const activityService = require('./activity.service');
+const settingsRepo = require('../repositories/settings.repository');
 
 async function createReservation({ userId, equipmentId, startTime, endTime }) {
   if (!userId || !equipmentId || !startTime || !endTime) {
@@ -19,6 +20,38 @@ async function createReservation({ userId, equipmentId, startTime, endTime }) {
   if (!equipment) {
     const err = new Error('Oprema nije pronadjena');
     err.status = 404;
+    throw err;
+  }
+
+  const [maxDaysStr, maxAdvanceStr, maxActiveStr] = await Promise.all([
+    settingsRepo.get('max_reservation_days'),
+    settingsRepo.get('max_advance_days'),
+    settingsRepo.get('max_active_reservations'),
+  ]);
+
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const durationDays = (end - start) / (1000 * 60 * 60 * 24);
+  const maxDays = parseInt(maxDaysStr || '30');
+  if (durationDays > maxDays) {
+    const err = new Error(`Rezervacija ne može trajati duže od ${maxDays} dana`);
+    err.status = 400;
+    throw err;
+  }
+
+  const maxAdvance = parseInt(maxAdvanceStr || '90');
+  const advanceDays = (start - new Date()) / (1000 * 60 * 60 * 24);
+  if (advanceDays > maxAdvance) {
+    const err = new Error(`Rezervacija ne može biti kreirana više od ${maxAdvance} dana unaprijed`);
+    err.status = 400;
+    throw err;
+  }
+
+  const maxActive = parseInt(maxActiveStr || '5');
+  const activeCount = await reservationRepo.countActiveByUser(userId);
+  if (activeCount >= maxActive) {
+    const err = new Error(`Ne možete imati više od ${maxActive} aktivnih rezervacija istovremeno`);
+    err.status = 400;
     throw err;
   }
 
@@ -61,8 +94,8 @@ async function approveReservation(id, adminUserId) {
   return reservation;
 }
 
-async function rejectReservation(id, adminUserId) {
-  const reservation = await reservationRepo.updateStatus(id, 'rejected');
+async function rejectReservation(id, adminUserId, reason) {
+  const reservation = await reservationRepo.updateStatus(id, 'rejected', reason || null);
   if (!reservation) {
     const err = new Error('Reservation not found');
     err.status = 404;
@@ -78,7 +111,7 @@ async function rejectReservation(id, adminUserId) {
   }
 
   const equipment2 = await equipmentRepo.findById(reservation.equipment_id);
-  notificationService.notifyReservationRejected(reservation.user_id, equipment2?.name || '').catch(() => {});
+  notificationService.notifyReservationRejected(reservation.user_id, equipment2?.name || '', reason).catch(() => {});
   activityService.log({ userId: adminUserId, action: 'reservation_rejected', entityType: 'reservation', entityId: reservation.id, details: `Oprema: ${equipment2?.name}` });
 
   return reservation;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Check, X, AlertCircle, CheckCircle2, Tag } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, AlertCircle, CheckCircle2, Tag, Download } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_EQUIPMENT } from '../../theme';
@@ -39,6 +39,7 @@ export default function ManageEquipmentPage() {
     planned_service: '',
     warranty_expiry: '',
     service_company: '',
+    location_id: '',
   });
   const [addMsg, setAddMsg]       = useState(null);
 
@@ -46,6 +47,7 @@ export default function ManageEquipmentPage() {
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState('#3b82f6');
   const [tagEquipmentId, setTagEquipmentId] = useState(null);
+  const [locations, setLocations] = useState([]);
 
   const authH = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${token}` });
 
@@ -59,7 +61,12 @@ export default function ManageEquipmentPage() {
     setAllTags(Array.isArray(d) ? d : []);
   }
 
-  useEffect(() => { load().finally(() => setLoading(false)); loadTags(); }, []);
+  async function loadLocations() {
+    const d = await fetch('/api/locations').then(r => r.json());
+    setLocations(Array.isArray(d) ? d : []);
+  }
+
+  useEffect(() => { load().finally(() => setLoading(false)); loadTags(); loadLocations(); }, []);
 
   async function handleCreateTag(e) {
     e.preventDefault();
@@ -170,7 +177,21 @@ export default function ManageEquipmentPage() {
         <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
           Administrator
         </div>
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: C.heading }}>Upravljanje opremom</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: C.heading }}>Upravljanje opremom</h1>
+          <button
+            onClick={async () => {
+              const res = await fetch('/api/export/equipment', { headers: { Authorization: `Bearer ${token}` } });
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a'); a.href = url; a.download = 'oprema.csv'; a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{ padding: '7px 14px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, border: `1px solid ${C.border}`, borderRadius: 8, background: '#fff', cursor: 'pointer', color: C.muted }}
+          >
+            <Download size={14} /> Export CSV
+          </button>
+        </div>
         <p style={{ marginTop: 6, fontSize: 15, color: C.muted }}>Dodajte, uredite ili uklonite opremu iz inventara.</p>
       </div>
 
@@ -207,8 +228,15 @@ export default function ManageEquipmentPage() {
               <input value={newItem.manufacturer} onChange={e => setNewItem({ ...newItem, manufacturer: e.target.value })} placeholder="Proizvodjac" style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija (tekst)</label>
               <input value={newItem.location} onChange={e => setNewItem({ ...newItem, location: e.target.value })} placeholder="Sala, kabinet..." style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Prostorija</label>
+              <select value={newItem.location_id} onChange={e => setNewItem({ ...newItem, location_id: e.target.value })} style={SELECT} onFocus={focusStyle} onBlur={blurStyle}>
+                <option value="">— Bez prostorije —</option>
+                {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+              </select>
             </div>
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Datum nabavke</label>
@@ -243,6 +271,17 @@ export default function ManageEquipmentPage() {
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Servisna firma</label>
               <input value={newItem.service_company} onChange={e => setNewItem({ ...newItem, service_company: e.target.value })} placeholder="Naziv servisne firme" style={FIELD} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Sigurnosne napomene</label>
+              <textarea
+                value={newItem.safety_notes || ''}
+                onChange={e => setNewItem({ ...newItem, safety_notes: e.target.value })}
+                placeholder="npr. Nositi zaštitne naočale. Ne rukovati bez certifikata."
+                rows={3}
+                style={{ ...FIELD, resize: 'vertical', fontFamily: 'inherit' }}
+                onFocus={focusStyle} onBlur={blurStyle}
+              />
             </div>
           </div>
           <div className="action-row">
@@ -343,6 +382,7 @@ export default function ManageEquipmentPage() {
                           <input type="date" value={editData.planned_service} onChange={e => setEditData({ ...editData, planned_service: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                           <input type="date" value={editData.warranty_expiry} onChange={e => setEditData({ ...editData, warranty_expiry: e.target.value })} style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                           <input value={editData.service_company} onChange={e => setEditData({ ...editData, service_company: e.target.value })} placeholder="Servisna firma" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <textarea value={editData.safety_notes || ''} onChange={e => setEditData({ ...editData, safety_notes: e.target.value })} placeholder="Sigurnosne napomene..." rows={2} style={{ ...FIELD, fontSize: 13, resize: 'vertical', fontFamily: 'inherit' }} onFocus={focusStyle} onBlur={blurStyle} />
                         </div>
                       ) : (
                         <div style={{ fontSize: 12, color: C.muted, display: 'grid', gap: 4 }}>
@@ -355,6 +395,7 @@ export default function ManageEquipmentPage() {
                           <span>Planirani servis: {item.planned_service ? fmtDate(item.planned_service) : '-'}</span>
                           <span>Garantni rok: {item.warranty_expiry ? fmtDate(item.warranty_expiry) : '-'}</span>
                           <span>Servisna firma: {item.service_company || '-'}</span>
+                          {item.safety_notes && <span style={{ color: '#b45309' }}>Napomene: {item.safety_notes}</span>}
                         </div>
                       )}
                     </td>
@@ -364,9 +405,17 @@ export default function ManageEquipmentPage() {
                         : <span style={{ fontSize: 13, color: C.muted, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.description || '—'}</span>}
                     </td>
                     <td style={{ padding: '13px 20px' }}>
-                      {editing
-                        ? <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
-                        : <span style={{ fontSize: 13, color: C.muted }}>{item.location || '—'}</span>}
+                      {editing ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="Tekst lokacije" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                          <select value={editData.location_id || ''} onChange={e => setEditData({ ...editData, location_id: e.target.value })} style={{ ...SELECT, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle}>
+                            <option value="">— Bez prostorije —</option>
+                            {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                          </select>
+                        </div>
+                      ) : (
+                        <span style={{ fontSize: 13, color: C.muted }}>{item.location_name || item.location || '—'}</span>
+                      )}
                     </td>
                     <td style={{ padding: '13px 20px' }}>
                       {editing
@@ -465,8 +514,15 @@ export default function ManageEquipmentPage() {
                         <input value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija</label>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Lokacija (tekst)</label>
                         <input value={editData.location} onChange={e => setEditData({ ...editData, location: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Prostorija</label>
+                        <select value={editData.location_id || ''} onChange={e => setEditData({ ...editData, location_id: e.target.value })} style={{ ...SELECT, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle}>
+                          <option value="">— Bez prostorije —</option>
+                          {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                        </select>
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Status</label>
@@ -493,6 +549,10 @@ export default function ManageEquipmentPage() {
                       <div>
                         <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Servisna firma</label>
                         <input value={editData.service_company} onChange={e => setEditData({ ...editData, service_company: e.target.value })} placeholder="—" style={{ ...FIELD, fontSize: 13 }} onFocus={focusStyle} onBlur={blurStyle} />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: C.muted, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.4 }}>Sigurnosne napomene</label>
+                        <textarea value={editData.safety_notes || ''} onChange={e => setEditData({ ...editData, safety_notes: e.target.value })} placeholder="Sigurnosne napomene..." rows={2} style={{ ...FIELD, fontSize: 13, resize: 'vertical', fontFamily: 'inherit' }} onFocus={focusStyle} onBlur={blurStyle} />
                       </div>
                       <div className="action-row">
                         <button className="btn-primary" onClick={() => handleSave(item.id)} style={{ ...BTN.primary, padding: '8px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>

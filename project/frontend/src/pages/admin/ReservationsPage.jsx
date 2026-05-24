@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Check, X, ClipboardList, SearchX } from 'lucide-react';
+import { Check, X, ClipboardList, SearchX, MessageSquare, Download } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_RESERVATION } from '../../theme';
@@ -22,6 +22,8 @@ export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [rejectModal, setRejectModal] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const authH = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${token}` });
 
@@ -50,10 +52,21 @@ export default function ReservationsPage() {
     }
   }
 
-  async function handleReject(id) {
-    const res = await fetch(`/api/reservations/${id}/reject`, { method: 'PATCH', headers: authH() });
+  function openRejectModal(reservation) {
+    setRejectModal(reservation);
+    setRejectReason('');
+  }
+
+  async function handleReject() {
+    if (!rejectModal) return;
+    const res = await fetch(`/api/reservations/${rejectModal.id}/reject`, {
+      method: 'PATCH',
+      headers: authH(),
+      body: JSON.stringify({ reason: rejectReason.trim() || undefined }),
+    });
     if (res.ok) {
       toast.success('Rezervacija je odbijena.');
+      setRejectModal(null);
       load(filter);
     } else {
       toast.error('Greška pri odbijanju rezervacije.');
@@ -62,6 +75,35 @@ export default function ReservationsPage() {
 
   return (
     <div>
+      {/* Reject modal */}
+      {rejectModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div style={{ background: '#fff', borderRadius: 16, padding: 28, maxWidth: 440, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.18)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <MessageSquare size={20} color="#ef4444" />
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: C.heading, margin: 0 }}>Odbijanje rezervacije</h2>
+            </div>
+            <p style={{ fontSize: 13, color: C.muted, marginBottom: 4 }}>
+              Oprema: <strong>{rejectModal.equipment_name}</strong> — {rejectModal.full_name}
+            </p>
+            <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>Unesite razlog odbijanja (opcionalno):</p>
+            <textarea
+              value={rejectReason}
+              onChange={e => setRejectReason(e.target.value)}
+              placeholder="npr. Oprema je u servisu u tom periodu..."
+              rows={3}
+              style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, color: C.body, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+            />
+            <div style={{ display: 'flex', gap: 10, marginTop: 18, justifyContent: 'flex-end' }}>
+              <button onClick={() => setRejectModal(null)} style={{ ...BTN.ghost, padding: '8px 18px', fontSize: 13 }}>Odustani</button>
+              <button onClick={handleReject} style={{ ...BTN.danger, padding: '8px 18px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <X size={14} /> Odbij rezervaciju
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
           Administrator
@@ -91,7 +133,21 @@ export default function ReservationsPage() {
       <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
         <div style={{ padding: '16px 24px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 15, fontWeight: 600, color: C.heading }}>Rezervacije</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 13, color: C.muted }}>{reservations.length} stavki</span>
+          <button
+            onClick={async () => {
+              const res = await fetch('/api/export/reservations', { headers: { Authorization: `Bearer ${token}` } });
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a'); a.href = url; a.download = 'rezervacije.csv'; a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{ ...BTN.ghost, padding: '5px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4, border: `1px solid ${C.border}`, borderRadius: 8 }}
+          >
+            <Download size={13} /> Export CSV
+          </button>
+        </div>
         </div>
 
         {loading ? (
@@ -134,7 +190,7 @@ export default function ReservationsPage() {
                               <Check size={12} /> Odobri
                             </button>
                             <button
-                              onClick={() => handleReject(r.id)}
+                              onClick={() => openRejectModal(r)}
                               style={{ ...BTN.danger, padding: '5px 11px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}
                             >
                               <X size={12} /> Odbij
@@ -169,7 +225,7 @@ export default function ReservationsPage() {
                           <button onClick={() => handleApprove(r.id)} style={{ ...BTN.primary, flex: 1, padding: '7px 10px', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                             <Check size={13} /> Odobri
                           </button>
-                          <button onClick={() => handleReject(r.id)} style={{ ...BTN.danger, flex: 1, padding: '7px 10px', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                          <button onClick={() => openRejectModal(r)} style={{ ...BTN.danger, flex: 1, padding: '7px 10px', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                             <X size={13} /> Odbij
                           </button>
                         </div>

@@ -43,4 +43,27 @@ async function updateProfile(id, { fullName, passwordHash, bio, institution, dep
   return rows[0] || null;
 }
 
-module.exports = { findByUsername, findById, create, updateProfile };
+async function findAll() {
+  const { rows } = await pool.query(
+    'SELECT id, email, full_name, role, is_active, created_at FROM users ORDER BY created_at DESC'
+  );
+  return rows;
+}
+
+async function setRole(id, role) {
+  const { rows } = await pool.query(
+    'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, email, full_name, role, is_active, created_at',
+    [role, id]
+  );
+  return rows[0] || null;
+}
+
+async function setActive(id, isActive) {
+  const { rows } = await pool.query(
+    'UPDATE users SET is_active = $1 WHERE id = $2 RETURNING id, email, full_name, role, is_active, created_at',
+    [isActive, id]
+  );
+  return rows[0] || null;
+}
+
+module.exports = { findByUsername, findById, create, updateProfile, findAll, setRole, setActive };
