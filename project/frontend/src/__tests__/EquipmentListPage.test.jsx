@@ -64,4 +64,43 @@ describe('EquipmentListPage', () => {
     expect(screen.getByText('Microscope A')).toBeInTheDocument();
     expect(screen.queryByText('Analyzer B')).not.toBeInTheDocument();
   });
+
+  test('filters equipment by location', async () => {
+    global.fetch = vi.fn((url) => {
+      if (url === '/api/equipment') {
+        return Promise.resolve({
+          json: () => Promise.resolve([
+            { id: 1, name: 'Microscope A', status: 'available', location_id: 1, location_name: 'Lab A' },
+            { id: 2, name: 'Analyzer B', status: 'available', location_id: 2, location_name: 'Lab B' },
+          ]),
+        });
+      }
+      if (url === '/api/tags') {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/locations') {
+        return Promise.resolve({
+          json: () => Promise.resolve([
+            { id: 1, name: 'Lab A' },
+            { id: 2, name: 'Lab B' },
+          ]),
+        });
+      }
+      return Promise.resolve({ json: () => Promise.resolve([]) });
+    });
+
+    render(
+      <MemoryRouter>
+        <EquipmentListPage />
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText('Microscope A')).toBeInTheDocument();
+    expect(screen.getByText('Analyzer B')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Lab A' }));
+
+    expect(screen.getByText('Microscope A')).toBeInTheDocument();
+    expect(screen.queryByText('Analyzer B')).not.toBeInTheDocument();
+  });
 });

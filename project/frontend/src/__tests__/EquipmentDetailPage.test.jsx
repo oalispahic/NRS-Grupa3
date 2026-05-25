@@ -97,4 +97,38 @@ describe('EquipmentDetailPage', () => {
     expect(updateCall[1].method).toBe('PUT');
     expect(JSON.parse(updateCall[1].body)).toEqual({ status: 'maintenance' });
   });
+
+  test('requires safety note confirmation before showing reservation form', async () => {
+    useAuthMock.mockReturnValue({
+      user: { role: 'laborant', full_name: 'Test User' },
+      token: 'token',
+    });
+
+    global.fetch = vi.fn((url) => {
+      if (url === '/api/equipment/1') {
+        return Promise.resolve({
+          json: () => Promise.resolve({
+            id: 1,
+            name: 'Microscope A',
+            status: 'available',
+            safety_notes: 'Nosite zastitu za oci.',
+          }),
+        });
+      }
+      if (url === '/api/equipment/1/reserved-dates') {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      return Promise.resolve({ json: () => Promise.resolve([]) });
+    });
+
+    renderWithRoute();
+
+    const openButton = await screen.findByRole('button', { name: /odaberi termin/i });
+    fireEvent.click(openButton);
+
+    const confirmButton = await screen.findByRole('button', { name: /razumijem/i });
+    fireEvent.click(confirmButton);
+
+    expect(await screen.findByRole('button', { name: /potvrdi rezervaciju/i })).toBeInTheDocument();
+  });
 });

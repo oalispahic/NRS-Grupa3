@@ -44,7 +44,7 @@ async function getById(id) {
   return equipment;
 }
 
-async function create({ name, description, status, location, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company }) {
+async function create({ name, description, status, location, location_id, serial_number, model, manufacturer, purchase_date, supplier, last_service, planned_service, warranty_expiry, service_company, safety_notes }) {
   const normalizedName = normalizeString(name);
   const normalizedDescription = normalizeString(description);
   const normalizedLocation = normalizeString(location);
@@ -57,6 +57,8 @@ async function create({ name, description, status, location, serial_number, mode
   const normalizedPlannedService = normalizeDate(planned_service);
   const normalizedWarrantyExpiry = normalizeDate(warranty_expiry);
   const normalizedServiceCompany = normalizeString(service_company);
+  const normalizedSafetyNotes = normalizeString(safety_notes);
+  const normalizedLocationId = location_id ? (parseInt(location_id, 10) || null) : null;
 
   if (!normalizedName) {
     const err = new Error('name is required');
@@ -88,6 +90,7 @@ async function create({ name, description, status, location, serial_number, mode
       description: normalizedDescription,
       status,
       location: normalizedLocation,
+      location_id: normalizedLocationId,
       serial_number: normalizedSerial,
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
@@ -97,6 +100,7 @@ async function create({ name, description, status, location, serial_number, mode
       planned_service: normalizedPlannedService,
       warranty_expiry: normalizedWarrantyExpiry,
       service_company: normalizedServiceCompany,
+      safety_notes: normalizedSafetyNotes,
     });
   } catch (err) {
     handleUniqueError(err);
@@ -122,6 +126,8 @@ async function update(id, data) {
   const normalizedPlannedService = normalizeDate(data.planned_service);
   const normalizedWarrantyExpiry = normalizeDate(data.warranty_expiry);
   const normalizedServiceCompany = normalizeString(data.service_company);
+  const normalizedSafetyNotes = normalizeString(data.safety_notes);
+  const normalizedLocationId = data.location_id ? (parseInt(data.location_id, 10) || null) : null;
 
   if (data.serial_number !== undefined && !normalizedSerial) {
     const err = new Error('serial_number is required');
@@ -142,6 +148,7 @@ async function update(id, data) {
       description: normalizedDescription,
       status: data.status,
       location: normalizedLocation,
+      location_id: normalizedLocationId,
       serial_number: normalizedSerial,
       model: normalizedModel,
       manufacturer: normalizedManufacturer,
@@ -151,6 +158,7 @@ async function update(id, data) {
       planned_service: normalizedPlannedService,
       warranty_expiry: normalizedWarrantyExpiry,
       service_company: normalizedServiceCompany,
+      safety_notes: normalizedSafetyNotes,
     });
   } catch (err) {
     handleUniqueError(err);

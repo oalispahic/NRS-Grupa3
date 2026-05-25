@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Truck, Building2, Clock, Tag } from 'lucide-react';
+import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Shield, Truck, Building2, Clock, Tag, X } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
@@ -34,6 +34,7 @@ export default function EquipmentDetailPage() {
   const [adminSaving, setAdminSaving]   = useState(false);
   const [adminSuccess, setAdminSuccess] = useState('');
   const [safetyConfirmed, setSafetyConfirmed] = useState(false);
+  const [showSafetyDialog, setShowSafetyDialog] = useState(false);
 
   function loadEquipment() {
     return fetch(`/api/equipment/${id}`)
@@ -177,8 +178,23 @@ export default function EquipmentDetailPage() {
               {!showForm ? (
                 <div style={{ marginTop: 12 }}>
                   <p style={{ fontSize: 13, color: C.muted, marginBottom: 14 }}>Oprema je dostupna. Odaberite termin i kreirajte zahtjev za rezervaciju.</p>
+                  {equipment?.safety_notes && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#d97706', fontWeight: 600, marginBottom: 12 }}>
+                      <Shield size={13} /> Oprema ima sigurnosne napomene
+                    </div>
+                  )}
                   <div className="action-row">
-                    <button className="btn-primary" onClick={() => setShowForm(true)} style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <button
+                      className="btn-primary"
+                      onClick={() => {
+                        if (equipment?.safety_notes) {
+                          setShowSafetyDialog(true);
+                        } else {
+                          setShowForm(true);
+                        }
+                      }}
+                      style={{ ...BTN.primary, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                    >
                       <Calendar size={14} /> Odaberi termin
                     </button>
                   </div>
@@ -188,21 +204,6 @@ export default function EquipmentDetailPage() {
                   {errorMsg && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: '#991b1b' }}>
                       <AlertCircle size={14} style={{ flexShrink: 0 }} /> {errorMsg}
-                    </div>
-                  )}
-                  {equipment?.safety_notes && (
-                    <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Sigurnosne napomene</div>
-                      <p style={{ fontSize: 13, color: '#78350f', margin: '0 0 10px', lineHeight: 1.5 }}>{equipment.safety_notes}</p>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: '#92400e', fontWeight: 500 }}>
-                        <input
-                          type="checkbox"
-                          checked={safetyConfirmed}
-                          onChange={e => setSafetyConfirmed(e.target.checked)}
-                          style={{ width: 16, height: 16, accentColor: '#d97706' }}
-                        />
-                        Pročitao/la sam i razumijem sigurnosne napomene
-                      </label>
                     </div>
                   )}
                   <div style={{ marginBottom: 16 }}>
@@ -216,9 +217,9 @@ export default function EquipmentDetailPage() {
                   </div>
                   <div className="action-row">
                     <button type="submit"
-                      disabled={submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)}
+                      disabled={submitting || !calStart || !calEnd}
                       className="btn-primary"
-                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd || (equipment?.safety_notes && !safetyConfirmed)) ? 'not-allowed' : 'pointer' }}>
+                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd) ? 'not-allowed' : 'pointer' }}>
                       {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}
                     </button>
                     <button type="button" className="btn-outline" style={BTN.outline}
@@ -377,14 +378,58 @@ export default function EquipmentDetailPage() {
           </div>
 
           {equipment.safety_notes && (
-            <div style={{ background: '#fff', border: `1px solid #fcd34d`, borderRadius: 12, padding: '20px 24px' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Sigurnosne napomene</div>
+            <div style={{ background: '#fff', border: `1px solid #fcd34d`, borderRadius: 12, padding: '20px 24px', marginTop: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <Shield size={14} color="#d97706" />
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: 0.5 }}>Sigurnosne napomene</div>
+              </div>
               <p style={{ fontSize: 14, color: '#78350f', margin: 0, lineHeight: 1.6 }}>{equipment.safety_notes}</p>
             </div>
           )}
 
         </div>
       </div>
+
+      {showSafetyDialog && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px' }}>
+          <div style={{ background: '#fff', borderRadius: 14, width: '100%', maxWidth: 500, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'labFadeIn 0.15s ease-out' }}>
+            <div style={{ background: '#fffbeb', borderRadius: '14px 14px 0 0', padding: '18px 24px', borderBottom: '1px solid #fcd34d', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Shield size={18} color="#d97706" />
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#92400e' }}>Sigurnosne napomene</span>
+              </div>
+              <button onClick={() => setShowSafetyDialog(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#92400e', display: 'flex', padding: 4 }}>
+                <X size={18} />
+              </button>
+            </div>
+            <div style={{ padding: '20px 24px' }}>
+              <p style={{ fontSize: 14, color: '#78350f', lineHeight: 1.7, margin: '0 0 8px' }}>
+                Oprema <strong>{equipment.name}</strong> ima sljedeće sigurnosne napomene:
+              </p>
+              <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '12px 16px', marginBottom: 20 }}>
+                <p style={{ fontSize: 14, color: '#92400e', margin: 0, lineHeight: 1.7 }}>{equipment.safety_notes}</p>
+              </div>
+              <p style={{ fontSize: 13, color: '#78350f', margin: '0 0 20px', fontWeight: 500 }}>
+                Potvrđivanjem izjavljujete da ste pročitali i razumjeli gore navedene napomene.
+              </p>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => setShowSafetyDialog(false)}
+                  style={{ ...BTN.ghost, padding: '9px 18px', fontSize: 13 }}
+                >
+                  Odustani
+                </button>
+                <button
+                  onClick={() => { setShowSafetyDialog(false); setSafetyConfirmed(true); setShowForm(true); }}
+                  style={{ background: '#d97706', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                  <Shield size={14} /> Razumijem, nastavi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
