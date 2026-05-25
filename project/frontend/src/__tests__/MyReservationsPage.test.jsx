@@ -158,4 +158,31 @@ describe('MyReservationsPage', () => {
       expect(postCall).toBeTruthy();
     });
   });
+
+  test('shows rejection reason for rejected reservation', async () => {
+    const futureStart = new Date(Date.now() + 24 * 3600000).toISOString();
+    const futureEnd = new Date(Date.now() + 25 * 3600000).toISOString();
+
+    global.fetch = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve([
+        {
+          id: 12,
+          equipment_name: 'Microscope X',
+          start_time: futureStart,
+          end_time: futureEnd,
+          status: 'rejected',
+          rejection_reason: 'Oprema je u servisu',
+        },
+      ]),
+    });
+
+    render(
+      <MemoryRouter>
+        <MyReservationsPage />
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText(/Razlog odbijanja/i)).toBeInTheDocument();
+    expect(screen.getByText('Oprema je u servisu')).toBeInTheDocument();
+  });
 });

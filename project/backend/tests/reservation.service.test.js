@@ -1,6 +1,8 @@
 const reservationRepo = require('../src/repositories/reservation.repository');
 const equipmentRepo = require('../src/repositories/equipment.repository');
 const reservationService = require('../src/services/reservation.service');
+const settingsRepo = require('../src/repositories/settings.repository');
+const notificationService = require('../src/services/notification.service');
 
 jest.mock('../src/repositories/reservation.repository', () => ({
   findConflict: jest.fn(),
@@ -12,6 +14,7 @@ jest.mock('../src/repositories/reservation.repository', () => ({
   updateStatus: jest.fn(),
   updateDates: jest.fn(),
   countActive: jest.fn(),
+  countActiveByUser: jest.fn(),
   returnEarly: jest.fn(),
   findCurrentlyActive: jest.fn(),
 }));
@@ -30,9 +33,22 @@ jest.mock('../src/services/activity.service', () => ({
   log: jest.fn().mockResolvedValue(),
 }));
 
+jest.mock('../src/repositories/settings.repository', () => ({
+  get: jest.fn(),
+}));
+
 describe('reservation.service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    settingsRepo.get.mockImplementation((key) => {
+      const defaults = {
+        max_reservation_days: '30',
+        max_advance_days: '90',
+        max_active_reservations: '5',
+      };
+      return Promise.resolve(defaults[key]);
+    });
+    reservationRepo.countActiveByUser.mockResolvedValue(0);
   });
 
   test('createReservation rejects missing fields', async () => {
@@ -71,6 +87,64 @@ describe('reservation.service', () => {
       startTime: '2025-01-01T10:00:00Z',
       endTime: '2025-01-01T11:00:00Z',
     })).rejects.toMatchObject({ status: 409 });
+  });
+
+  test('createReservation rejects when duration exceeds max days', async () => {
+    equipmentRepo.findById.mockResolvedValue({ id: 2 });
+    reservationRepo.findConflict.mockResolvedValue(null);
+    settingsRepo.get.mockImplementation((key) => {
+      if (key === 'max_reservation_days') return Promise.resolve('1');
+      if (key === 'max_advance_days') return Promise.resolve('90');
+      if (key === 'max_active_reservations') return Promise.resolve('5');
+      return Promise.resolve(null);
+    });
+
+    await expect(reservationService.createReservation({
+      userId: 1,
+      equipmentId: 2,
+      startTime: '2025-01-01T00:00:00Z',
+      endTime: '2025-01-03T00:00:00Z',
+    })).rejects.toMatchObject({ status: 400 });
+  });
+
+  test('createReservation rejects when booking too far in advance', async () => {
+    equipmentRepo.findById.mockResolvedValue({ id: 2 });
+    reservationRepo.findConflict.mockResolvedValue(null);
+    settingsRepo.get.mockImplementation((key) => {
+      if (key === 'max_reservation_days') return Promise.resolve('30');
+      if (key === 'max_advance_days') return Promise.resolve('1');
+      if (key === 'max_active_reservations') return Promise.resolve('5');
+      return Promise.resolve(null);
+    });
+
+    const startTime = new Date(Date.now() + 5 * 24 * 3600000).toISOString();
+    const endTime = new Date(Date.now() + 6 * 24 * 3600000).toISOString();
+
+    await expect(reservationService.createReservation({
+      userId: 1,
+      equipmentId: 2,
+      startTime,
+      endTime,
+    })).rejects.toMatchObject({ status: 400 });
+  });
+
+  test('createReservation rejects when max active reservations reached', async () => {
+    equipmentRepo.findById.mockResolvedValue({ id: 2 });
+    reservationRepo.findConflict.mockResolvedValue(null);
+    reservationRepo.countActiveByUser.mockResolvedValue(1);
+    settingsRepo.get.mockImplementation((key) => {
+      if (key === 'max_reservation_days') return Promise.resolve('30');
+      if (key === 'max_advance_days') return Promise.resolve('90');
+      if (key === 'max_active_reservations') return Promise.resolve('1');
+      return Promise.resolve(null);
+    });
+
+    await expect(reservationService.createReservation({
+      userId: 1,
+      equipmentId: 2,
+      startTime: '2025-01-01T10:00:00Z',
+      endTime: '2025-01-01T11:00:00Z',
+    })).rejects.toMatchObject({ status: 400 });
   });
 
   test('createReservation creates reservation when valid', async () => {
@@ -139,15 +213,17 @@ describe('reservation.service', () => {
   });
 
   test('rejectReservation updates status', async () => {
-    reservationRepo.updateStatus.mockResolvedValue({ id: 2, status: 'rejected', equipment_id: 10 });
+    reservationRepo.updateStatus.mockResolvedValue({ id: 2, status: 'rejected', equipment_id: 10, user_id: 4 });
     reservationRepo.countActive.mockResolvedValue(0);
-    equipmentRepo.findById.mockResolvedValue({ id: 10, status: 'reserved' });
+    equipmentRepo.findById.mockResolvedValue({ id: 10, status: 'reserved', name: 'Microscope A' });
     equipmentRepo.update.mockResolvedValue({ id: 10, status: 'available' });
 
-    const result = await reservationService.rejectReservation(2);
+    const result = await reservationService.rejectReservation(2, 9, 'Nedovoljna dokumentacija');
 
-    expect(reservationRepo.updateStatus).toHaveBeenCalledWith(2, 'rejected');
+    expect(reservationRepo.updateStatus).toHaveBeenCalledWith(2, 'rejected', 'Nedovoljna dokumentacija');
     expect(equipmentRepo.update).toHaveBeenCalledWith(10, { status: 'available' });
+    expect(notificationService.notifyReservationRejected)
+      .toHaveBeenCalledWith(4, 'Microscope A', 'Nedovoljna dokumentacija');
     expect(result).toEqual(expect.objectContaining({ id: 2, status: 'rejected' }));
   });
 
