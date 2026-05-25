@@ -62,6 +62,132 @@ const EMPTY_ITEM = {
   service_company: '', safety_notes: '',
 };
 
+function InputEl({ value, onChange, placeholder, type = 'text', style }) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      style={{ ...F, ...style }}
+      onFocus={e => e.target.style.borderColor = PRIMARY}
+      onBlur={e => e.target.style.borderColor = C.border}
+    />
+  );
+}
+
+function SelectEl({ value, onChange, children, style }) {
+  return (
+    <select
+      value={value}
+      onChange={onChange}
+      style={{ ...F, ...style }}
+      onFocus={e => e.target.style.borderColor = PRIMARY}
+      onBlur={e => e.target.style.borderColor = C.border}
+    >
+      {children}
+    </select>
+  );
+}
+
+function TextareaEl({ value, onChange, placeholder, rows = 3 }) {
+  return (
+    <textarea
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      rows={rows}
+      style={{ ...F, resize: 'vertical', fontFamily: 'inherit' }}
+      onFocus={e => e.target.style.borderColor = PRIMARY}
+      onBlur={e => e.target.style.borderColor = C.border}
+    />
+  );
+}
+
+function EquipmentForm({ data, onChange, locations }) {
+  const set = (k, v) => onChange({ ...data, [k]: v });
+  return (
+    <div style={{ display: 'grid', gap: 24 }}>
+      <div>
+        <SectionTitle icon={<Wrench size={14} color={PRIMARY} />} title="Osnovno" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+          <Field label="Naziv *">
+            <InputEl value={data.name} onChange={e => set('name', e.target.value)} placeholder="Naziv aparata" />
+          </Field>
+          <Field label="Serijski broj *">
+            <InputEl value={data.serial_number} onChange={e => set('serial_number', e.target.value)} placeholder="SN-0001" />
+          </Field>
+          <Field label="Model *">
+            <InputEl value={data.model} onChange={e => set('model', e.target.value)} placeholder="Model" />
+          </Field>
+          <Field label="Proizvođač">
+            <InputEl value={data.manufacturer} onChange={e => set('manufacturer', e.target.value)} placeholder="Npr. Eppendorf" />
+          </Field>
+          <Field label="Status">
+            <SelectEl value={data.status} onChange={e => set('status', e.target.value)}>
+              {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </SelectEl>
+          </Field>
+          <Field label="Datum nabavke">
+            <InputEl type="date" value={data.purchase_date} onChange={e => set('purchase_date', e.target.value)} />
+          </Field>
+        </div>
+      </div>
+
+      <div>
+        <SectionTitle icon={<MapPin size={14} color={PRIMARY} />} title="Lokacija i opis" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+          <Field label="Prostorija">
+            <SelectEl value={data.location_id} onChange={e => set('location_id', e.target.value)}>
+              <option value="">— Bez prostorije —</option>
+              {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+            </SelectEl>
+          </Field>
+          <Field label="Lokacija (slobodan tekst)">
+            <InputEl value={data.location} onChange={e => set('location', e.target.value)} placeholder="Sala, ormar, polica..." />
+          </Field>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <Field label="Opis">
+              <TextareaEl value={data.description} onChange={e => set('description', e.target.value)} placeholder="Kratak opis aparata..." rows={2} />
+            </Field>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <SectionTitle icon={<Wrench size={14} color={PRIMARY} />} title="Servisne informacije" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+          <Field label="Dobavljač">
+            <InputEl value={data.supplier} onChange={e => set('supplier', e.target.value)} placeholder="Naziv dobavljača" />
+          </Field>
+          <Field label="Servisna firma">
+            <InputEl value={data.service_company} onChange={e => set('service_company', e.target.value)} placeholder="Naziv servisne firme" />
+          </Field>
+          <Field label="Zadnji servis">
+            <InputEl type="date" value={data.last_service} onChange={e => set('last_service', e.target.value)} />
+          </Field>
+          <Field label="Planirani servis">
+            <InputEl type="date" value={data.planned_service} onChange={e => set('planned_service', e.target.value)} />
+          </Field>
+          <Field label="Garantni rok (ističe)">
+            <InputEl type="date" value={data.warranty_expiry} onChange={e => set('warranty_expiry', e.target.value)} />
+          </Field>
+        </div>
+      </div>
+
+      <div>
+        <SectionTitle icon={<Shield size={14} color="#d97706" />} title="Sigurnosne napomene" />
+        <TextareaEl
+          value={data.safety_notes}
+          onChange={e => set('safety_notes', e.target.value)}
+          placeholder="Npr. Nositi zaštitne naočale. Ne rukovati bez certifikata. Rad isključivo u digestoru."
+          rows={3}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function ManageEquipmentPage() {
   const { token } = useAuth();
   const toast = useToast();
@@ -188,130 +314,6 @@ export default function ManageEquipmentPage() {
     return matchQ && matchS && matchL;
   });
 
-  const InputEl = ({ value, onChange, placeholder, type = 'text', style }) => (
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      style={{ ...F, ...style }}
-      onFocus={e => e.target.style.borderColor = PRIMARY}
-      onBlur={e => e.target.style.borderColor = C.border}
-    />
-  );
-
-  const SelectEl = ({ value, onChange, children, style }) => (
-    <select
-      value={value}
-      onChange={onChange}
-      style={{ ...F, ...style }}
-      onFocus={e => e.target.style.borderColor = PRIMARY}
-      onBlur={e => e.target.style.borderColor = C.border}
-    >
-      {children}
-    </select>
-  );
-
-  const TextareaEl = ({ value, onChange, placeholder, rows = 3 }) => (
-    <textarea
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      rows={rows}
-      style={{ ...F, resize: 'vertical', fontFamily: 'inherit' }}
-      onFocus={e => e.target.style.borderColor = PRIMARY}
-      onBlur={e => e.target.style.borderColor = C.border}
-    />
-  );
-
-  function EquipmentForm({ data, onChange }) {
-    const set = (k, v) => onChange({ ...data, [k]: v });
-    return (
-      <div style={{ display: 'grid', gap: 24 }}>
-        {/* Osnovno */}
-        <div>
-          <SectionTitle icon={<Wrench size={14} color={PRIMARY} />} title="Osnovno" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
-            <Field label="Naziv *">
-              <InputEl value={data.name} onChange={e => set('name', e.target.value)} placeholder="Naziv aparata" />
-            </Field>
-            <Field label="Serijski broj *">
-              <InputEl value={data.serial_number} onChange={e => set('serial_number', e.target.value)} placeholder="SN-0001" />
-            </Field>
-            <Field label="Model *">
-              <InputEl value={data.model} onChange={e => set('model', e.target.value)} placeholder="Model" />
-            </Field>
-            <Field label="Proizvođač">
-              <InputEl value={data.manufacturer} onChange={e => set('manufacturer', e.target.value)} placeholder="Npr. Eppendorf" />
-            </Field>
-            <Field label="Status">
-              <SelectEl value={data.status} onChange={e => set('status', e.target.value)}>
-                {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-              </SelectEl>
-            </Field>
-            <Field label="Datum nabavke">
-              <InputEl type="date" value={data.purchase_date} onChange={e => set('purchase_date', e.target.value)} />
-            </Field>
-          </div>
-        </div>
-
-        {/* Lokacija i opis */}
-        <div>
-          <SectionTitle icon={<MapPin size={14} color={PRIMARY} />} title="Lokacija i opis" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
-            <Field label="Prostorija">
-              <SelectEl value={data.location_id} onChange={e => set('location_id', e.target.value)}>
-                <option value="">— Bez prostorije —</option>
-                {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-              </SelectEl>
-            </Field>
-            <Field label="Lokacija (slobodan tekst)">
-              <InputEl value={data.location} onChange={e => set('location', e.target.value)} placeholder="Sala, ormar, polica..." />
-            </Field>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <Field label="Opis">
-                <TextareaEl value={data.description} onChange={e => set('description', e.target.value)} placeholder="Kratak opis aparata..." rows={2} />
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        {/* Servisne informacije */}
-        <div>
-          <SectionTitle icon={<Wrench size={14} color={PRIMARY} />} title="Servisne informacije" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
-            <Field label="Dobavljač">
-              <InputEl value={data.supplier} onChange={e => set('supplier', e.target.value)} placeholder="Naziv dobavljača" />
-            </Field>
-            <Field label="Servisna firma">
-              <InputEl value={data.service_company} onChange={e => set('service_company', e.target.value)} placeholder="Naziv servisne firme" />
-            </Field>
-            <Field label="Zadnji servis">
-              <InputEl type="date" value={data.last_service} onChange={e => set('last_service', e.target.value)} />
-            </Field>
-            <Field label="Planirani servis">
-              <InputEl type="date" value={data.planned_service} onChange={e => set('planned_service', e.target.value)} />
-            </Field>
-            <Field label="Garantni rok (ističe)">
-              <InputEl type="date" value={data.warranty_expiry} onChange={e => set('warranty_expiry', e.target.value)} />
-            </Field>
-          </div>
-        </div>
-
-        {/* Sigurnosne napomene */}
-        <div>
-          <SectionTitle icon={<Shield size={14} color="#d97706" />} title="Sigurnosne napomene" />
-          <TextareaEl
-            value={data.safety_notes}
-            onChange={e => set('safety_notes', e.target.value)}
-            placeholder="Npr. Nositi zaštitne naočale. Ne rukovati bez certifikata. Rad isključivo u digestoru."
-            rows={3}
-          />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
       {/* Header */}
@@ -344,7 +346,7 @@ export default function ManageEquipmentPage() {
         <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px 24px', marginBottom: 20 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: C.heading, marginBottom: 20 }}>Nova oprema</div>
           <form onSubmit={handleAdd}>
-            <EquipmentForm data={newItem} onChange={setNewItem} />
+            <EquipmentForm data={newItem} onChange={setNewItem} locations={locations} />
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button type="submit" style={{ ...BTN.primary, display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', fontSize: 13 }}>
                 <Plus size={14} /> Dodaj opremu
@@ -554,7 +556,7 @@ export default function ManageEquipmentPage() {
 
             {/* Modal body */}
             <div style={{ padding: '24px', maxHeight: '70vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
-              <EquipmentForm data={editData} onChange={setEditData} />
+              <EquipmentForm data={editData} onChange={setEditData} locations={locations} />
 
               {/* Tags section */}
               {allTags.length > 0 && (
