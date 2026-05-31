@@ -4,7 +4,7 @@ const notificationService = require('./notification.service');
 const activityService = require('./activity.service');
 const settingsRepo = require('../repositories/settings.repository');
 
-async function createReservation({ userId, equipmentId, startTime, endTime }) {
+async function createReservation({ userId, equipmentId, startTime, endTime, waitlist = false }) {
   if (!userId || !equipmentId || !startTime || !endTime) {
     const err = new Error('Sva polja su obavezna: oprema, pocetak i kraj termina');
     err.status = 400;
@@ -55,11 +55,13 @@ async function createReservation({ userId, equipmentId, startTime, endTime }) {
     throw err;
   }
 
-  const conflict = await reservationRepo.findConflict(equipmentId, startTime, endTime);
-  if (conflict) {
-    const err = new Error('Oprema je vec rezervisana za odabrani termin');
-    err.status = 409;
-    throw err;
+  if (!waitlist) {
+    const conflict = await reservationRepo.findConflict(equipmentId, startTime, endTime);
+    if (conflict) {
+      const err = new Error('Oprema je vec rezervisana za odabrani termin');
+      err.status = 409;
+      throw err;
+    }
   }
 
   const reservation = await reservationRepo.create({ userId, equipmentId, startTime, endTime });

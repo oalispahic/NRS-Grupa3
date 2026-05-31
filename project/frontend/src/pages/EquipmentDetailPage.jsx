@@ -29,6 +29,7 @@ export default function EquipmentDetailPage() {
   const [submitting, setSubmitting]   = useState(false);
   const [successMsg, setSuccessMsg]   = useState('');
   const [errorMsg, setErrorMsg]       = useState('');
+  const [offerWaitlist, setOfferWaitlist] = useState(false);
 
   const [adminStatus, setAdminStatus]   = useState('');
   const [adminSaving, setAdminSaving]   = useState(false);
@@ -62,25 +63,29 @@ export default function EquipmentDetailPage() {
 
   useEffect(() => { loadEquipment(); loadReservedDates(); loadWaitlist(); }, [id]);
 
-  async function handleReserve(e) {
-    e.preventDefault();
-    setErrorMsg(''); setSuccessMsg('');
-
-
-
+  async function submitReservation({ asWaitlist = false } = {}) {
     const startTime = new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate(), 0, 0, 0).toISOString();
     const endTime = new Date(calEnd.getFullYear(), calEnd.getMonth(), calEnd.getDate(), 23, 59, 59).toISOString();
 
     setSubmitting(true);
+    setErrorMsg(''); setOfferWaitlist(false);
     try {
       const res = await fetch('/api/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ equipmentId: id, startTime, endTime }),
+        body: JSON.stringify({ equipmentId: id, startTime, endTime, waitlist: asWaitlist }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Greška pri rezervaciji');
-      const msg = 'Rezervacija uspjesno kreirana — status: na cekanju.';
+      if (!res.ok) {
+        if (res.status === 409 && !asWaitlist) {
+          setOfferWaitlist(true);
+          return;
+        }
+        throw new Error(data.error || 'Greška pri rezervaciji');
+      }
+      const msg = asWaitlist
+        ? 'Zahtjev na listi čekanja kreiran — admin će vas obavijestiti.'
+        : 'Rezervacija kreirana — status: na čekanju.';
       setSuccessMsg(msg);
       toast.success(msg);
       setShowForm(false); setCalStart(null); setCalEnd(null);
@@ -91,6 +96,12 @@ export default function EquipmentDetailPage() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleReserve(e) {
+    e.preventDefault();
+    setSuccessMsg('');
+    await submitReservation({ asWaitlist: false });
   }
 
   async function handleStatusSave() {
@@ -214,89 +225,74 @@ export default function EquipmentDetailPage() {
                 </div>
               ) : (
                 <form onSubmit={handleReserve} style={{ animation: 'labFadeIn 0.18s ease-out' }}>
-                  {errorMsg && (
+                  {errorMsg && !offerWaitlist && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: '#991b1b' }}>
                       <AlertCircle size={14} style={{ flexShrink: 0 }} /> {errorMsg}
                     </div>
                   )}
-                  <div style={{ marginBottom: 16 }}>
-                    <ReservationCalendar
-                      occupiedRanges={reservedDates}
-                      selectedStart={calStart}
-                      selectedEnd={calEnd}
-                      onSelect={(s, e) => { setCalStart(s); setCalEnd(e); setErrorMsg(''); }}
-                      onClear={() => { setCalStart(null); setCalEnd(null); }}
-                    />
-                  </div>
-                  <div className="action-row">
-                    <button type="submit"
-                      disabled={submitting || !calStart || !calEnd}
-                      className="btn-primary"
-                      style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd) ? 'not-allowed' : 'pointer' }}>
-                      {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}
-                    </button>
-                    <button type="button" className="btn-outline" style={BTN.outline}
-                      onClick={() => { setShowForm(false); setCalStart(null); setCalEnd(null); setErrorMsg(''); setSafetyConfirmed(false); }}>
-                      Odustani
-                    </button>
-                  </div>
+
+                  {/* Waitlist offer — shown when selected dates are already reserved */}
+                  {offerWaitlist && (
+                    <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '16px', marginBottom: 16 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontWeight: 700, color: '#92400e', fontSize: 14 }}>
+                        <Bell size={15} color="#d97706" />
+                        Odabrani termini su zauzeti
+                      </div>
+                      <p style={{ fontSize: 13, color: '#78350f', marginBottom: 14, lineHeight: 1.5 }}>
+                        Oprema je već rezervisana za odabrani period. Možete poslati zahtjev na
+                        <strong> listu čekanja</strong> — admin će vas obavijestiti ako se termin oslobodi.
+                      </p>
+                      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          disabled={submitting}
+                          onClick={() => submitReservation({ asWaitlist: true })}
+                          style={{ ...BTN.primary, background: '#d97706', display: 'flex', alignItems: 'center', gap: 6, opacity: submitting ? 0.7 : 1 }}
+                        >
+                          <Bell size={14} />
+                          {submitting ? 'Slanje...' : 'Prijavi se na listu čekanja'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setOfferWaitlist(false); setCalStart(null); setCalEnd(null); }}
+                          style={BTN.outline}
+                        >
+                          Odaberi druge termine
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {!offerWaitlist && (
+                    <>
+                      <div style={{ marginBottom: 16 }}>
+                        <ReservationCalendar
+                          occupiedRanges={reservedDates}
+                          selectedStart={calStart}
+                          selectedEnd={calEnd}
+                          onSelect={(s, e) => { setCalStart(s); setCalEnd(e); setErrorMsg(''); }}
+                          onClear={() => { setCalStart(null); setCalEnd(null); }}
+                        />
+                      </div>
+                      <div className="action-row">
+                        <button type="submit"
+                          disabled={submitting || !calStart || !calEnd}
+                          className="btn-primary"
+                          style={{ ...BTN.primary, opacity: (submitting || !calStart || !calEnd) ? 0.6 : 1, cursor: (submitting || !calStart || !calEnd) ? 'not-allowed' : 'pointer' }}>
+                          {submitting ? 'Slanje...' : 'Potvrdi rezervaciju'}
+                        </button>
+                        <button type="button" className="btn-outline" style={BTN.outline}
+                          onClick={() => { setShowForm(false); setCalStart(null); setCalEnd(null); setErrorMsg(''); setSafetyConfirmed(false); setOfferWaitlist(false); }}>
+                          Odustani
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </form>
               )}
             </div>
           )}
 
-          {/* Waitlist — visible for reserved/maintenance/in_use status */}
-          {showWaitlist && (
-            <div style={{ background: '#fafbff', border: `1px solid #dbeafe`, borderRadius: 12, padding: '16px 20px', fontSize: 13, marginTop: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, fontWeight: 600, color: '#1e40af' }}>
-                <Bell size={14} />
-                Lista čekanja
-                {waitlistInfo?.total > 0 && <span style={{ fontSize: 12, background: '#dbeafe', color: '#1e40af', borderRadius: 99, padding: '1px 8px', fontWeight: 700 }}>{waitlistInfo.total} {waitlistInfo.total === 1 ? 'korisnik' : 'korisnika'}</span>}
-              </div>
-              {isAdmin && waitlistInfo?.list !== undefined ? (
-                <div style={{ fontSize: 13, color: C.muted }}>
-                  {waitlistInfo.total > 0
-                    ? `${waitlistInfo.total} korisnik(a) čeka na obavijest kada oprema postane slobodna.`
-                    : 'Niko nije na listi čekanja.'}
-                </div>
-              ) : waitlistInfo?.onList ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '7px 14px' }}>
-                    <Bell size={14} /> Na listi čekanja{waitlistInfo.position ? ` (pozicija ${waitlistInfo.position})` : ''}
-                  </span>
-                  <button
-                    disabled={waitlistLoading}
-                    onClick={async () => {
-                      setWaitlistLoading(true);
-                      await fetch(`/api/equipment/${id}/waitlist`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-                      setWaitlistInfo(p => ({ ...p, onList: false, position: null, total: (p?.total || 1) - 1 }));
-                      setWaitlistLoading(false);
-                    }}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: C.muted, background: 'none', border: `1px solid ${C.border}`, borderRadius: 8, padding: '7px 12px', cursor: 'pointer' }}
-                  >
-                    <BellOff size={13} /> Ukloni s liste
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <div style={{ color: C.muted, marginBottom: 10 }}>Oprema nije dostupna. Dobijet ćete obavijest čim postane slobodna.</div>
-                  <button
-                    disabled={waitlistLoading}
-                    onClick={async () => {
-                      setWaitlistLoading(true);
-                      const r = await fetch(`/api/equipment/${id}/waitlist`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
-                      if (r.ok) loadWaitlist();
-                      setWaitlistLoading(false);
-                    }}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: PRIMARY, color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, cursor: waitlistLoading ? 'not-allowed' : 'pointer', fontWeight: 600, opacity: waitlistLoading ? 0.7 : 1 }}
-                  >
-                    <Bell size={14} />
-                    Stavi me na listu čekanja
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Admin: promjena statusa (PB7) */}
           {isAdmin && (

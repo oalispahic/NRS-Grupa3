@@ -340,10 +340,9 @@ function NotificationBell({ token, placement = 'top' }) {
 
       {open && (
         <div style={{
-          position: 'fixed',
           ...(placement === 'bottom'
-            ? { top: 60, right: 12, left: 'auto' }
-            : { bottom: 'calc(100% + 8px)', left: 0 }),
+            ? { position: 'fixed', top: 62, right: 12, left: 'auto' }
+            : { position: 'absolute', bottom: 48, left: 0 }),
           width: 300, background: '#fff', border: `1px solid ${C.border}`,
           borderRadius: 12, boxShadow: '0 4px 32px rgba(15,23,42,0.22)',
           zIndex: 200, overflow: 'hidden',
