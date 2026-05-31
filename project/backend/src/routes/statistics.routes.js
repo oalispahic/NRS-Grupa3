@@ -134,9 +134,11 @@ router.get('/reportv2', async (req, res, next) => {
       return next(err);
     }
 
-    // Sequential queries — no $-parameters, dates embedded as validated literals.
-    // Sequential (not Promise.all) so only 1 DB connection is needed at any time.
-    const W = `created_at::date >= '${f}' AND created_at::date <= '${t}'`;
+    // Single-table WHERE clause (no alias needed)
+    const W  = `created_at::date >= '${f}' AND created_at::date <= '${t}'`;
+    // Fully-qualified for JOIN queries (prevents "column reference is ambiguous" when
+    // joined tables like equipment/users also have created_at)
+    const WR = `r.created_at::date >= '${f}' AND r.created_at::date <= '${t}'`;
 
     const kpi = await pool.query(`
       SELECT
@@ -155,7 +157,7 @@ router.get('/reportv2', async (req, res, next) => {
     const topEq = await pool.query(`
       SELECT e.name AS equipment_name, COUNT(r.id) AS reservation_count
       FROM reservations r JOIN equipment e ON e.id = r.equipment_id
-      WHERE r.${W} GROUP BY e.id, e.name ORDER BY reservation_count DESC LIMIT 10
+      WHERE ${WR} GROUP BY e.id, e.name ORDER BY reservation_count DESC LIMIT 10
     `);
 
     const trend = await pool.query(`
@@ -170,7 +172,7 @@ router.get('/reportv2', async (req, res, next) => {
     const topU = await pool.query(`
       SELECT u.full_name, u.email, COUNT(r.id) AS reservation_count
       FROM reservations r JOIN users u ON u.id = r.user_id
-      WHERE r.${W} GROUP BY u.id, u.full_name, u.email ORDER BY reservation_count DESC LIMIT 5
+      WHERE ${WR} GROUP BY u.id, u.full_name, u.email ORDER BY reservation_count DESC LIMIT 5
     `);
 
     res.json({
