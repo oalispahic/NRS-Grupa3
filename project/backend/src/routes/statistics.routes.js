@@ -6,41 +6,29 @@ router.use(authenticate, requireRole('admin', 'test'));
 
 router.get('/', async (req, res, next) => {
   try {
-    const [kpi, topEquipment, statusDist, weeklyTrend] = await Promise.all([
-      pool.query(`
-        SELECT
-          (SELECT COUNT(*) FROM equipment) AS total_equipment,
-          (SELECT COUNT(*) FROM reservations) AS total_reservations,
-          (SELECT COUNT(*) FROM users) AS total_users,
-          (SELECT ROUND(AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600)::numeric, 1)
-           FROM reservations WHERE status = 'approved') AS avg_duration_hours,
-          (SELECT ROUND(
-            COUNT(*) FILTER (WHERE status = 'approved') * 100.0 / NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0)
-          , 1) FROM reservations) AS approval_rate
-      `),
-      pool.query(`
-        SELECT e.name AS equipment_name, COUNT(r.id) AS reservation_count
-        FROM reservations r
-        JOIN equipment e ON e.id = r.equipment_id
-        GROUP BY e.id, e.name
-        ORDER BY reservation_count DESC
-        LIMIT 7
-      `),
-      pool.query(`
-        SELECT status, COUNT(*) AS count
-        FROM reservations
-        GROUP BY status
-      `),
-      pool.query(`
-        SELECT
-          DATE_TRUNC('week', created_at) AS week,
-          COUNT(*) AS count
-        FROM reservations
-        WHERE created_at >= NOW() - INTERVAL '12 weeks'
-        GROUP BY week
-        ORDER BY week ASC
-      `),
-    ]);
+    // Sequential queries to use max 1 DB connection (no Promise.all)
+    const kpi = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM equipment) AS total_equipment,
+        (SELECT COUNT(*) FROM reservations) AS total_reservations,
+        (SELECT COUNT(*) FROM users) AS total_users,
+        (SELECT ROUND(AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600)::numeric, 1)
+         FROM reservations WHERE status = 'approved') AS avg_duration_hours,
+        (SELECT ROUND(
+          COUNT(*) FILTER (WHERE status = 'approved') * 100.0 / NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0)
+        , 1) FROM reservations) AS approval_rate
+    `);
+    const topEquipment = await pool.query(`
+      SELECT e.name AS equipment_name, COUNT(r.id) AS reservation_count
+      FROM reservations r JOIN equipment e ON e.id = r.equipment_id
+      GROUP BY e.id, e.name ORDER BY reservation_count DESC LIMIT 7
+    `);
+    const statusDist = await pool.query(`SELECT status, COUNT(*) AS count FROM reservations GROUP BY status`);
+    const weeklyTrend = await pool.query(`
+      SELECT DATE_TRUNC('week', created_at) AS week, COUNT(*) AS count
+      FROM reservations WHERE created_at >= NOW() - INTERVAL '12 weeks'
+      GROUP BY week ORDER BY week ASC
+    `);
 
     res.json({
       kpi: kpi.rows[0],
@@ -146,44 +134,44 @@ router.get('/reportv2', async (req, res, next) => {
       return next(err);
     }
 
-    // All queries use no $-parameters — dates are embedded as validated literals
-    const [kpi, topEq, trend, statusBd, topU] = await Promise.all([
-      pool.query(`
-        SELECT
-          (SELECT COUNT(*) FROM reservations WHERE created_at::date >= '${f}' AND created_at::date <= '${t}') AS total_reservations,
-          (SELECT COUNT(*) FROM reservations WHERE status='approved' AND created_at::date >= '${f}' AND created_at::date <= '${t}') AS approved,
-          (SELECT COUNT(*) FROM reservations WHERE status='rejected' AND created_at::date >= '${f}' AND created_at::date <= '${t}') AS rejected,
-          (SELECT COUNT(*) FROM reservations WHERE status='cancelled' AND created_at::date >= '${f}' AND created_at::date <= '${t}') AS cancelled,
-          (SELECT COUNT(*) FROM reservations WHERE status='pending' AND created_at::date >= '${f}' AND created_at::date <= '${t}') AS pending,
-          (SELECT ROUND(COUNT(*) FILTER (WHERE status='approved') * 100.0 / NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0), 1)
-           FROM reservations WHERE created_at::date >= '${f}' AND created_at::date <= '${t}') AS approval_rate,
-          (SELECT ROUND(AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600)::numeric, 1)
-           FROM reservations WHERE status='approved' AND created_at::date >= '${f}' AND created_at::date <= '${t}') AS avg_duration_hours
-      `),
-      pool.query(`
-        SELECT e.name AS equipment_name, COUNT(r.id) AS reservation_count
-        FROM reservations r JOIN equipment e ON e.id = r.equipment_id
-        WHERE r.created_at::date >= '${f}' AND r.created_at::date <= '${t}'
-        GROUP BY e.id, e.name ORDER BY reservation_count DESC LIMIT 10
-      `),
-      pool.query(`
-        SELECT DATE_TRUNC('day', created_at) AS day, COUNT(*) AS count
-        FROM reservations
-        WHERE created_at::date >= '${f}' AND created_at::date <= '${t}'
-        GROUP BY 1 ORDER BY 1
-      `),
-      pool.query(`
-        SELECT status, COUNT(*) AS count FROM reservations
-        WHERE created_at::date >= '${f}' AND created_at::date <= '${t}'
-        GROUP BY status
-      `),
-      pool.query(`
-        SELECT u.full_name, u.email, COUNT(r.id) AS reservation_count
-        FROM reservations r JOIN users u ON u.id = r.user_id
-        WHERE r.created_at::date >= '${f}' AND r.created_at::date <= '${t}'
-        GROUP BY u.id, u.full_name, u.email ORDER BY reservation_count DESC LIMIT 5
-      `),
-    ]);
+    // Sequential queries — no $-parameters, dates embedded as validated literals.
+    // Sequential (not Promise.all) so only 1 DB connection is needed at any time.
+    const W = `created_at::date >= '${f}' AND created_at::date <= '${t}'`;
+
+    const kpi = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM reservations WHERE ${W}) AS total_reservations,
+        (SELECT COUNT(*) FROM reservations WHERE status='approved' AND ${W}) AS approved,
+        (SELECT COUNT(*) FROM reservations WHERE status='rejected' AND ${W}) AS rejected,
+        (SELECT COUNT(*) FROM reservations WHERE status='cancelled' AND ${W}) AS cancelled,
+        (SELECT COUNT(*) FROM reservations WHERE status='pending' AND ${W}) AS pending,
+        (SELECT ROUND(COUNT(*) FILTER (WHERE status='approved') * 100.0 /
+           NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0), 1)
+         FROM reservations WHERE ${W}) AS approval_rate,
+        (SELECT ROUND(AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600)::numeric, 1)
+         FROM reservations WHERE status='approved' AND ${W}) AS avg_duration_hours
+    `);
+
+    const topEq = await pool.query(`
+      SELECT e.name AS equipment_name, COUNT(r.id) AS reservation_count
+      FROM reservations r JOIN equipment e ON e.id = r.equipment_id
+      WHERE r.${W} GROUP BY e.id, e.name ORDER BY reservation_count DESC LIMIT 10
+    `);
+
+    const trend = await pool.query(`
+      SELECT DATE_TRUNC('day', created_at) AS day, COUNT(*) AS count
+      FROM reservations WHERE ${W} GROUP BY 1 ORDER BY 1
+    `);
+
+    const statusBd = await pool.query(`
+      SELECT status, COUNT(*) AS count FROM reservations WHERE ${W} GROUP BY status
+    `);
+
+    const topU = await pool.query(`
+      SELECT u.full_name, u.email, COUNT(r.id) AS reservation_count
+      FROM reservations r JOIN users u ON u.id = r.user_id
+      WHERE r.${W} GROUP BY u.id, u.full_name, u.email ORDER BY reservation_count DESC LIMIT 5
+    `);
 
     res.json({
       kpi: kpi.rows[0],
