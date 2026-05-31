@@ -127,6 +127,8 @@ export default function EquipmentDetailPage() {
   const canReserve = (user.role === 'laborant' || user.role === 'test') && (equipment.status === 'available' || equipment.status === 'reserved');
   const isAdmin = user.role === 'admin' || user.role === 'test';
   const statusChanged = adminStatus !== equipment.status;
+  // Waitlist: show when status is reserved/maintenance/in_use (not available, not out_of_service)
+  const showWaitlist = ['reserved', 'maintenance', 'in_use'].includes(equipment.status);
 
   return (
     <div>
@@ -243,17 +245,17 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {/* Waitlist — shows for all users when equipment is not available/reserved */}
-          {!canReserve && equipment.status !== 'out_of_service' && (
+          {/* Waitlist — visible for reserved/maintenance/in_use status */}
+          {showWaitlist && (
             <div style={{ background: '#fafbff', border: `1px solid #dbeafe`, borderRadius: 12, padding: '16px 20px', fontSize: 13, marginTop: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, fontWeight: 600, color: '#1e40af' }}>
                 <Bell size={14} />
                 Lista čekanja
                 {waitlistInfo?.total > 0 && <span style={{ fontSize: 12, background: '#dbeafe', color: '#1e40af', borderRadius: 99, padding: '1px 8px', fontWeight: 700 }}>{waitlistInfo.total} {waitlistInfo.total === 1 ? 'korisnik' : 'korisnika'}</span>}
               </div>
-              {isAdmin ? (
+              {isAdmin && waitlistInfo?.list !== undefined ? (
                 <div style={{ fontSize: 13, color: C.muted }}>
-                  {waitlistInfo?.total > 0
+                  {waitlistInfo.total > 0
                     ? `${waitlistInfo.total} korisnik(a) čeka na obavijest kada oprema postane slobodna.`
                     : 'Niko nije na listi čekanja.'}
                 </div>
