@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Microscope, MapPin, ChevronRight, SearchX, Search, X, Tag } from 'lucide-react';
+import { Microscope, MapPin, ChevronRight, SearchX, Search, X, Tag, Plus, Scale, Star } from 'lucide-react';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT } from '../theme';
 
 const STATUS_FILTERS = [
@@ -17,6 +17,8 @@ export default function EquipmentListPage() {
   const [locationFilter, setLocationFilter] = useState('');
   const [allTags, setAllTags] = useState([]);
   const [allLocations, setAllLocations] = useState([]);
+  const [compareIds, setCompareIds] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => {
     fetch('/api/equipment').then(r => r.json()).then(d => setEquipment(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
@@ -39,6 +41,7 @@ export default function EquipmentListPage() {
   });
 
   return (
+    <>
     <div>
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'inline-block', border: `1px solid ${C.border}`, borderRadius: 99, padding: '4px 14px', fontSize: 13, color: C.muted, marginBottom: 12 }}>
@@ -201,9 +204,35 @@ export default function EquipmentListPage() {
                 item.manufacturer ? `Proizvođač: ${item.manufacturer}` : null,
                 item.serial_number ? `Serijski: ${item.serial_number}` : null,
               ].filter(Boolean).join(' | ');
+              const inCompare = compareIds.includes(item.id);
+              const compareDisabled = !inCompare && compareIds.length >= 3;
               return (
-                <Link key={item.id} to={`/equipment/${item.id}`} className="card-hover"
-                  style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 14, transition: 'border-color 0.15s, box-shadow 0.15s' }}>
+                <div key={item.id} style={{ position: 'relative' }}>
+                  {/* Comparator toggle button */}
+                  <button
+                    onClick={e => {
+                      e.preventDefault();
+                      if (inCompare) setCompareIds(p => p.filter(i => i !== item.id));
+                      else if (!compareDisabled) setCompareIds(p => [...p, item.id]);
+                    }}
+                    title={compareDisabled ? 'Max 3 stavke' : inCompare ? 'Ukloni iz komparatora' : 'Dodaj u komparator'}
+                    style={{
+                      position: 'absolute', top: 10, right: 10, zIndex: 2,
+                      width: 26, height: 26, borderRadius: '50%',
+                      background: inCompare ? PRIMARY : '#fff',
+                      color: inCompare ? '#fff' : C.muted,
+                      border: `1.5px solid ${inCompare ? PRIMARY : C.border}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: compareDisabled ? 'not-allowed' : 'pointer',
+                      opacity: compareDisabled ? 0.35 : 1,
+                      fontSize: 14, fontWeight: 700, lineHeight: 1,
+                    }}
+                  >
+                    {inCompare ? '✓' : '+'}
+                  </button>
+
+                  <Link to={`/equipment/${item.id}`} className="card-hover"
+                    style={{ background: '#fff', border: `1px solid ${inCompare ? PRIMARY : C.border}`, borderRadius: 12, padding: '20px 22px', textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 14, transition: 'border-color 0.15s, box-shadow 0.15s' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
                     <div style={iconBox(40, 10)}>
                       <Microscope size={18} color={PRIMARY} />
@@ -245,12 +274,117 @@ export default function EquipmentListPage() {
                       Detalji <ChevronRight size={14} />
                     </span>
                   </div>
-                </Link>
+                  </Link>
+                </div>
               );
             })}
           </div>
         </>
       )}
     </div>
+
+    {/* Floating compare bar - outside main div, inside Fragment */}
+    {/* Floating compare bar */}
+    {compareIds.length >= 2 && (
+      <div style={{
+        position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+        background: '#0f172a', color: '#fff', borderRadius: 40,
+        padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 14,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.35)', zIndex: 200, animation: 'labFadeIn 0.2s ease-out',
+        whiteSpace: 'nowrap',
+      }}>
+        <Scale size={16} color="#60a5fa" />
+        <span style={{ fontSize: 14, fontWeight: 600 }}>
+          Odabrano {compareIds.length} {compareIds.length === 2 ? 'stavke' : 'stavke'}
+        </span>
+        <button
+          onClick={() => setShowCompare(true)}
+          style={{ background: PRIMARY, color: '#fff', border: 'none', borderRadius: 20, padding: '6px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+        >
+          Poredi ▶
+        </button>
+        <button
+          onClick={() => setCompareIds([])}
+          style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: 0 }}
+        >
+          ×
+        </button>
+      </div>
+    )}
+
+    {/* Compare modal */}
+    {showCompare && (
+      <div
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 300, display: 'flex', flexDirection: 'column' }}
+        onClick={e => { if (e.target === e.currentTarget) setShowCompare(false); }}
+      >
+        <div style={{ background: '#fff', margin: '20px', borderRadius: 16, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', maxHeight: 'calc(100vh - 40px)', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+          {/* Modal header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: `1px solid ${C.border}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Scale size={18} color={PRIMARY} />
+              <span style={{ fontSize: 16, fontWeight: 800, color: C.heading }}>Usporedba opreme</span>
+            </div>
+            <button onClick={() => setShowCompare(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, fontSize: 22, lineHeight: 1 }}>×</button>
+          </div>
+
+          {/* Compare table */}
+          <div style={{ flex: 1, overflowX: 'auto', overflowY: 'auto', padding: '20px 24px' }}>
+            {(() => {
+              const items = compareIds.map(cid => equipment.find(e => e.id === cid)).filter(Boolean);
+              const rows = [
+                { label: 'Model', key: 'model' },
+                { label: 'Proizvođač', key: 'manufacturer' },
+                { label: 'Status', key: 'status', render: v => { const s = STATUS_EQUIPMENT[v] || {}; return <span style={{ background: s.bg, color: s.color, padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600 }}>{s.label || v}</span>; } },
+                { label: 'Lokacija', key: 'location_name', fallback: 'location' },
+                { label: 'Serijski br.', key: 'serial_number' },
+                { label: 'Sigurnosne napomene', key: 'safety_notes', render: v => v ? <span style={{ color: '#d97706' }}>Da</span> : <span style={{ color: '#22c55e' }}>Ne</span> },
+                { label: 'Tagovi', key: 'tags', render: v => v?.length > 0 ? v.map(t => <span key={t.id} style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: t.color + '22', color: t.color, border: `1px solid ${t.color}44`, marginRight: 4 }}>{t.name}</span>) : '—' },
+                { label: 'Zadnji servis', key: 'last_service', render: v => v ? new Date(v).toLocaleDateString('bs-BA') : '—' },
+              ];
+              const colW = `${Math.floor(100 / items.length)}%`;
+              return (
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: items.length * 220 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: 140, textAlign: 'left', padding: '10px 12px', color: C.muted, fontSize: 12, fontWeight: 600, borderBottom: `1px solid ${C.border}` }}>Karakteristika</th>
+                      {items.map(item => (
+                        <th key={item.id} style={{ width: colW, textAlign: 'left', padding: '10px 12px', borderBottom: `1px solid ${C.border}` }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: C.heading }}>{item.name}</div>
+                          <Link to={`/equipment/${item.id}`} style={{ fontSize: 11, color: PRIMARY }}>Otvori →</Link>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map(row => (
+                      <tr key={row.key} style={{ borderBottom: `1px solid ${C.borderFaint}` }}>
+                        <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 600, color: C.muted, whiteSpace: 'nowrap' }}>{row.label}</td>
+                        {items.map(item => {
+                          const v = item[row.key] ?? (row.fallback ? item[row.fallback] : null);
+                          return (
+                            <td key={item.id} style={{ padding: '10px 12px', fontSize: 13, color: C.body }}>
+                              {row.render ? row.render(v) : (v || <span style={{ color: C.subtle }}>—</span>)}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              );
+            })()}
+          </div>
+
+          {/* Modal footer */}
+          <div style={{ padding: '16px 24px', borderTop: `1px solid ${C.border}`, display: 'flex', gap: 10 }}>
+            <button onClick={() => { setShowCompare(false); setCompareIds([]); }} style={{ background: C.bgFaint, border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 20px', fontSize: 13, cursor: 'pointer' }}>
+              Zatvori
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

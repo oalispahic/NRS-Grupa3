@@ -26,4 +26,31 @@ async function count() {
   return parseInt(rows[0].count, 10);
 }
 
-module.exports = { create, findAll, count };
+async function findByUser({ userId, limit = 50, offset = 0, type = null } = {}) {
+  const params = [userId, limit, offset];
+  let typeClause = '';
+  if (type) {
+    params.push(type);
+    typeClause = `AND al.action = $${params.length}`;
+  }
+  const { rows } = await pool.query(
+    `SELECT al.*, u.full_name, u.email
+     FROM activity_logs al
+     LEFT JOIN users u ON u.id = al.user_id
+     WHERE al.user_id = $1 ${typeClause}
+     ORDER BY al.created_at DESC
+     LIMIT $2 OFFSET $3`,
+    params
+  );
+  return rows;
+}
+
+async function countByUser(userId) {
+  const { rows } = await pool.query(
+    'SELECT COUNT(*) FROM activity_logs WHERE user_id = $1',
+    [userId]
+  );
+  return parseInt(rows[0].count, 10);
+}
+
+module.exports = { create, findAll, count, findByUser, countByUser };

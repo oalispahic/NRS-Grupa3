@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Plus, Pencil, Trash2, Check, X, Tag, Download,
-  MapPin, ChevronDown, ChevronUp, Shield, Wrench,
+  MapPin, ChevronDown, ChevronUp, Shield, Wrench, QrCode,
 } from 'lucide-react';
+import QRCode from 'react-qr-code';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { PRIMARY, C, BTN, STATUS_EQUIPMENT } from '../../theme';
@@ -202,6 +203,9 @@ export default function ManageEquipmentPage() {
 
   const [editItem, setEditItem] = useState(null);
   const [editData, setEditData] = useState({});
+
+  const [qrItem, setQrItem] = useState(null);
+  const qrRef = useRef(null);
 
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState('#6366f1');
@@ -515,12 +519,19 @@ export default function ManageEquipmentPage() {
                   )}
 
                   {/* Actions */}
-                  <div style={{ display: 'flex', gap: 8, marginTop: 'auto', paddingTop: 4 }}>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 'auto', paddingTop: 4, flexWrap: 'wrap' }}>
                     <button
                       onClick={() => openEdit(item)}
                       style={{ ...BTN.ghost, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 12px', fontSize: 12 }}
                     >
                       <Pencil size={12} /> Uredi
+                    </button>
+                    <button
+                      onClick={() => setQrItem(item)}
+                      title="Generiraj QR kod"
+                      style={{ ...BTN.ghost, display: 'flex', alignItems: 'center', gap: 5, padding: '7px 12px', fontSize: 12 }}
+                    >
+                      <QrCode size={12} /> QR
                     </button>
                     <button
                       onClick={() => handleDelete(item.id, item.name)}
@@ -598,6 +609,63 @@ export default function ManageEquipmentPage() {
               </button>
               <button onClick={handleSave} style={{ ...BTN.primary, display: 'flex', alignItems: 'center', gap: 6, padding: '9px 20px', fontSize: 13 }}>
                 <Check size={14} /> Spremi izmjene
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR modal */}
+      {qrItem && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+          onClick={e => { if (e.target === e.currentTarget) setQrItem(null); }}
+        >
+          <div style={{ background: '#fff', borderRadius: 14, padding: '28px 32px', maxWidth: 360, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'labFadeIn 0.15s ease-out', textAlign: 'center' }}>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.heading, marginBottom: 4 }}>QR kod</div>
+            <div style={{ fontSize: 13, color: C.muted, marginBottom: 20 }}>{qrItem.name}</div>
+
+            <div ref={qrRef} style={{ display: 'inline-block', padding: 16, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, marginBottom: 20 }}>
+              <QRCode
+                value={`${window.location.origin}/equipment/${qrItem.id}`}
+                size={180}
+                bgColor="#ffffff"
+                fgColor="#0f172a"
+              />
+            </div>
+
+            <div style={{ fontSize: 11, color: C.subtle, marginBottom: 20, wordBreak: 'break-all' }}>
+              {window.location.origin}/equipment/{qrItem.id}
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <button
+                onClick={() => {
+                  const svg = qrRef.current?.querySelector('svg');
+                  if (!svg) return;
+                  const canvas = document.createElement('canvas');
+                  const size = 220;
+                  canvas.width = size; canvas.height = size;
+                  const ctx = canvas.getContext('2d');
+                  ctx.fillStyle = '#fff';
+                  ctx.fillRect(0, 0, size, size);
+                  const svgData = new XMLSerializer().serializeToString(svg);
+                  const img = new Image();
+                  img.onload = () => {
+                    ctx.drawImage(img, 20, 20, size - 40, size - 40);
+                    const a = document.createElement('a');
+                    a.download = `qr-${qrItem.name.replace(/\s+/g, '-').toLowerCase()}.png`;
+                    a.href = canvas.toDataURL('image/png');
+                    a.click();
+                  };
+                  img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+                }}
+                style={{ ...BTN.outline, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}
+              >
+                <Download size={13} /> Preuzmi PNG
+              </button>
+              <button onClick={() => setQrItem(null)} style={{ ...BTN.ghost, fontSize: 13 }}>
+                Zatvori
               </button>
             </div>
           </div>

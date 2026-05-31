@@ -19,6 +19,10 @@ import UsersAdminPage from './pages/admin/UsersAdminPage';
 import StatisticsPage from './pages/admin/StatisticsPage';
 import ConsumablesPage from './pages/admin/ConsumablesPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import ReportsPage from './pages/admin/ReportsPage';
+import MaintenancePage from './pages/admin/MaintenancePage';
+import MyTasksPage from './pages/MyTasksPage';
+import MyActivityPage from './pages/MyActivityPage';
 import RegisterPage from './pages/RegisterPage';
 
 export default function App() {
@@ -99,6 +103,26 @@ export default function App() {
               <AdminRoute>
                 <AppLayout><SettingsPage /></AppLayout>
               </AdminRoute>
+            } />
+            <Route path="/admin/reports" element={
+              <AdminRoute>
+                <AppLayout><ReportsPage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/admin/maintenance" element={
+              <AdminRoute>
+                <AppLayout><MaintenancePage /></AppLayout>
+              </AdminRoute>
+            } />
+            <Route path="/my-tasks" element={
+              <ProtectedRoute>
+                <AppLayout><MyTasksPage /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-activity" element={
+              <ProtectedRoute>
+                <AppLayout><MyActivityPage /></AppLayout>
+              </ProtectedRoute>
             } />
           </Routes>
         </ToastProvider>

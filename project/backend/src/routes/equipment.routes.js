@@ -4,6 +4,7 @@ const equipmentController = require('../controllers/equipment.controller');
 const reservationRepo = require('../repositories/reservation.repository');
 const ratingController = require('../controllers/rating.controller');
 const tagController = require('../controllers/tag.controller');
+const waitlistController = require('../controllers/waitlist.controller');
 
 router.get('/', equipmentController.list);
 
@@ -21,6 +22,10 @@ router.post('/:id/ratings', authenticate, ratingController.add);
 
 router.get('/:id/tags', tagController.getEquipmentTags);
 router.put('/:id/tags', authenticate, requireRole('admin', 'test'), tagController.setEquipmentTags);
+
+router.get('/:id/waitlist', authenticate, waitlistController.getWaitlist);
+router.post('/:id/waitlist', authenticate, waitlistController.addToWaitlist);
+router.delete('/:id/waitlist', authenticate, waitlistController.removeFromWaitlist);
 
 router.get('/:id', equipmentController.getOne);
 router.post('/', authenticate, requireRole('admin', 'test'), equipmentController.create);

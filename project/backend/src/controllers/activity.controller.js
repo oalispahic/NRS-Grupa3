@@ -11,4 +11,16 @@ async function getAll(req, res, next) {
   }
 }
 
-module.exports = { getAll };
+async function getMine(req, res, next) {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const type = req.query.type || null;
+    const data = await activityService.getMine({ userId: req.user.id, limit, offset, type });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { getAll, getMine };

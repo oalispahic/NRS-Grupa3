@@ -4,6 +4,7 @@ import {
   FlaskConical, LayoutDashboard, Microscope, BookOpen,
   Settings, LogOut, ClipboardList, Menu, X, Bell, User,
   Activity, MonitorCheck, MapPin, Users, BarChart2, Package, SlidersHorizontal,
+  Wrench, FileText, ListChecks, Clock,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { FONT, GLOBAL_CSS, C, PRIMARY } from '../theme';
@@ -18,6 +19,8 @@ const NAV_GROUPS_LABORANT = [
       { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
       { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
+      { to: '/my-tasks',        label: 'Moji zadaci',      Icon: ListChecks },
+      { to: '/my-activity',     label: 'Moje aktivnosti',  Icon: Clock },
       { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
@@ -43,6 +46,8 @@ const NAV_GROUPS_ADMIN = [
       { to: '/admin/locations',    label: 'Lokacije',            Icon: MapPin },
       { to: '/admin/consumables',  label: 'Repromaterijali',     Icon: Package },
       { to: '/admin/statistics',   label: 'Statistike',          Icon: BarChart2 },
+      { to: '/admin/reports',      label: 'Izvještaji',          Icon: FileText },
+      { to: '/admin/maintenance',  label: 'Održavanje',          Icon: Wrench },
       { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
     ],
   },
@@ -55,6 +60,8 @@ const NAV_GROUPS_TEST = [
       { to: '/dashboard',       label: 'Dashboard',        Icon: LayoutDashboard },
       { to: '/equipment',       label: 'Oprema',           Icon: Microscope },
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
+      { to: '/my-tasks',        label: 'Moji zadaci',      Icon: ListChecks },
+      { to: '/my-activity',     label: 'Moje aktivnosti',  Icon: Clock },
       { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
@@ -69,6 +76,8 @@ const NAV_GROUPS_TEST = [
       { to: '/admin/locations',    label: 'Lokacije',            Icon: MapPin },
       { to: '/admin/consumables',  label: 'Repromaterijali',     Icon: Package },
       { to: '/admin/statistics',   label: 'Statistike',          Icon: BarChart2 },
+      { to: '/admin/reports',      label: 'Izvještaji',          Icon: FileText },
+      { to: '/admin/maintenance',  label: 'Održavanje',          Icon: Wrench },
       { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
     ],
   },

@@ -12,4 +12,12 @@ async function getAll({ limit, offset } = {}) {
   return { logs, total };
 }
 
-module.exports = { log, getAll };
+async function getMine({ userId, limit, offset, type } = {}) {
+  const [logs, total] = await Promise.all([
+    activityRepo.findByUser({ userId, limit, offset, type }),
+    activityRepo.countByUser(userId),
+  ]);
+  return { logs, total };
+}
+
+module.exports = { log, getAll, getMine };

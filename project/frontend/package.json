@@ -13,6 +13,8 @@
     "nrs-grupa3": "file:../..",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-is": "^19.2.6",
+    "react-qr-code": "^2.0.21",
     "react-router-dom": "^7.14.2",
     "recharts": "^3.8.1"
   },

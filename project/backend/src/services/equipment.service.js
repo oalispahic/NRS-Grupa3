@@ -1,4 +1,6 @@
 const equipmentRepo = require('../repositories/equipment.repository');
+const waitlistRepo = require('../repositories/waitlist.repository');
+const notificationRepo = require('../repositories/notification.repository');
 
 const VALID_STATUSES = ['available', 'reserved', 'in_use', 'maintenance', 'out_of_service'];
 
@@ -169,6 +171,23 @@ async function update(id, data) {
     err.status = 404;
     throw err;
   }
+
+  if (data.status === 'available') {
+    const waitlist = await waitlistRepo.findByEquipment(id).catch(() => []);
+    if (waitlist.length > 0) {
+      await Promise.all(
+        waitlist.map(entry =>
+          notificationRepo.create({
+            userId: entry.user_id,
+            type: 'equipment_available',
+            title: 'Oprema je dostupna',
+            message: `"${updated.name}" je sada slobodna za rezervaciju.`,
+          }).catch(() => {})
+        )
+      );
+    }
+  }
+
   return updated;
 }
 

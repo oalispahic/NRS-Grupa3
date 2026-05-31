@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Shield, Truck, Building2, Clock, Tag, X } from 'lucide-react';
+import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Shield, Truck, Building2, Clock, Tag, X, Bell, BellOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
@@ -36,6 +36,9 @@ export default function EquipmentDetailPage() {
   const [safetyConfirmed, setSafetyConfirmed] = useState(false);
   const [showSafetyDialog, setShowSafetyDialog] = useState(false);
 
+  const [waitlistInfo, setWaitlistInfo] = useState(null);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+
   function loadEquipment() {
     return fetch(`/api/equipment/${id}`)
       .then(r => r.json())
@@ -49,7 +52,15 @@ export default function EquipmentDetailPage() {
       .then(data => { if (Array.isArray(data)) setReservedDates(data); });
   }
 
-  useEffect(() => { loadEquipment(); loadReservedDates(); }, [id]);
+  function loadWaitlist() {
+    if (!token || !user) return;
+    fetch(`/api/equipment/${id}/waitlist`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setWaitlistInfo(d); })
+      .catch(() => {});
+  }
+
+  useEffect(() => { loadEquipment(); loadReservedDates(); loadWaitlist(); }, [id]);
 
   async function handleReserve(e) {
     e.preventDefault();
@@ -234,7 +245,40 @@ export default function EquipmentDetailPage() {
 
           {!canReserve && (user.role === 'laborant' || user.role === 'test') && !isAdmin && (
             <div style={{ background: C.bgFaint, border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 20px', fontSize: 13, color: C.muted }}>
-              Oprema trenutno nije dostupna za rezervaciju.
+              <div style={{ marginBottom: 10 }}>Oprema trenutno nije dostupna za rezervaciju.</div>
+              {waitlistInfo?.onList ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '7px 14px' }}>
+                    <Bell size={14} /> Na listi čekanja (pozicija {waitlistInfo.position})
+                  </span>
+                  <button
+                    disabled={waitlistLoading}
+                    onClick={async () => {
+                      setWaitlistLoading(true);
+                      await fetch(`/api/equipment/${id}/waitlist`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+                      setWaitlistInfo(null);
+                      setWaitlistLoading(false);
+                    }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: C.muted, background: 'none', border: `1px solid ${C.border}`, borderRadius: 8, padding: '7px 12px', cursor: 'pointer' }}
+                  >
+                    <BellOff size={13} /> Ukloni s liste
+                  </button>
+                </div>
+              ) : (
+                <button
+                  disabled={waitlistLoading}
+                  onClick={async () => {
+                    setWaitlistLoading(true);
+                    const r = await fetch(`/api/equipment/${id}/waitlist`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+                    if (r.ok) loadWaitlist();
+                    setWaitlistLoading(false);
+                  }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: '#fff', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.body, cursor: 'pointer', fontWeight: 500 }}
+                >
+                  <Bell size={14} color={PRIMARY} />
+                  Stavi na listu čekanja
+                </button>
+              )}
             </div>
           )}
 
