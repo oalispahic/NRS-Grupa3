@@ -4,6 +4,22 @@ const pool = require('../config/db');
 
 router.use(authenticate, requireRole('admin', 'test'));
 
+// Debug endpoint — shows actual DB error so we can diagnose
+router.get('/debug-report', async (req, res) => {
+  const { from = '2026-01-01', to = '2026-05-31' } = req.query;
+  const results = {};
+  try { await pool.query('SELECT 1'); results.connection = 'OK'; } catch (e) { results.connection = e.message; }
+  try {
+    const r = await pool.query(`SELECT COUNT(*) AS n FROM reservations WHERE created_at::date >= '${from}' AND created_at::date <= '${to}'`);
+    results.simple_count = r.rows[0].n;
+  } catch (e) { results.simple_count_error = e.message; }
+  try {
+    const r = await pool.query(`SELECT e.name, COUNT(rv.id) AS n FROM reservations rv JOIN equipment e ON e.id = rv.equipment_id WHERE rv.created_at::date >= '${from}' AND rv.created_at::date <= '${to}' GROUP BY e.id LIMIT 3`);
+    results.join_query = r.rows.length + ' rows';
+  } catch (e) { results.join_query_error = e.message; }
+  res.json(results);
+});
+
 router.get('/', async (req, res, next) => {
   try {
     // Sequential queries to use max 1 DB connection (no Promise.all)

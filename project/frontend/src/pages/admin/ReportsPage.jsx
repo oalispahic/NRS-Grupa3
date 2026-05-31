@@ -64,8 +64,9 @@ export default function ReportsPage() {
       const r = await fetch(`/api/statistics/reportv2?from=${from}&to=${to}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      setData(await r.json());
+      const body = await r.json();
+      if (!r.ok) throw new Error(`HTTP ${r.status}: ${body.error || JSON.stringify(body)}`);
+      setData(body);
     } catch (e) {
       setError(e.message);
     } finally {
