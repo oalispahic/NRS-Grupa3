@@ -85,14 +85,16 @@ function MonthGrid({ year, month, today, selectedStart, selectedEnd, hoverDate, 
       position: 'relative',
     };
 
-    if (isPast || occupied) {
+    if (isPast && !occupied) {
+      return { ...base, background: '#f1f5f9', color: '#94a3b8', cursor: 'default', opacity: 0.6 };
+    }
+    if (occupied) {
       return {
         ...base,
-        background: occupied ? '#fee2e2' : '#f1f5f9',
-        color: occupied ? '#dc2626' : '#94a3b8',
-        cursor: 'default',
-        opacity: occupied ? 1 : 0.6,
-        borderRadius: '50%',
+        background: '#fef9c3',
+        color: '#92400e',
+        cursor: 'pointer',
+        border: '1px solid #fde68a',
       };
     }
 
@@ -162,13 +164,13 @@ function MonthGrid({ year, month, today, selectedStart, selectedEnd, hoverDate, 
                 onClick={() => {
                   const d = toDateOnly(day);
                   const t = toDateOnly(today);
-                  if (d < t || isOccupied(day, occupiedRanges)) return;
+                  if (d < t) return;
                   onDayClick(day);
                 }}
                 onMouseEnter={() => {
                   const d = toDateOnly(day);
                   const t = toDateOnly(today);
-                  if (d < t || isOccupied(day, occupiedRanges)) return;
+                  if (d < t) return;
                   onDayHover(day);
                 }}
                 onMouseLeave={() => onDayHover(null)}
@@ -196,12 +198,11 @@ function MonthGrid({ year, month, today, selectedStart, selectedEnd, hoverDate, 
   );
 }
 
-export default function ReservationCalendar({ occupiedRanges = [], selectedStart, selectedEnd, onSelect, onClear }) {
+export default function ReservationCalendar({ occupiedRanges = [], selectedStart, selectedEnd, onSelect, onClear, onOccupiedRange }) {
   const today = new Date();
   const [baseYear, setBaseYear] = useState(today.getFullYear());
   const [baseMonth, setBaseMonth] = useState(today.getMonth());
   const [hoverDate, setHoverDate] = useState(null);
-  const [pickError, setPickError] = useState('');
 
   const month2 = baseMonth === 11 ? 0 : baseMonth + 1;
   const year2 = baseMonth === 11 ? baseYear + 1 : baseYear;
@@ -220,8 +221,6 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
   }
 
   const handleDayClick = useCallback((day) => {
-    setPickError('');
-
     if (!selectedStart || (selectedStart && selectedEnd)) {
       onSelect(day, null);
       return;
@@ -232,8 +231,8 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
     if (end < start) { [start, end] = [end, start]; }
 
     if (rangeContainsOccupied(start, end, occupiedRanges)) {
-      setPickError('Odabrani raspon sadrži zauzete datume. Odaberite drugi period.');
-      onSelect(null, null);
+      onSelect(start, end);
+      if (onOccupiedRange) onOccupiedRange(start, end);
       return;
     }
 
@@ -261,8 +260,8 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
 
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <span style={{ fontSize: 12, fontWeight: 600, color: C.muted, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 10, height: 10, borderRadius: 3, background: '#fee2e2', border: '1px solid #fca5a5', display: 'inline-block' }} />
-            Zauzeto
+            <span style={{ width: 10, height: 10, borderRadius: 3, background: '#fef9c3', border: '1px solid #fde68a', display: 'inline-block' }} />
+            Zauzeto (klikni za waitlist)
           </span>
           <span style={{ fontSize: 12, fontWeight: 600, color: C.muted, display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: 3, background: '#dcfce7', border: '1px solid #86efac', display: 'inline-block' }} />
@@ -306,9 +305,6 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
 
       {/* Footer */}
       <div style={{ padding: '12px 24px 16px', borderTop: `1px solid ${C.border}`, background: C.bgFaint }}>
-        {pickError && (
-          <div style={{ fontSize: 12, color: '#dc2626', marginBottom: 10, fontWeight: 500 }}>{pickError}</div>
-        )}
         {selectedStart && !selectedEnd && (
           <div style={{ fontSize: 13, color: C.muted, marginBottom: 8 }}>
             Početak: <strong style={{ color: C.heading }}>{fmtDay(selectedStart)}</strong> — odaberite krajnji datum
@@ -325,7 +321,7 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
         )}
         {(selectedStart || selectedEnd) && (
           <button
-            onClick={() => { onClear(); setPickError(''); }}
+            onClick={() => { onClear(); }}
             style={{ fontSize: 12, color: C.muted, background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline', marginTop: 2 }}
           >
             Poništi odabir

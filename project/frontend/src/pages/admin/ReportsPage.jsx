@@ -61,7 +61,7 @@ export default function ReportsPage() {
     setLoading(true);
     setError(null);
     try {
-      const r = await fetch(`/api/statistics/report?from=${from}&to=${to}`, {
+      const r = await fetch(`/api/statistics/reportv2?from=${from}&to=${to}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);

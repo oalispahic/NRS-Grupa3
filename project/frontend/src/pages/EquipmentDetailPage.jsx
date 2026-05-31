@@ -270,8 +270,9 @@ export default function EquipmentDetailPage() {
                           occupiedRanges={reservedDates}
                           selectedStart={calStart}
                           selectedEnd={calEnd}
-                          onSelect={(s, e) => { setCalStart(s); setCalEnd(e); setErrorMsg(''); }}
-                          onClear={() => { setCalStart(null); setCalEnd(null); }}
+                          onSelect={(s, e) => { setCalStart(s); setCalEnd(e); setErrorMsg(''); setOfferWaitlist(false); }}
+                          onClear={() => { setCalStart(null); setCalEnd(null); setOfferWaitlist(false); }}
+                          onOccupiedRange={(s, e) => { setCalStart(s); setCalEnd(e); setOfferWaitlist(true); }}
                         />
                       </div>
                       <div className="action-row">

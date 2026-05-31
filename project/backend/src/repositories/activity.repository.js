@@ -10,13 +10,14 @@ async function create({ userId, action, entityType, entityId, details }) {
 }
 
 async function findAll({ limit = 100, offset = 0 } = {}) {
+  const lim = Math.min(parseInt(limit) || 100, 200);
+  const off = Math.max(parseInt(offset) || 0, 0);
   const { rows } = await pool.query(
     `SELECT al.*, u.full_name, u.email
      FROM activity_logs al
      LEFT JOIN users u ON u.id = al.user_id
      ORDER BY al.created_at DESC
-     LIMIT $1 OFFSET $2`,
-    [limit, offset]
+     LIMIT ${lim} OFFSET ${off}`
   );
   return rows;
 }
@@ -27,11 +28,13 @@ async function count() {
 }
 
 async function findByUser({ userId, limit = 50, offset = 0, type = null } = {}) {
-  const params = [userId, limit, offset];
+  const lim = Math.min(parseInt(limit) || 50, 200);
+  const off = Math.max(parseInt(offset) || 0, 0);
+  const params = [userId];
   let typeClause = '';
   if (type) {
     params.push(type);
-    typeClause = `AND al.action = $${params.length}`;
+    typeClause = `AND al.action = $2`;
   }
   const { rows } = await pool.query(
     `SELECT al.*, u.full_name, u.email
@@ -39,7 +42,7 @@ async function findByUser({ userId, limit = 50, offset = 0, type = null } = {}) 
      LEFT JOIN users u ON u.id = al.user_id
      WHERE al.user_id = $1 ${typeClause}
      ORDER BY al.created_at DESC
-     LIMIT $2 OFFSET $3`,
+     LIMIT ${lim} OFFSET ${off}`,
     params
   );
   return rows;
