@@ -621,6 +621,18 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Sprint 10 — novo</td>
 </tr>
 
+<tr>
+<td>PB51</td>
+<td>Nadolazeći planirani servisi</td>
+<td align="left">Kao administrator želim vidjeti listu opreme čiji planirani servis pada u narednih 30 dana s vizualnim upozorenjem za prekoračene rokove</td>
+<td>Sekcija na /admin/maintenance s listom opreme sortiranom po datumu servisa; colour coding: crveno za prekoračeno, žuto za &lt;7 dana; klik vodi na equipment detail; backend endpoint /api/maintenance/upcoming-services</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>2</td>
+<td>In Progress</td>
+<td>Sprint 10 — novo</td>
+</tr>
+
 </table>
 
 
@@ -642,7 +654,7 @@ Sprint 9 (Administracija korisnika, sigurnost, analitika i inventar):
 - PB20, PB21, PB22, PB43, PB44, PB45, PB46, PB47
 
 Sprint 10 (Analitika, održavanje i finalizacija):
-- PB16, PB17, PB35, PB40, PB48, PB49, PB50
+- PB16, PB17, PB35, PB40, PB48, PB49, PB50, PB51
 
 # Preliminarne tehnologije za realizaciju projekta
 

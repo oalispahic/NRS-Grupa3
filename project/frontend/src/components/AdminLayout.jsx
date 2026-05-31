@@ -272,7 +272,7 @@ function fmt(dt) {
   return new Date(dt).toLocaleString('bs-BA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 }
 
-function NotificationBell({ token }) {
+function NotificationBell({ token, placement = 'top' }) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState({ notifications: [], unread: 0 });
   const ref = useRef(null);
@@ -340,9 +340,12 @@ function NotificationBell({ token }) {
 
       {open && (
         <div style={{
-          position: 'absolute', bottom: 46, left: 0,
+          position: 'fixed',
+          ...(placement === 'bottom'
+            ? { top: 60, right: 12, left: 'auto' }
+            : { bottom: 'calc(100% + 8px)', left: 0 }),
           width: 300, background: '#fff', border: `1px solid ${C.border}`,
-          borderRadius: 12, boxShadow: '0 -4px 32px rgba(15,23,42,0.22)',
+          borderRadius: 12, boxShadow: '0 4px 32px rgba(15,23,42,0.22)',
           zIndex: 200, overflow: 'hidden',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: `1px solid ${C.borderFaint}` }}>
@@ -444,7 +447,7 @@ export default function AdminLayout({ children }) {
           <span style={{ fontWeight: 700, fontSize: 14, color: '#fff' }}>LabManager</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <NotificationBell token={token} />
+          <NotificationBell token={token} placement="bottom" />
           <button
             onClick={() => setMobileOpen(o => !o)}
             style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 7, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}

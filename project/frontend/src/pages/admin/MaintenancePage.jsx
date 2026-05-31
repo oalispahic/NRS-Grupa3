@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Wrench, Plus, ChevronDown, ChevronUp, AlertCircle, Check, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Wrench, Plus, ChevronDown, ChevronUp, AlertCircle, Check, Trash2, CalendarClock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { C, PRIMARY, BTN } from '../../theme';
 
@@ -36,6 +37,7 @@ export default function MaintenancePage() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [filterStatus, setFilterStatus] = useState('');
+  const [upcomingServices, setUpcomingServices] = useState([]);
 
   const hdr = { Authorization: `Bearer ${token}` };
 
@@ -44,10 +46,12 @@ export default function MaintenancePage() {
       fetch('/api/maintenance', { headers: hdr }).then(r => r.json()),
       fetch('/api/users', { headers: hdr }).then(r => r.json()),
       fetch('/api/equipment', { headers: hdr }).then(r => r.json()),
-    ]).then(([t, u, e]) => {
+      fetch('/api/maintenance/upcoming-services?days=30', { headers: hdr }).then(r => r.json()),
+    ]).then(([t, u, e, us]) => {
       setTasks(Array.isArray(t) ? t : []);
       setUsers(Array.isArray(u) ? u : []);
       setEquipment(Array.isArray(e) ? e : []);
+      setUpcomingServices(Array.isArray(us) ? us : []);
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -171,6 +175,46 @@ export default function MaintenancePage() {
               <button type="button" onClick={() => { setShowForm(false); setForm(EMPTY); }} style={BTN.outline}>Otkaži</button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Upcoming planned services (PB51) */}
+      {upcomingServices.length > 0 && (
+        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 12, padding: '16px 20px', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, fontWeight: 700, color: '#92400e', fontSize: 14 }}>
+            <CalendarClock size={16} color="#d97706" />
+            Nadolazeći planirani servisi (narednih 30 dana)
+            <span style={{ fontSize: 12, background: '#fde68a', color: '#92400e', borderRadius: 99, padding: '1px 8px' }}>{upcomingServices.length}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {upcomingServices.map(eq => {
+              const sDate = new Date(eq.planned_service);
+              const now = new Date();
+              const diffDays = Math.ceil((sDate - now) / 86400000);
+              const isOverdue = diffDays < 0;
+              const isSoon = diffDays >= 0 && diffDays <= 7;
+              const dateColor = isOverdue ? '#dc2626' : isSoon ? '#d97706' : C.body;
+              const fmtDate = sDate.toLocaleDateString('bs-BA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return (
+                <Link
+                  key={eq.id}
+                  to={`/equipment/${eq.id}`}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#fff', borderRadius: 8, padding: '10px 14px', textDecoration: 'none', border: `1px solid ${isOverdue ? '#fca5a5' : '#fde68a'}`, flexWrap: 'wrap' }}
+                >
+                  <div>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: C.heading }}>{eq.name}</span>
+                    {eq.model && <span style={{ fontSize: 12, color: C.muted, marginLeft: 8 }}>{eq.model}</span>}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: dateColor }}>
+                      {isOverdue ? `Kasni ${Math.abs(diffDays)}d` : diffDays === 0 ? 'Danas' : `Za ${diffDays}d`}
+                    </span>
+                    <span style={{ fontSize: 12, color: C.muted }}>{fmtDate}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 

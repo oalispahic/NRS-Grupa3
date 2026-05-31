@@ -1,5 +1,5 @@
 ## Sprint 10 goal
-Finalizirati sistem kroz: grafičke izvještaje s PDF eksportom, maintenance task management s dodjeljvanjem korisnicima, ličnu historiju aktivnosti, responsive mobilni dizajn, komparaciju opreme, listu čekanja za zauzetu opremu i QR kodove za fizičko označavanje opreme — čime se sistem zaokružuje u potpunu, produkcijski zrelu aplikaciju.
+Finalizirati sistem kroz: grafičke izvještaje s PDF eksportom, maintenance task management s dodjeljvanjem korisnicima, ličnu historiju aktivnosti, responsive mobilni dizajn, komparaciju opreme, listu čekanja za zauzetu opremu, QR kodove za fizičko označavanje opreme i pregled nadolazećih servisnih termina — čime se sistem zaokružuje u potpunu, produkcijski zrelu aplikaciju.
 
 ---
 
@@ -178,6 +178,36 @@ Srednji
 ### Veze sa drugim storyjima ili zavisnostima
 - Zavisi od: detalja opreme (US-2), notifikacija (US-16)
 - Povezano sa: rezervacijom opreme (US-3)
+
+---
+
+### ID storyja
+US-39
+
+### Naziv storyja
+Nadolazeći planirani servisi
+
+**Opis**
+Kao administrator želim vidjeti listu opreme čiji planirani servis pada u narednih 30 dana s vizualnim upozorenjem za prekoračene i hitne rokove
+
+**Poslovna vrijednost**
+Ovaj story je važan jer administratori moraju proaktivno planirati servisne aktivnosti — bez sistematskog pregleda, planirani servisi se lako propuste, što dovodi do kvara i zastoja u radu laboratorije.
+
+**Prioritet**
+Srednji
+
+### Pretpostavke i otvorena pitanja
+- Pretpostavka: Sekcija se prikazuje na vrhu `/admin/maintenance` stranice ako ima opreme s upcoming servisom.
+- Pretpostavka: Colour coding: crveno = prekoračen rok, žuto = ≤7 dana, normalno = ostalo.
+- Pretpostavka: Backend endpoint `GET /api/maintenance/upcoming-services?days=30` vraća sortiranu listu.
+- Pretpostavka: Klik na stavku vodi na `/equipment/:id`.
+- Pretpostavka: Sekcija se skriva ako nema opreme s upcoming servisom u 30 dana.
+- Otvoreno pitanje: Da li admin može kreirati maintenance task direktno iz ove sekcije?
+- Otvoreno pitanje: Da li se window može proširiti na 60/90 dana?
+
+### Veze sa drugim storyjima ili zavisnostima
+- Zavisi od: upravljanja opremom (US-3), maintenance modula (US-33)
+- Koristi existing `planned_service` polje u tabeli equipment
 
 ---
 

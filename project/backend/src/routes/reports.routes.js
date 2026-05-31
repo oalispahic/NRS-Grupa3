@@ -25,7 +25,7 @@ router.get('/', async (req, res, next) => {
              COUNT(*) FILTER (WHERE status = 'approved') * 100.0 /
              NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0)
            , 1) AS approval_rate,
-           ROUND(AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600) FILTER (WHERE status = 'approved')::numeric, 1) AS avg_duration_hours
+           ROUND((AVG(EXTRACT(EPOCH FROM (end_time - start_time))/3600) FILTER (WHERE status = 'approved'))::numeric, 1) AS avg_duration_hours
          FROM reservations
          WHERE created_at >= $1 AND created_at < ($2::date + INTERVAL '1 day')`,
         [from, to]

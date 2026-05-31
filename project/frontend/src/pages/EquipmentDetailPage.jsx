@@ -243,20 +243,31 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {!canReserve && (user.role === 'laborant' || user.role === 'test') && !isAdmin && (
-            <div style={{ background: C.bgFaint, border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 20px', fontSize: 13, color: C.muted }}>
-              <div style={{ marginBottom: 10 }}>Oprema trenutno nije dostupna za rezervaciju.</div>
-              {waitlistInfo?.onList ? (
+          {/* Waitlist — shows for all users when equipment is not available/reserved */}
+          {!canReserve && equipment.status !== 'out_of_service' && (
+            <div style={{ background: '#fafbff', border: `1px solid #dbeafe`, borderRadius: 12, padding: '16px 20px', fontSize: 13, marginTop: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, fontWeight: 600, color: '#1e40af' }}>
+                <Bell size={14} />
+                Lista čekanja
+                {waitlistInfo?.total > 0 && <span style={{ fontSize: 12, background: '#dbeafe', color: '#1e40af', borderRadius: 99, padding: '1px 8px', fontWeight: 700 }}>{waitlistInfo.total} {waitlistInfo.total === 1 ? 'korisnik' : 'korisnika'}</span>}
+              </div>
+              {isAdmin ? (
+                <div style={{ fontSize: 13, color: C.muted }}>
+                  {waitlistInfo?.total > 0
+                    ? `${waitlistInfo.total} korisnik(a) čeka na obavijest kada oprema postane slobodna.`
+                    : 'Niko nije na listi čekanja.'}
+                </div>
+              ) : waitlistInfo?.onList ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '7px 14px' }}>
-                    <Bell size={14} /> Na listi čekanja (pozicija {waitlistInfo.position})
+                    <Bell size={14} /> Na listi čekanja{waitlistInfo.position ? ` (pozicija ${waitlistInfo.position})` : ''}
                   </span>
                   <button
                     disabled={waitlistLoading}
                     onClick={async () => {
                       setWaitlistLoading(true);
                       await fetch(`/api/equipment/${id}/waitlist`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-                      setWaitlistInfo(null);
+                      setWaitlistInfo(p => ({ ...p, onList: false, position: null, total: (p?.total || 1) - 1 }));
                       setWaitlistLoading(false);
                     }}
                     style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: C.muted, background: 'none', border: `1px solid ${C.border}`, borderRadius: 8, padding: '7px 12px', cursor: 'pointer' }}
@@ -265,19 +276,22 @@ export default function EquipmentDetailPage() {
                   </button>
                 </div>
               ) : (
-                <button
-                  disabled={waitlistLoading}
-                  onClick={async () => {
-                    setWaitlistLoading(true);
-                    const r = await fetch(`/api/equipment/${id}/waitlist`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
-                    if (r.ok) loadWaitlist();
-                    setWaitlistLoading(false);
-                  }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: '#fff', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.body, cursor: 'pointer', fontWeight: 500 }}
-                >
-                  <Bell size={14} color={PRIMARY} />
-                  Stavi na listu čekanja
-                </button>
+                <div>
+                  <div style={{ color: C.muted, marginBottom: 10 }}>Oprema nije dostupna. Dobijet ćete obavijest čim postane slobodna.</div>
+                  <button
+                    disabled={waitlistLoading}
+                    onClick={async () => {
+                      setWaitlistLoading(true);
+                      const r = await fetch(`/api/equipment/${id}/waitlist`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+                      if (r.ok) loadWaitlist();
+                      setWaitlistLoading(false);
+                    }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: PRIMARY, color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, cursor: waitlistLoading ? 'not-allowed' : 'pointer', fontWeight: 600, opacity: waitlistLoading ? 0.7 : 1 }}
+                  >
+                    <Bell size={14} />
+                    Stavi me na listu čekanja
+                  </button>
+                </div>
               )}
             </div>
           )}
