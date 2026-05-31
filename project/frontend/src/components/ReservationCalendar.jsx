@@ -316,7 +316,7 @@ export default function ReservationCalendar({ occupiedRanges = [], selectedStart
             {fmtDay(selectedStart)} — {fmtDay(selectedEnd)}
           </div>
         )}
-        {!selectedStart && !pickError && (
+        {!selectedStart && (
           <div style={{ fontSize: 13, color: C.muted }}>Kliknite na slobodan datum za početak rezervacije.</div>
         )}
         {(selectedStart || selectedEnd) && (
