@@ -75,7 +75,6 @@ router.get('/report', async (req, res, next) => {
            COUNT(*) AS total_reservations,
            COUNT(*) FILTER (WHERE status = 'approved') AS approved,
            COUNT(*) FILTER (WHERE status = 'rejected') AS rejected,
-           COUNT(*) FILTER (WHERE status = 'cancelled') AS cancelled,
            COUNT(*) FILTER (WHERE status = 'pending') AS pending,
            ROUND(
              COUNT(*) FILTER (WHERE status = 'approved') * 100.0 /
@@ -161,7 +160,6 @@ router.get('/reportv2', async (req, res, next) => {
         (SELECT COUNT(*) FROM reservations WHERE ${W}) AS total_reservations,
         (SELECT COUNT(*) FROM reservations WHERE status='approved' AND ${W}) AS approved,
         (SELECT COUNT(*) FROM reservations WHERE status='rejected' AND ${W}) AS rejected,
-        (SELECT COUNT(*) FROM reservations WHERE status='cancelled' AND ${W}) AS cancelled,
         (SELECT COUNT(*) FROM reservations WHERE status='pending' AND ${W}) AS pending,
         (SELECT ROUND(COUNT(*) FILTER (WHERE status='approved') * 100.0 /
            NULLIF(COUNT(*) FILTER (WHERE status IN ('approved','rejected')), 0), 1)

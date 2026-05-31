@@ -171,8 +171,8 @@ export default function ReportsPage() {
               <KPI icon={<TrendingUp size={20} color={PRIMARY} />} label="Ukupno rezervacija" value={kpi.total_reservations} />
               <KPI icon={<CheckCircle2 size={20} color="#22c55e" />} label="Odobrene" value={kpi.approved} sub={`Stopa odobrenja: ${kpi.approval_rate ?? 0}%`} />
               <KPI icon={<XCircle size={20} color="#ef4444" />} label="Odbijene" value={kpi.rejected} />
-              <KPI icon={<AlertCircle size={20} color="#94a3b8" />} label="Otkazane" value={kpi.cancelled} />
-              <KPI icon={<Clock size={20} color="#f59e0b" />} label="Prosj. trajanje" value={kpi.avg_duration_hours ? `${kpi.avg_duration_hours}h` : '—'} />
+              <KPI icon={<AlertCircle size={20} color="#f59e0b" />} label="Na čekanju" value={kpi.pending} />
+              <KPI icon={<Clock size={20} color={PRIMARY} />} label="Prosj. trajanje" value={kpi.avg_duration_hours ? `${kpi.avg_duration_hours}h` : '—'} />
             </div>
 
             {/* Charts */}
