@@ -1,5 +1,7 @@
 const equipmentRepo = require('../src/repositories/equipment.repository');
 const equipmentService = require('../src/services/equipment.service');
+const waitlistRepo = require('../src/repositories/waitlist.repository');
+const notificationRepo = require('../src/repositories/notification.repository');
 
 jest.mock('../src/repositories/equipment.repository', () => ({
   findAll: jest.fn(),
@@ -7,6 +9,14 @@ jest.mock('../src/repositories/equipment.repository', () => ({
   create: jest.fn(),
   update: jest.fn(),
   remove: jest.fn(),
+}));
+
+jest.mock('../src/repositories/waitlist.repository', () => ({
+  findByEquipment: jest.fn(),
+}));
+
+jest.mock('../src/repositories/notification.repository', () => ({
+  create: jest.fn(),
 }));
 
 describe('equipment.service', () => {
@@ -141,5 +151,18 @@ describe('equipment.service', () => {
     equipmentRepo.remove.mockResolvedValue(true);
 
     await expect(equipmentService.remove(1)).resolves.toBeUndefined();
+  });
+
+  test('update notifies waitlist when equipment becomes available', async () => {
+    equipmentRepo.update.mockResolvedValue({ id: 1, name: 'Microscope A', status: 'available' });
+    waitlistRepo.findByEquipment.mockResolvedValue([{ user_id: 7 }, { user_id: 8 }]);
+
+    await equipmentService.update(1, { status: 'available' });
+
+    expect(waitlistRepo.findByEquipment).toHaveBeenCalledWith(1);
+    expect(notificationRepo.create).toHaveBeenCalledWith(expect.objectContaining({
+      userId: 7,
+      type: 'equipment_available',
+    }));
   });
 });

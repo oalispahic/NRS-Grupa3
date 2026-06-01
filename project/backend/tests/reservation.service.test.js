@@ -170,6 +170,29 @@ describe('reservation.service', () => {
     expect(result).toEqual({ id: 5, status: 'pending' });
   });
 
+  test('createReservation allows waitlist when conflicts exist', async () => {
+    equipmentRepo.findById.mockResolvedValue({ id: 2, status: 'reserved' });
+    reservationRepo.findConflict.mockResolvedValue({ id: 9 });
+    reservationRepo.create.mockResolvedValue({ id: 12, status: 'pending' });
+
+    const result = await reservationService.createReservation({
+      userId: 1,
+      equipmentId: 2,
+      startTime: '2025-01-01T10:00:00Z',
+      endTime: '2025-01-01T11:00:00Z',
+      waitlist: true,
+    });
+
+    expect(reservationRepo.findConflict).not.toHaveBeenCalled();
+    expect(reservationRepo.create).toHaveBeenCalledWith({
+      userId: 1,
+      equipmentId: 2,
+      startTime: '2025-01-01T10:00:00Z',
+      endTime: '2025-01-01T11:00:00Z',
+    });
+    expect(result).toEqual({ id: 12, status: 'pending' });
+  });
+
   test('getMyReservations returns user reservations', async () => {
     reservationRepo.findByUserId.mockResolvedValue([{ id: 1 }]);
 
