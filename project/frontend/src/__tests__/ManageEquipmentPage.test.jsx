@@ -140,4 +140,33 @@ describe('ManageEquipmentPage', () => {
     revokeSpy.mockRestore();
     clickSpy.mockRestore();
   });
+
+  test('opens QR modal', async () => {
+    global.fetch = vi.fn((url, options) => {
+      if (url === '/api/equipment' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([
+          { id: 1, name: 'Microscope A', status: 'available' },
+        ]) });
+      }
+      if (url === '/api/tags' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/locations' && (!options || !options.method)) {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+    });
+
+    render(
+      <MemoryRouter>
+        <ManageEquipmentPage />
+      </MemoryRouter>
+    );
+
+    const qrBtn = await screen.findByTitle(/qr kod/i);
+    fireEvent.click(qrBtn);
+
+    expect(await screen.findByText(/QR kod/i)).toBeInTheDocument();
+    expect(screen.getByText('Microscope A')).toBeInTheDocument();
+  });
 });

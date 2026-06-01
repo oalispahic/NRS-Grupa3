@@ -103,4 +103,42 @@ describe('EquipmentListPage', () => {
     expect(screen.getByText('Microscope A')).toBeInTheDocument();
     expect(screen.queryByText('Analyzer B')).not.toBeInTheDocument();
   });
+
+  test('opens compare modal after selecting items', async () => {
+    global.fetch = vi.fn((url) => {
+      if (url === '/api/equipment') {
+        return Promise.resolve({
+          json: () => Promise.resolve([
+            { id: 1, name: 'Microscope A', status: 'available' },
+            { id: 2, name: 'Analyzer B', status: 'available' },
+          ]),
+        });
+      }
+      if (url === '/api/tags') {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/locations') {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      return Promise.resolve({ json: () => Promise.resolve([]) });
+    });
+
+    render(
+      <MemoryRouter>
+        <EquipmentListPage />
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText('Microscope A')).toBeInTheDocument();
+
+    const compareBtns = screen.getAllByTitle(/Dodaj u komparator/i);
+    fireEvent.click(compareBtns[0]);
+    fireEvent.click(compareBtns[1]);
+
+    expect(await screen.findByText(/Odabrano 2/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Poredi/i }));
+
+    expect(await screen.findByText(/Usporedba opreme/i)).toBeInTheDocument();
+  });
 });
