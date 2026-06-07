@@ -205,4 +205,38 @@ describe('EquipmentDetailPage', () => {
       expect(JSON.parse(postCall[1].body)).toEqual(expect.objectContaining({ waitlist: true }));
     });
   });
+
+  test('shows inquiry button for non-admin and stores equipment context', async () => {
+    useAuthMock.mockReturnValue({
+      user: { role: 'laborant', full_name: 'Test User' },
+      token: 'token',
+    });
+
+    global.fetch = vi.fn((url) => {
+      if (url === '/api/equipment/1') {
+        return Promise.resolve({
+          json: () => Promise.resolve({
+            id: 1,
+            name: 'Centrifuga X',
+            status: 'available',
+          }),
+        });
+      }
+      if (url === '/api/equipment/1/reserved-dates') {
+        return Promise.resolve({ json: () => Promise.resolve([]) });
+      }
+      if (url === '/api/equipment/1/waitlist') {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ onList: false, position: null, total: 0 }) });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    renderWithRoute();
+
+    const inquiryBtn = await screen.findByRole('button', { name: /pošalji pitanje adminu/i });
+    fireEvent.click(inquiryBtn);
+
+    const ctx = JSON.parse(sessionStorage.getItem('msgEquipCtx'));
+    expect(ctx).toEqual({ id: 1, name: 'Centrifuga X' });
+  });
 });

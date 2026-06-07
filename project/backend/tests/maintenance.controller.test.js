@@ -14,7 +14,7 @@ jest.mock('../src/repositories/maintenance.repository', () => ({
 }));
 
 jest.mock('../src/repositories/notification.repository', () => ({
-  create: jest.fn(),
+  create: jest.fn().mockResolvedValue({}),
 }));
 
 jest.mock('../src/services/activity.service', () => ({

@@ -16,7 +16,7 @@ jest.mock('../src/repositories/waitlist.repository', () => ({
 }));
 
 jest.mock('../src/repositories/notification.repository', () => ({
-  create: jest.fn(),
+  create: jest.fn().mockResolvedValue({}),
 }));
 
 describe('equipment.service', () => {
