@@ -16,6 +16,7 @@ const consumableRoutes = require('./routes/consumable.routes');
 const statisticsRoutes = require('./routes/statistics.routes');
 const maintenanceRoutes = require('./routes/maintenance.routes');
 const reportsRoutes = require('./routes/reports.routes');
+const messagesRoutes = require('./routes/messages.routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/consumables', consumableRoutes);
 app.use('/api/statistics', statisticsRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/reports', reportsRoutes);
+app.use('/api/messages', messagesRoutes);
 
 app.use(errorHandler);
 

@@ -24,6 +24,8 @@ import MaintenancePage from './pages/admin/MaintenancePage';
 import MyTasksPage from './pages/MyTasksPage';
 import MyActivityPage from './pages/MyActivityPage';
 import RegisterPage from './pages/RegisterPage';
+import MessagesPage from './pages/MessagesPage';
+import AdminMessagesPage from './pages/admin/AdminMessagesPage';
 
 export default function App() {
   return (
@@ -123,6 +125,16 @@ export default function App() {
               <ProtectedRoute>
                 <AppLayout><MyActivityPage /></AppLayout>
               </ProtectedRoute>
+            } />
+            <Route path="/messages" element={
+              <ProtectedRoute>
+                <AppLayout><MessagesPage /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/messages" element={
+              <AdminRoute>
+                <AppLayout><AdminMessagesPage /></AppLayout>
+              </AdminRoute>
             } />
           </Routes>
         </ToastProvider>

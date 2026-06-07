@@ -1,5 +1,5 @@
 
-# Product backlog 5.0
+# Product backlog 6.0
 
 <div align > 
 
@@ -9,7 +9,7 @@
 
 ## Opis projekta 
 
-Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacijama, praćenje statusa opreme, odobravanje korištenja, pregled zauzeća, potrošnju repromaterijala, maintenance task management i grafičke izvještaje. 
+Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacijama, praćenje statusa opreme, odobravanje korištenja, pregled zauzeća, potrošnju repromaterijala, maintenance task management, grafičke izvještaje i direktnu komunikaciju između korisnika i administratora.
 
 ## Tipovi korisnika
 
@@ -221,8 +221,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Low</td>
 <td>5</td>
-<td>In Progress</td>
-<td>Sprint 10 — redefiniran</td>
+<td>Done</td>
+<td>Sprint 10</td>
 </tr>
 
 <tr>
@@ -233,8 +233,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Low</td>
 <td>5</td>
-<td>In Progress</td>
-<td>Sprint 10 — redefiniran</td>
+<td>Done</td>
+<td>Sprint 10</td>
 </tr>
 
 <tr>
@@ -282,7 +282,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>High</td>
 <td>5</td>
 <td>Done</td>
-<td>Sprint 9 — redefiniran</td>
+<td>Sprint 9</td>
 </tr>
 
 <tr>
@@ -437,7 +437,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Low</td>
 <td>3</td>
-<td>In Progress</td>
+<td>Done</td>
 <td>Sprint 10</td>
 </tr>
 
@@ -497,7 +497,7 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Technical</td>
 <td>Medium</td>
 <td>5</td>
-<td>In Progress</td>
+<td>Done</td>
 <td>Sprint 10</td>
 </tr>
 
@@ -593,8 +593,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Medium</td>
 <td>3</td>
-<td>In Progress</td>
-<td>Sprint 10 — novo</td>
+<td>Done</td>
+<td>Sprint 10</td>
 </tr>
 
 <tr>
@@ -605,8 +605,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Medium</td>
 <td>3</td>
-<td>In Progress</td>
-<td>Sprint 10 — novo</td>
+<td>Done</td>
+<td>Sprint 10</td>
 </tr>
 
 <tr>
@@ -617,8 +617,8 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Low</td>
 <td>2</td>
-<td>In Progress</td>
-<td>Sprint 10 — novo</td>
+<td>Done</td>
+<td>Sprint 10</td>
 </tr>
 
 <tr>
@@ -629,8 +629,44 @@ Ovaj sistem omogućava evidenciju laboratorijske opreme, upravljanje rezervacija
 <td>Feature</td>
 <td>Medium</td>
 <td>2</td>
-<td>In Progress</td>
-<td>Sprint 10 — novo</td>
+<td>Done</td>
+<td>Sprint 10</td>
+</tr>
+
+<tr>
+<td>PB52</td>
+<td>Direktne poruke korisnik ↔ administratori</td>
+<td align="left">Kao korisnik, želim slati poruke administratorima i primati njihove odgovore unutar sistema</td>
+<td>Chat sučelje na /messages (korisnik) i inbox s konverzacijama na /admin/messages; unread badge u navigaciji; in-app notifikacije pri primljenim porukama; read receipts</td>
+<td>Feature</td>
+<td>High</td>
+<td>5</td>
+<td>Done</td>
+<td>Sprint 11</td>
+</tr>
+
+<tr>
+<td>PB53</td>
+<td>Pitanje o opremi (Equipment Inquiry)</td>
+<td align="left">Kao korisnik, želim direktno s kartice opreme poslati pitanje administratoru uz automatski priložen kontekst te opreme</td>
+<td>"Pošalji pitanje adminu" dugme na EquipmentDetailPage; sessionStorage prenosi equipment kontekst; equipment chip vidljiv u compose formi; equipment_id FK na messages tabeli</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>2</td>
+<td>Done</td>
+<td>Sprint 11</td>
+</tr>
+
+<tr>
+<td>PB54</td>
+<td>Admin broadcast obavijesti</td>
+<td align="left">Kao administrator, želim slati obavijesti svim korisnicima sistema odjednom</td>
+<td>Tab "Nova obavijest" na /admin/messages s formom (naslov + tekst); broadcasts + broadcast_reads tabela; korisnici vide obavijesti u "Obavijesti" tabu s unread highlighted žuto; "Pročitano" po stavci</td>
+<td>Feature</td>
+<td>Medium</td>
+<td>3</td>
+<td>Done</td>
+<td>Sprint 11</td>
 </tr>
 
 </table>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Shield, Truck, Building2, Clock, Tag, X, Bell, BellOff } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { MapPin, Calendar, ChevronLeft, AlertCircle, CheckCircle2, Microscope, Settings2, Hash, Wrench, ShieldCheck, Shield, Truck, Building2, Clock, Tag, X, Bell, BellOff, MessageSquare } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { PRIMARY, C, iconBox, STATUS_EQUIPMENT, BTN } from '../theme';
@@ -19,6 +19,7 @@ export default function EquipmentDetailPage() {
   const { id }          = useParams();
   const { user, token } = useAuth();
   const toast           = useToast();
+  const navigate        = useNavigate();
 
   const [equipment, setEquipment]     = useState(null);
   const [loading, setLoading]         = useState(true);
@@ -176,6 +177,22 @@ export default function EquipmentDetailPage() {
               </span>
             ))}
           </div>
+
+          {/* Ask admin a question about this equipment */}
+          {!isAdmin && (
+            <div style={{ marginBottom: 16 }}>
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('msgEquipCtx', JSON.stringify({ id: parseInt(id), name: equipment.name }));
+                  navigate('/messages');
+                }}
+                style={{ ...BTN.outline, display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13 }}
+              >
+                <MessageSquare size={14} />
+                Pošalji pitanje adminu
+              </button>
+            </div>
+          )}
 
           {equipment.description && (
             <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 24px', marginBottom: 24 }}>

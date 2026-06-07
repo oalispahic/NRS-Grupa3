@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS broadcasts (
+  id        SERIAL PRIMARY KEY,
+  sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title     VARCHAR(200) NOT NULL,
+  body      TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS broadcast_reads (
+  broadcast_id INTEGER NOT NULL REFERENCES broadcasts(id) ON DELETE CASCADE,
+  user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  read_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (broadcast_id, user_id)
+);

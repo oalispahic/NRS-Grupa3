@@ -4,7 +4,7 @@ import {
   FlaskConical, LayoutDashboard, Microscope, BookOpen,
   Settings, LogOut, ClipboardList, Menu, X, Bell, User,
   Activity, MonitorCheck, MapPin, Users, BarChart2, Package, SlidersHorizontal,
-  Wrench, FileText, ListChecks, Clock,
+  Wrench, FileText, ListChecks, Clock, MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { FONT, GLOBAL_CSS, C, PRIMARY } from '../theme';
@@ -21,6 +21,7 @@ const NAV_GROUPS_LABORANT = [
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
       { to: '/my-tasks',        label: 'Moji zadaci',      Icon: ListChecks },
       { to: '/my-activity',     label: 'Moje aktivnosti',  Icon: Clock },
+      { to: '/messages',        label: 'Poruke',           Icon: MessageSquare, badge: true },
       { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
@@ -49,6 +50,7 @@ const NAV_GROUPS_ADMIN = [
       { to: '/admin/reports',      label: 'Izvještaji',          Icon: FileText },
       { to: '/admin/maintenance',  label: 'Održavanje',          Icon: Wrench },
       { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
+      { to: '/admin/messages',     label: 'Poruke korisnika',    Icon: MessageSquare, badge: true },
     ],
   },
 ];
@@ -62,6 +64,7 @@ const NAV_GROUPS_TEST = [
       { to: '/reservations/my', label: 'Moje rezervacije', Icon: BookOpen },
       { to: '/my-tasks',        label: 'Moji zadaci',      Icon: ListChecks },
       { to: '/my-activity',     label: 'Moje aktivnosti',  Icon: Clock },
+      { to: '/messages',        label: 'Poruke',           Icon: MessageSquare, badge: true },
       { to: '/profile',         label: 'Moj profil',       Icon: User },
     ],
   },
@@ -79,6 +82,7 @@ const NAV_GROUPS_TEST = [
       { to: '/admin/reports',      label: 'Izvještaji',          Icon: FileText },
       { to: '/admin/maintenance',  label: 'Održavanje',          Icon: Wrench },
       { to: '/admin/settings',     label: 'Pravila korištenja',  Icon: SlidersHorizontal },
+      { to: '/admin/messages',     label: 'Poruke korisnika',    Icon: MessageSquare, badge: true },
     ],
   },
 ];
@@ -89,7 +93,7 @@ const ROLE_META = {
   laborant: { label: 'Laborant',      color: '#34d399', bg: 'rgba(52,211,153,0.15)'  },
 };
 
-function NavItem({ to, label, Icon, active }) {
+function NavItem({ to, label, Icon, active, unreadCount = 0 }) {
   return (
     <Link
       to={to}
@@ -130,7 +134,18 @@ function NavItem({ to, label, Icon, active }) {
         style={{ flexShrink: 0 }}
       />
       <span style={{ flex: 1 }}>{label}</span>
-      {active && (
+      {unreadCount > 0 && (
+        <span style={{
+          background: '#ef4444', color: '#fff',
+          fontSize: 10, fontWeight: 700,
+          minWidth: 17, height: 17, borderRadius: 99,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '0 4px', flexShrink: 0,
+        }}>
+          {unreadCount > 99 ? '99+' : unreadCount}
+        </span>
+      )}
+      {active && unreadCount === 0 && (
         <span style={{
           width: 5, height: 5,
           borderRadius: '50%',
@@ -143,7 +158,7 @@ function NavItem({ to, label, Icon, active }) {
   );
 }
 
-function Sidebar({ user, groups, isActive, logout, token }) {
+function Sidebar({ user, groups, isActive, logout, token, msgUnread = 0 }) {
   const role = ROLE_META[user?.role] || { label: user?.role, color: '#94a3b8', bg: 'rgba(148,163,184,0.15)' };
   const initial = user?.full_name?.[0]?.toUpperCase() || '?';
 
@@ -196,8 +211,8 @@ function Sidebar({ user, groups, isActive, logout, token }) {
             }}>
               {group.label}
             </div>
-            {group.items.map(({ to, label, Icon }) => (
-              <NavItem key={to} to={to} label={label} Icon={Icon} active={isActive(to)} />
+            {group.items.map(({ to, label, Icon, badge }) => (
+              <NavItem key={to} to={to} label={label} Icon={Icon} active={isActive(to)} unreadCount={badge ? msgUnread : 0} />
             ))}
           </div>
         ))}
@@ -384,8 +399,22 @@ export default function AdminLayout({ children }) {
   const { user, logout, token } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [msgUnread, setMsgUnread] = useState(0);
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+  useEffect(() => {
+    if (!token) return;
+    function fetchUnread() {
+      fetch('/api/messages/unread-count', { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.ok ? r.json() : { count: 0 })
+        .then(d => setMsgUnread(d.count || 0))
+        .catch(() => {});
+    }
+    fetchUnread();
+    const t = setInterval(fetchUnread, 30000);
+    return () => clearInterval(t);
+  }, [token]);
 
   const groups =
     user?.role === 'test'     ? NAV_GROUPS_TEST :
@@ -415,7 +444,7 @@ export default function AdminLayout({ children }) {
         position: 'fixed', top: 0, left: 0, bottom: 0,
         zIndex: 50,
       }}>
-        <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} />
+        <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} msgUnread={msgUnread} />
       </div>
 
       {/* Mobile overlay */}
@@ -426,7 +455,7 @@ export default function AdminLayout({ children }) {
             style={{ position: 'fixed', inset: 0, zIndex: 98, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
           />
           <div style={{ position: 'fixed', top: 0, left: 0, bottom: 0, width: SIDEBAR_W, zIndex: 99 }}>
-            <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} />
+            <Sidebar user={user} groups={groups} isActive={isActive} logout={logout} token={token} msgUnread={msgUnread} />
           </div>
         </>
       )}
