@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import ReservationCalendar from '../components/ReservationCalendar';
 
-function Wrapper({ occupied }) {
+function Wrapper({ occupied, onOccupiedRange }) {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
 
@@ -14,6 +14,7 @@ function Wrapper({ occupied }) {
       selectedEnd={end}
       onSelect={(s, e) => { setStart(s); setEnd(e); }}
       onClear={() => { setStart(null); setEnd(null); }}
+      onOccupiedRange={onOccupiedRange}
     />
   );
 }
@@ -28,20 +29,26 @@ describe('ReservationCalendar', () => {
     vi.useRealTimers();
   });
 
-  test('shows error when selected range contains occupied dates', () => {
+  test('shows prompt when start day selected, then calls onOccupiedRange when range covers occupied dates', () => {
+    const onOccupiedRange = vi.fn();
+
     render(
       <Wrapper
         occupied={[{ start_time: '2025-01-20T00:00:00Z', end_time: '2025-01-22T00:00:00Z' }]}
+        onOccupiedRange={onOccupiedRange}
       />
     );
 
+    // Click day 18 (start)
     const startDay = screen.getAllByText('18')[0];
-    const endDay = screen.getAllByText('24')[0];
-
     fireEvent.click(startDay);
     expect(screen.getByText(/odaberite krajnji datum/i)).toBeInTheDocument();
+
+    // Click day 24 (end — overlaps with occupied 20-22)
+    const endDay = screen.getAllByText('24')[0];
     fireEvent.click(endDay);
 
-    expect(screen.getByText(/Odabrani raspon/i)).toBeInTheDocument();
+    // onOccupiedRange should have been called because 18-24 overlaps occupied 20-22
+    expect(onOccupiedRange).toHaveBeenCalled();
   });
 });
