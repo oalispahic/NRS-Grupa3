@@ -167,6 +167,6 @@ describe('ManageEquipmentPage', () => {
     fireEvent.click(qrBtn);
 
     expect(await screen.findByText(/QR kod/i)).toBeInTheDocument();
-    expect(screen.getByText('Microscope A')).toBeInTheDocument();
+    expect(screen.getAllByText('Microscope A').length).toBeGreaterThanOrEqual(2);
   });
 });
