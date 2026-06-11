@@ -13,6 +13,7 @@ LabManager v1.0 je kompletna web aplikacija za upravljanje medicinskom laborator
 **Produkcijski URL-ovi:**
 - Frontend: https://nrs.marexdev.com/
 - Backend API: https://api.nrs.marexdev.com/
+- Demo pristup (laborant): `korisnik1@lab.ba` / `korisnik123`
 
 ---
 

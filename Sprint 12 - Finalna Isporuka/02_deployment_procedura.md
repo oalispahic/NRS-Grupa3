@@ -229,8 +229,8 @@ curl -X POST http://localhost:3001/api/auth/register \
 ```
 
 **Testni korisnici za Supabase produkcijsku bazu:**
-- Admin: `admin2` / `admin123`
-- Laborant: `korisnik1` / `korisnik123`
+- Laborant: `korisnik1@lab.ba` / `korisnik123` (verifikovano aktivno)
+- Admin: kontaktiraj voditelja tima za kredencijale
 
 ---
 

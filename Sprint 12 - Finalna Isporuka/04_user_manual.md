@@ -33,8 +33,9 @@ LabManager je namijenjen svim zaposlenicima medicinskih i istraživačkih labora
 
 | Uloga | Korisničko ime | Lozinka |
 |---|---|---|
-| Administrator | `admin2` | `admin123` |
-| Laborant | `korisnik1` | `korisnik123` |
+| Laborant | `korisnik1@lab.ba` | `korisnik123` |
+
+> Admin korisnik nije javno dostupan (kredencijali se ne dijele iz sigurnosnih razloga). Kontaktirajte voditelja tima (`oalispahic`) za admin pristup.
 
 ### Koraci za prijavu
 

@@ -27,6 +27,6 @@ Ovaj folder sadrži kompletnu završnu dokumentaciju projekta, pripremljenu u sk
 
 - **Produkcija:** https://nrs.marexdev.com
 - **API health:** https://api.nrs.marexdev.com/api/health
-- **Demo admin:** `admin2` / `admin123`
-- **Demo laborant:** `korisnik1` / `korisnik123`
+- **Demo laborant:** `korisnik1@lab.ba` / `korisnik123`
+- **Admin pristup:** kontaktiraj voditelja tima
 - **CD pipeline:** `.github/workflows/health-check.yml`
